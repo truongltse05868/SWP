@@ -23,7 +23,7 @@ CREATE TABLE if not exists `user` (
 );
 CREATE TABLE if not exists `subject` (
     subject_id INT AUTO_INCREMENT PRIMARY KEY,
-    supject_code NVARCHAR(10) NOT NULL,
+    subject_code NVARCHAR(10) NOT NULL,
     `name` NVARCHAR(30) NOT NULL,
     `description` NVARCHAR(100),
     `status` bit default 0 NOT NULL
