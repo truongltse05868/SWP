@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dao.UserDAO;
 import entity.User;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -32,16 +33,20 @@ public class UserListController extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        // Tạo danh sách người dùng mẫu
+//        //khởi tạo userDAO
+//        UserDAO  userDAO = new UserDAO();
+//        //lấy full user từ database cho vào list
+//        List<User> users = userDAO.getAllUsers();
+//
+//        // Đặt danh sách người dùng vào request
+//        request.setAttribute("users", users);
+
+//thế éo nào mà éo chạy vào cái page này được nhỉ. help me, data chỗ này đang test nhé. connect db cũng đang lỗi, cay quá.
         List<User> users = new ArrayList<>();
         users.add(new User(1, "john_doe", "password123", "john@example.com", "John Doe", "1234567890", true, 23, true, 1));
         users.add(new User(2, "jane_doe", "password123", "jane@example.com", "Jane Doe", "0987654321", false, 33, true, 2));
-        users.add(new User(3, "jim_bean", "password123", "jim@example.com", "Jim Bean", "1231231234", true, 22, true, 1));
-
-        // Đặt danh sách người dùng vào request
+        users.add(new User(3, "jim_bean", "password123", "jim@example.com", "Jim Bean", "1231231234", true, 19, true, 1));
         request.setAttribute("users", users);
-        
         RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/userList.jsp");
         dispatcher.forward(request, response);
     }
