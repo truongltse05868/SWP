@@ -20,8 +20,8 @@ public class DBConnect {
 //            input your database username, password and url here
             // anh em sửa thành connection của mình nhé. 
             String user = "root";
-            String pass = "Mysql-suck";
-            String url = "jdbc:mysql://127.0.0.1:3306/KRS_SWR";
+            String pass = "Simon041098@";
+            String url = "jdbc:mysql://localhost:3306/KRS_SWR";
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (Exception ex) {
