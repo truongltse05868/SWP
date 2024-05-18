@@ -13,42 +13,36 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
- * @author simon
+ * UserListController handles requests to display the list of users.
  */
 public class UserListController extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
+    private static final Logger logger = Logger.getLogger(UserListController.class.getName());
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-//        //khởi tạo userDAO
-//        UserDAO  userDAO = new UserDAO();
-//        //lấy full user từ database cho vào list
-//        List<User> users = userDAO.getAllUsers();
-//
-//        // Đặt danh sách người dùng vào request
-//        request.setAttribute("users", users);
+        try {
+            // Initialize UserDAO
+            UserDAO userDAO = new UserDAO();
+            // Fetch list of users from the database
+            List<User> users = userDAO.getAllUsers();
 
-//thế éo nào mà éo chạy vào cái page này được nhỉ. help me, data chỗ này đang test nhé. connect db cũng đang lỗi, cay quá.
-        List<User> users = new ArrayList<>();
-        users.add(new User(1, "john_doe", "password123", "john@example.com", "John Doe", "1234567890", true, 23, true, 1));
-        users.add(new User(2, "jane_doe", "password123", "jane@example.com", "Jane Doe", "0987654321", false, 33, true, 2));
-        users.add(new User(3, "jim_bean", "password123", "jim@example.com", "Jim Bean", "1231231234", true, 19, true, 1));
-        request.setAttribute("users", users);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/userList.jsp");
-        dispatcher.forward(request, response);
+            // Set the list of users as a request attribute
+            request.setAttribute("users", users);
+
+            // Forward the request to the JSP page
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/userList.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error processing user list request", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing your request.");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -90,4 +84,5 @@ public class UserListController extends HttpServlet {
         return "UserListController";
     }// </editor-fold>
 
-}
+    }
+

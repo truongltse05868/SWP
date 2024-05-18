@@ -1,28 +1,21 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package entity;
 
 /**
- *
- * @author HuyPC
+ * User entity represents a user in the system.
  */
 public class User {
-    int user_id;
-    String user_name;
-    String password;
-    String email;
-    String full_name;
-    String phone;
-    boolean gender;
-    int age;
-    boolean status;
-    int role_id;
+    private int user_id;
+    private String user_name;
+    private String password;
+    private String email;
+    private String full_name;
+    private String phone;
+    private String gender;
+    private int age;
+    private boolean status;
+    private int role_id;
 
-    public User(int user_id, String user_name, String password, String email, 
-            String full_name, String phone, boolean gender, int age, 
-            boolean status, int role_id) {
+    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, int age, boolean status, int role_id) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.password = password;
@@ -83,15 +76,15 @@ public class User {
         this.phone = phone;
     }
 
-    public boolean isGender() {
+    public String getGender() {
         return gender;
     }
 
-    public void setGender(boolean gender) {
+    public void setGender(String gender) {
         this.gender = gender;
     }
 
-    public int isAge() {
+    public int getAge() {
         return age;
     }
 
@@ -117,12 +110,12 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "user_id=" + user_id + ", user_name=" + user_name + 
-                ", password=" + password + ", email=" + email + ", full_name=" 
-                + full_name + ", phone=" + phone + ", gender=" + gender 
-                + ", age=" + age + ", status=" + status + ", role_id=" 
-                + role_id + '}';
+        return "User{" + "user_id=" + user_id + ", user_name=" + user_name + ", password=" + password + ", email=" + email + ", full_name=" + full_name + ", phone=" + phone + ", gender=" + gender + ", age=" + age + ", status=" + status + ", role_id=" + role_id + '}';
     }
+
     
-    
+    public User()
+    {
+        
+    }
 }
