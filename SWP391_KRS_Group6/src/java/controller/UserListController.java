@@ -5,6 +5,7 @@
 package controller;
 
 import entity.User;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -34,15 +35,15 @@ public class UserListController extends HttpServlet {
         
         // Tạo danh sách người dùng mẫu
         List<User> users = new ArrayList<>();
-        users.add(new User(1, "john_doe", "password123", "john@example.com", "John Doe", "1234567890", true, false, true, 1));
-        users.add(new User(2, "jane_doe", "password123", "jane@example.com", "Jane Doe", "0987654321", false, false, true, 2));
-        users.add(new User(3, "jim_bean", "password123", "jim@example.com", "Jim Bean", "1231231234", true, true, true, 1));
+        users.add(new User(1, "john_doe", "password123", "john@example.com", "John Doe", "1234567890", true, 23, true, 1));
+        users.add(new User(2, "jane_doe", "password123", "jane@example.com", "Jane Doe", "0987654321", false, 33, true, 2));
+        users.add(new User(3, "jim_bean", "password123", "jim@example.com", "Jim Bean", "1231231234", true, 22, true, 1));
 
         // Đặt danh sách người dùng vào request
         request.setAttribute("users", users);
         
-        // Chuyển tiếp đến tệp JSP
-        request.getRequestDispatcher("/userList.jsp").forward(request, response);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/userList.jsp");
+        dispatcher.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -81,7 +82,7 @@ public class UserListController extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "UserListController";
     }// </editor-fold>
 
 }

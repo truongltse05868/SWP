@@ -18,11 +18,11 @@ public class DBConnect {
         try {
             
 //            input your database username, password and url here
-            
-            String user = "sa";
-            String pass = "123";
-            String url = "jdbc:sqlserver://DESKTOP-L396LB5\\SQLEXPRESS:1433;databaseName=yourdatabasename";
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            // anh em sửa thành connection của mình nhé. 
+            String user = "root";
+            String pass = "Simon041098@";
+            String url = "jdbc:mysql://127.0.0.1:3306/DB_SWP391";
+            Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (Exception ex) {
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);

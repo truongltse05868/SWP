@@ -16,12 +16,12 @@ public class User {
     String full_name;
     String phone;
     boolean gender;
-    boolean age;
+    int age;
     boolean status;
     int role_id;
 
     public User(int user_id, String user_name, String password, String email, 
-            String full_name, String phone, boolean gender, boolean age, 
+            String full_name, String phone, boolean gender, int age, 
             boolean status, int role_id) {
         this.user_id = user_id;
         this.user_name = user_name;
@@ -91,11 +91,11 @@ public class User {
         this.gender = gender;
     }
 
-    public boolean isAge() {
+    public int isAge() {
         return age;
     }
 
-    public void setAge(boolean age) {
+    public void setAge(int age) {
         this.age = age;
     }
 

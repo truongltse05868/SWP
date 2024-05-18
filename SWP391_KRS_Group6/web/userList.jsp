@@ -4,31 +4,15 @@
     Author     : simon
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>User List</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        table, th, td {
-            border: 1px solid black;
-        }
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
 </head>
 <body>
     <h1>User List</h1>
-    <table>
+    <table border="1">
         <tr>
             <th>ID</th>
             <th>Username</th>
@@ -47,21 +31,9 @@
                 <td>${user.email}</td>
                 <td>${user.full_name}</td>
                 <td>${user.phone}</td>
-                <td><c:choose>
-                        <c:when test="${user.gender}">Male</c:when>
-                        <c:otherwise>Female</c:otherwise>
-                    </c:choose>
-                </td>
-                <td><c:choose>
-                        <c:when test="${user.age}">Adult</c:when>
-                        <c:otherwise>Minor</c:otherwise>
-                    </c:choose>
-                </td>
-                <td><c:choose>
-                        <c:when test="${user.status}">Active</c:when>
-                        <c:otherwise>Inactive</c:otherwise>
-                    </c:choose>
-                </td>
+                <td>${user.gender}</td>
+                <td>${user.age}</td>
+                <td>${user.status}</td>
                 <td>${user.role_id}</td>
             </tr>
         </c:forEach>

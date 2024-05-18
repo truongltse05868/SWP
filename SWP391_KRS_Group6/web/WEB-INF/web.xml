@@ -7,6 +7,6 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>UserListController</servlet-name>
-        <url-pattern>/UserListController</url-pattern>
+        <url-pattern>/userList</url-pattern>
     </servlet-mapping>
 </web-app>
