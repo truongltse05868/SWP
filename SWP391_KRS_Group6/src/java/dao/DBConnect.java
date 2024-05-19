@@ -19,11 +19,18 @@ public class DBConnect {
             
 //            input your database username, password and url here
             // anh em sửa thành connection của mình nhé. 
+            //connection của Truonglt
             String user = "root";
             String pass = "Simon041098@";
             String url = "jdbc:mysql://localhost:3306/KRS_SWR?zeroDateTimeBehavior=CONVERT_TO_NULL";
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, pass);
+//            //ae tạo thêm connection của mình rồi thêm vào, comment connection của người khác đi nhé.
+//            String user = "root";
+//            String pass = "Simon041098@";
+//            String url = "jdbc:mysql://localhost:3306/KRS_SWR?zeroDateTimeBehavior=CONVERT_TO_NULL";
+//            Class.forName("com.mysql.cj.jdbc.Driver");
+            
         } catch (Exception ex) {
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
