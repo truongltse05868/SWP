@@ -21,7 +21,7 @@ public class DBConnect {
             // anh em sửa thành connection của mình nhé. 
             String user = "root";
             String pass = "Simon041098@";
-            String url = "jdbc:mysql://localhost:3306/KRS_SWR";
+            String url = "jdbc:mysql://localhost:3306/KRS_SWR?zeroDateTimeBehavior=CONVERT_TO_NULL";
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (Exception ex) {
