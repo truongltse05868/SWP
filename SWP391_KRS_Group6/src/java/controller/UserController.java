@@ -36,19 +36,22 @@ public class UserController extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     private static final Logger logger = Logger.getLogger(UserListController.class.getName());
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+    
+        throws ServletException, IOException {
 
         try {
             // Lấy userId từ request parameter
-            int userId = Integer.parseInt(request.getParameter("id"));
+//            int userId = Integer.parseInt(request.getParameter("id"));
+            int userId = 1;
                         // Initialize UserDAO
             UserDAO userDAO = new UserDAO();
             // Fetch list of users from the database
-            User users = userDAO.getUserById(userId);
+            User user = userDAO.getUserById(userId);
 
             // Set the list of users as a request attribute
-            request.setAttribute("users", users);
+            request.setAttribute("user", user);
 
             // Forward the request to the JSP page
             RequestDispatcher dispatcher = request.getRequestDispatcher("/userProfile.jsp");
