@@ -374,6 +374,9 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>${user.role_id}</td>
+                                                <td>
+                                                <button onclick="getUserDetails(${user.user_id})">Edit</button>
+                                            </td>
                                             </tr>
                                         </c:forEach>
                                     </table>
