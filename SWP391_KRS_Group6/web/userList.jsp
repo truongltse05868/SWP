@@ -375,8 +375,12 @@
                                                 </td>
                                                 <td>${user.role_id}</td>
                                                 <td>
-                                                <button onclick="getUserDetails(${user.user_id})">Edit</button>
-                                            </td>
+                                                    <form action="${pageContext.request.contextPath}/userProfile" method="post">
+                                                        <input type="hidden" name="id" value="${user.user_id}" />
+                                                        <button type="submit">Edit</button>
+                                                    </form>
+                                                    
+                                                </td>
                                             </tr>
                                         </c:forEach>
                                     </table>
