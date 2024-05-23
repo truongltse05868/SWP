@@ -1,6 +1,7 @@
 package controller;
 
 import dao.UserDAO;
+import entity.Role;
 import entity.User;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
 @WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
@@ -41,7 +43,19 @@ public class UserController extends HttpServlet {
                 } else {
                     response.sendRedirect("login.html?error=invalid_credentials");
                 }
-            }else {
+            } else if (action != null && action.equals("addUserPage")) {
+                // Hiển thị trang để thêm người dùng mới
+                // Truy vấn để lấy danh sách các role từ database
+                UserDAO roleDAO = new UserDAO();
+                List<Role> roles = roleDAO.getRoles();
+                request.setAttribute("roles", roles);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
+                dispatcher.forward(request, response);
+                
+            } else if (action != null && action.equals("addUser")) {
+                // Xử lý yêu cầu thêm người dùng mới
+                addUser(request, response);
+            } else {
                 int userId = Integer.parseInt(request.getParameter("id"));
                 UserDAO userDAO = new UserDAO();
                 User user = userDAO.getUserById(userId);
@@ -83,8 +97,14 @@ public class UserController extends HttpServlet {
             if (user != null) {
                 user.setFull_name(fullname);
                 user.setPhone(phone);
-                userDAO.updateUser(user);
-                response.sendRedirect(request.getContextPath() + "/userProfile?id=" + userId);
+                boolean isUpdated = userDAO.updateUser(user);
+
+                if (isUpdated) {
+                    request.setAttribute("successMessage", "Lưu thành công.");
+                } else {
+                    request.setAttribute("successMessage", "Lưu thành công.");
+                }
+                response.sendRedirect(request.getContextPath() + "/userController?id=" + userId);
 
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
@@ -110,6 +130,50 @@ public class UserController extends HttpServlet {
             logger.log(Level.SEVERE, "Error updating user", e);
         }
         return false;
+    }
+
+    private void addUser(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Lấy thông tin từ form
+            String userName = request.getParameter("userName");
+            String password = request.getParameter("password");
+            String email = request.getParameter("email");
+            String fullName = request.getParameter("fullName");
+            String phone = request.getParameter("phone");
+            String gender = request.getParameter("gender");
+            int age = Integer.parseInt(request.getParameter("age"));
+            boolean status = request.getParameter("status") != null;
+            int roleId = Integer.parseInt(request.getParameter("roleId"));
+
+            // Tạo một đối tượng User
+            User user = new User();
+            user.setUser_name(userName);
+            user.setPassword(password);
+            user.setEmail(email);
+            user.setFull_name(fullName);
+            user.setPhone(phone);
+            user.setGender(gender);
+            user.setAge(age);
+            user.setStatus(status);
+            user.setRole_id(roleId);
+
+            // Thêm người dùng vào cơ sở dữ liệu
+            UserDAO userDAO = new UserDAO();
+            boolean isSuccess = userDAO.addUser(user);
+
+            // Chuyển hướng về trang addUser.jsp với thông báo kết quả
+            if (isSuccess) {
+                request.setAttribute("successMessage", "User added successfully.");
+            } else {
+                request.setAttribute("errorMessage", "Failed to add user.");
+            }
+            request.getRequestDispatcher("/addUser.jsp").forward(request, response);
+        } catch (Exception e) {
+            // Xử lý ngoại lệ nếu có
+            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("/addUser.jsp").forward(request, response);
+        }
     }
 
     @Override
