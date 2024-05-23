@@ -375,7 +375,7 @@
                                                 </td>
                                                 <td>${user.role_id}</td>
                                                 <td>
-                                                    <form action="${pageContext.request.contextPath}/userProfile" method="post">
+                                                    <form action="${pageContext.request.contextPath}/userController" method="post">
                                                         <input type="hidden" name="id" value="${user.user_id}" />
                                                         <button type="submit">Edit</button>
                                                     </form>

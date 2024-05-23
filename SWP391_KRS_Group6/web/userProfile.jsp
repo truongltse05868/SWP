@@ -359,7 +359,7 @@
                                 <h4>User Profile</h4>
                             </div>
                             <div class="widget-inner">
-                                <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userProfile" method="post">
+                                <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userController" method="post">
                                     <input type="hidden" name="action" value="update"> 
                                     <input type="hidden" name="id" value="${user.user_id}">
                                     <div class="">
@@ -390,35 +390,35 @@
 
                                         <div class="seperator"></div>
 
-<!--                                        <div class="form-group row">
-                                            <div class="col-sm-10 ml-auto">
-                                                <h3>2. Address</h3>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Address</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text" value="5-S2-20 Dummy City, UK">
-                                            </div>
-                                        </div>-->
-<!--                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">City</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text" value="US">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">State</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text" value="California">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Postcode</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text" value="000702">
-                                            </div>
-                                        </div>-->
+                                        <!--                                        <div class="form-group row">
+                                                                                    <div class="col-sm-10 ml-auto">
+                                                                                        <h3>2. Address</h3>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">Address</label>
+                                                                                    <div class="col-sm-7">
+                                                                                        <input class="form-control" type="text" value="5-S2-20 Dummy City, UK">
+                                                                                    </div>
+                                                                                </div>-->
+                                        <!--                                        <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">City</label>
+                                                                                    <div class="col-sm-7">
+                                                                                        <input class="form-control" type="text" value="US">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">State</label>
+                                                                                    <div class="col-sm-7">
+                                                                                        <input class="form-control" type="text" value="California">
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">Postcode</label>
+                                                                                    <div class="col-sm-7">
+                                                                                        <input class="form-control" type="text" value="000702">
+                                                                                    </div>
+                                                                                </div>-->
 
                                         <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 
