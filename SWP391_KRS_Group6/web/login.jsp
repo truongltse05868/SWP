@@ -76,8 +76,8 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <label>Your Name</label>
-                                            <input name="dzName" type="text" required="" class="form-control">
+                                            <label>Your Account</label>
+                                            <input id="username" name="username" type="text" required="" class="form-control">
                                         </div>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@
                                     <div class="form-group">
                                         <div class="input-group"> 
                                             <label>Your Password</label>
-                                            <input name="dzEmail" type="password" class="form-control" required="">
+                                            <input id="password" name="password" type="password" class="form-control" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -99,7 +99,7 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-12 m-b30">
-                                    <button name="submit" type="submit" value="Submit" class="btn button-md">Login</button>
+                                    <button type="submit" class="btn button-md">Login</button>
                                 </div>
                                 <div class="col-lg-12">
                                     <h6>Login with Social media</h6>

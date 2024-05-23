@@ -99,10 +99,9 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean loginAccount(String account, String password) {
-        String query = "SELECT user_name, password FROM user WHERE user_name = ? AND phone = ?";
+        String query = "SELECT user_name, password FROM user WHERE user_name = ? ";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
-            ps.setString(2, password);  
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String checkAccount = rs.getString("user_name");
