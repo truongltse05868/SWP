@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 public class UserDAO extends DBConnect {
 
     private static final Logger logger = Logger.getLogger(UserDAO.class.getName());
+
     public UserDAO() {
         super(); // Gọi constructor của superclass để khởi tạo kết nối
     }
@@ -95,6 +96,26 @@ public class UserDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error updating user", e);
             return false;
         }
+    }
+
+    public boolean loginAccount(String account, String password) {
+        String query = "SELECT user_name, password FROM user WHERE user_name = ? AND phone = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, account);
+            ps.setString(2, password);  
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String checkAccount = rs.getString("user_name");
+                    String checkPass = rs.getString("password");
+                    if (checkPass.equals(password) && checkAccount.equals(account)) {
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error logging in user", e);
+        }
+        return false;
     }
 
 }

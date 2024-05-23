@@ -14,16 +14,18 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
-
+    
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
-
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             String action = request.getParameter("action");
-
+            
             if (action != null && action.equals("update")) {
                 updateUser(request, response);
+            } else if (action != null && action.equals("login")) {
+                
             } else {
                 int userId = Integer.parseInt(request.getParameter("id"));
                 UserDAO userDAO = new UserDAO();
@@ -40,35 +42,35 @@ public class UserController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing your request.");
         }
     }
-
+    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+    
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-
+    
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             int userId = Integer.parseInt(request.getParameter("id"));
             String fullname = request.getParameter("fullname");
             String phone = request.getParameter("phone");
-
+            
             UserDAO userDAO = new UserDAO();
             User user = userDAO.getUserById(userId);
-
+            
             if (user != null) {
                 user.setFull_name(fullname);
                 user.setPhone(phone);
                 userDAO.updateUser(user);
                 response.sendRedirect(request.getContextPath() + "/userProfile?id=" + userId);
-
+                
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
             }
@@ -80,7 +82,7 @@ public class UserController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
         }
     }
-
+    
     @Override
     public String getServletInfo() {
         return "Short description";
