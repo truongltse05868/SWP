@@ -66,16 +66,16 @@ public class SettingController extends HttpServlet {
                 if (message == null) {
                     message = "";
                 }
-            // Fetch list of users from the database
-            Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "asc");
+                // Fetch list of users from the database
+                Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "asc");
 
-            // Set the list of users as a request attribute
-            request.setAttribute("setting", setting);
+                // Set the list of users as a request attribute
+                request.setAttribute("setting", setting);
 
-            // Forward the request to the JSP page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("admin/SettingDisplay.jsp");
-            dispatcher.forward(request, response);
-       
+                // Forward the request to the JSP page
+                RequestDispatcher dispatcher = request.getRequestDispatcher("admin/SettingDisplay.jsp");
+                dispatcher.forward(request, response);
+
             }
 
             if (service.equals("insertSetting")) {
@@ -107,22 +107,22 @@ public class SettingController extends HttpServlet {
                     int pid = Integer.parseInt(request.getParameter("pid"));
                     Setting setting = dao.getSettingById(pid);
                     request.setAttribute("setting", setting);
-                   
+
                     dispath(request, response, "/admin/SettingForm.jsp");
                 } else {
-                   String settingId = request.getParameter("setting_id");
+                    String settingId = request.getParameter("setting_id");
                     String settingName = request.getParameter("setting_name");
                     String type = request.getParameter("type");
                     String description = request.getParameter("description");
-                    Boolean status = Boolean.parseBoolean(request.getParameter("status"));
+                    String statusParam = request.getParameter("status");
+                    boolean status = (statusParam != null && statusParam.equals("on"));
 
                     // convert
                     int settingIdInt = Integer.parseInt(settingId);
 
-                   
                     //
-                     Setting setting = new Setting(settingIdInt, settingName, type, description, status);
-                     dao.updateSetting(setting);
+                    Setting setting = new Setting(settingIdInt, settingName, type, description, status);
+                    dao.updateSetting(setting);
                     String st = "";
                     //send message
                     response.sendRedirect("SettingController");

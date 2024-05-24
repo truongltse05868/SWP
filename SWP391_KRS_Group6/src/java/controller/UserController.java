@@ -23,27 +23,30 @@ public class UserController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+//            HttpSession session = request.getSession();
             String action = request.getParameter("action");
 
             if (action != null && action.equals("update")) {
                 updateUser(request, response);
-            } else if (action != null && action.equals("loginPage")) {
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
-                dispatcher.forward(request, response);
-            } else if (action != null && action.equals("login")) {
-
-                String username = request.getParameter("username");
-                String password = request.getParameter("password");
-
-                if (loginAccount(username, password)) {
-                    Cookie userCookie = new Cookie("username", username);
-                    userCookie.setMaxAge(15); // 15s
-                    response.addCookie(userCookie);
-                    response.sendRedirect("/index.html");
-                } else {
-                    response.sendRedirect("login.html?error=invalid_credentials");
-                }
-            } else if (action != null && action.equals("addUserPage")) {
+//            } else if (action != null && action.equals("loginPage")) {
+//                RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
+//                dispatcher.forward(request, response);
+//            } else if (action != null && action.equals("login")) {
+//
+//                String username = request.getParameter("username");
+//                String password = request.getParameter("password");
+//
+//                if (loginAccount(username, password)) {
+//                    session.setAttribute("account", user);
+//                    Cookie userCookie = new Cookie("username", username);
+//                    userCookie.setMaxAge(15); // 15s
+//                    response.addCookie(userCookie);
+//                    response.sendRedirect("index.html");
+//                } else {
+//                    response.sendRedirect("login.html?error=invalid_credentials");
+//                }
+            } 
+            else if (action != null && action.equals("addUserPage")) {
                 // Hiển thị trang để thêm người dùng mới
                 // Truy vấn để lấy danh sách các role từ database
                 UserDAO roleDAO = new UserDAO();
