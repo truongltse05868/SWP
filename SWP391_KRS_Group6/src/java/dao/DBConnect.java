@@ -22,7 +22,7 @@ public class DBConnect {
             //connection của Truonglt
             String user = "root";
 //            String pass = "Simon041098@"; //mạc bục
-            String pass = "Simon@0410"; //máy công ty
+            String pass = "Mysql-suck"; //duc
             String url = "jdbc:mysql://127.0.0.1:3306/KRS_SWR?zeroDateTimeBehavior=CONVERT_TO_NULL";
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, pass);

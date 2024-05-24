@@ -1,6 +1,7 @@
 package dao;
 
 import entity.User;
+import entity.UserList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -49,6 +50,46 @@ public class UserDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error fetching all users", e);
         }
         return users;
+    }
+
+    public List<UserList> getAllUsersWithRole() {
+        List<UserList> usersl = new ArrayList<>();
+        String query = "SELECT u.user_id, u.user_name,u.password , u.email, u.full_name, u.phone, u.gender, u.age, u.status, s.setting_name\n"
+                + "FROM user u\n"
+                + "JOIN setting s ON s.setting_id = u.role_id;"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                UserList userl = new UserList(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getInt("age"),
+                        rs.getBoolean("status"),
+                        rs.getString("setting_name")
+                );
+//                User user = new User(
+//                        rs.getInt("user_id"),
+//                        rs.getString("user_name"),
+//                        rs.getString("password"),
+//                        rs.getString("email"),
+//                        rs.getString("full_name"),
+//                        rs.getString("phone"),
+//                        rs.getString("gender"),
+//                        rs.getInt("age"),
+//                        rs.getBoolean("status"),
+//                        rs.getInt("role_id")
+//                );
+                usersl.add(userl);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all users", e);
+        }
+        return usersl;
     }
 
     /**
@@ -102,7 +143,7 @@ public class UserDAO extends DBConnect {
         String query = "SELECT user_name, password FROM user WHERE user_name = ? AND phone = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
-            ps.setString(2, password);  
+            ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String checkAccount = rs.getString("user_name");

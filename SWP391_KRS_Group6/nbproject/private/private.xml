@@ -3,8 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/SWP/se1816-g6/se1816-g6/SWP391_KRS_Group6/nbproject/build-impl.xml</file>
-            <file>file:/D:/SWP/se1816-g6/se1816-g6/SWP391_KRS_Group6/src/java/dao/DBConnect.java</file>
+            <file>file:/D:/DH%20FPT/SWP/KRS/se1816-g6/SWP391_KRS_Group6/web/userList.jsp</file>
+            <file>file:/D:/DH%20FPT/SWP/KRS/se1816-g6/SWP391_KRS_Group6/src/java/entity/UserList.java</file>
+            <file>file:/D:/DH%20FPT/SWP/KRS/se1816-g6/SWP391_KRS_Group6/src/java/entity/User.java</file>
+            <file>file:/D:/DH%20FPT/SWP/KRS/se1816-g6/SWP391_KRS_Group6/src/java/dao/UserDAO.java</file>
+            <file>file:/D:/DH%20FPT/SWP/KRS/se1816-g6/SWP391_KRS_Group6/src/java/controller/UserListController.java</file>
         </group>
     </open-files>
 </project-private>

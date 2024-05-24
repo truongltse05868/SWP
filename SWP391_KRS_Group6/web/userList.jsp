@@ -352,7 +352,7 @@
                                             <th>Gender</th>
                                             <th>Age</th>
                                             <th>Status</th>
-                                            <th>Role ID</th>
+                                            <th>Role </th>
                                         </tr>
                                         <c:forEach var="user" items="${users}">
                                             <tr>
@@ -373,7 +373,7 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
-                                                <td>${user.role_id}</td>
+                                                <td>${user.setting_name}</td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/userProfile" method="post">
                                                         <input type="hidden" name="id" value="${user.user_id}" />

@@ -6,6 +6,7 @@ package controller;
 
 import dao.UserDAO;
 import entity.User;
+import entity.UserList;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -31,7 +32,8 @@ public class UserListController extends HttpServlet {
             // Initialize UserDAO
             UserDAO userDAO = new UserDAO();
             // Fetch list of users from the database
-            List<User> users = userDAO.getAllUsers();
+//            List<User> users = userDAO.getAllUsers();
+             List<UserList> users = userDAO.getAllUsersWithRole();
 
             // Set the list of users as a request attribute
             request.setAttribute("users", users);
