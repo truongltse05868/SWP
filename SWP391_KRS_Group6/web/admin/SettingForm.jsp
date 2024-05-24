@@ -74,7 +74,7 @@
                 <!--logo start -->
                 <div class="ttr-logo-box">
                     <div>
-                        <a href="index.html" class="ttr-logo">
+                        <a href="dashboard.html" class="ttr-logo">
                             <img alt="" class="ttr-logo-mobile" src="admin/assets/images/logo-mobile.png" width="30" height="30">
                             <img alt="" class="ttr-logo-desktop" src="admin/assets/images/logo-white.png" width="160" height="27">
                         </a>
@@ -257,7 +257,7 @@
                 <nav class="ttr-sidebar-navi">
                     <ul>
                         <li>
-                            <a href="index.html" class="ttr-material-button">
+                            <a href="dashboard.html" class="ttr-material-button">
                                 <span class="ttr-icon"><i class="ti-home"></i></span>
                                 <span class="ttr-label">Dashborad</span>
                             </a>
@@ -349,7 +349,7 @@
                 <div class="db-breadcrumb">
                     <h4 class="breadcrumb-title">Setting Details</h4>
                     <ul class="db-breadcrumb-list">
-                        <li><a href="./index.html"><i class="fa fa-home"></i>Home</a></li>
+                        <li><a href="./dashboard.html"><i class="fa fa-home"></i>Home</a></li>
                         <li>Setting Details</li>
                     </ul>
                 </div>	

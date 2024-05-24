@@ -39,7 +39,7 @@ public class UserController extends HttpServlet {
                     Cookie userCookie = new Cookie("username", username);
                     userCookie.setMaxAge(15); // 15s
                     response.addCookie(userCookie);
-                    response.sendRedirect("index.html");
+                    response.sendRedirect("/index.html");
                 } else {
                     response.sendRedirect("login.html?error=invalid_credentials");
                 }
