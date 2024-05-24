@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <display-name>KRS</display-name>
@@ -26,3 +27,25 @@
         <url-pattern>/SettingController</url-pattern>
     </servlet-mapping>
 </web-app>
+=======
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <display-name>KRS</display-name>
+    <servlet>
+        <servlet-name>UserListController</servlet-name>
+        <servlet-class>controller.UserListController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserListController</servlet-name>
+        <url-pattern>/userList</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserController</servlet-name>
+        <servlet-class>controller.UserController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserController</servlet-name>
+        <url-pattern>/userController</url-pattern>
+    </servlet-mapping>
+</web-app>
+>>>>>>> 8319e5700e1d88f201d01f6e571cf8a7d3bdad94

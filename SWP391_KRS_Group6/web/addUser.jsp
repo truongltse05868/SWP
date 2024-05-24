@@ -1,14 +1,14 @@
 <%-- 
-    Document   : userProfile
-    Created on : May 20, 2024, 2:41:19 AM
+    Document   : addUser
+    Created on : May 24, 2024, 12:14:43 AM
     Author     : simon
 --%>
 
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
-    <!-- Mirrored from educhamp.themetrades.com/demo/admin/user-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:11:35 GMT -->
+<html lang="en">
+
+    <!-- Mirrored from educhamp.themetrades.com/demo/admin/add-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:09:05 GMT -->
     <head>
 
         <!-- META ============================================= -->
@@ -59,12 +59,6 @@
 
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
-        <c:if test="${not empty successMessage}">
-            <div class="alert alert-success" role="alert">
-                ${successMessage}
-            </div>
-        </c:if>
-
 
         <!-- header start -->
         <header class="ttr-header">
@@ -184,7 +178,7 @@
                             </div>
                         </li>
                         <li>
-                            <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="admin/assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+                            <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
                             <div class="ttr-header-submenu">
                                 <ul>
                                     <li><a href="user-profile.html">My profile</a></li>
@@ -306,9 +300,9 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="userList" class="ttr-material-button">
+                            <a href="bookmark.html" class="ttr-material-button">
                                 <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
-                                <span class="ttr-label">User List</span>
+                                <span class="ttr-label">Bookmarks</span>
                             </a>
                         </li>
                         <li>
@@ -317,12 +311,12 @@
                                 <span class="ttr-label">Review</span>
                             </a>
                         </li>
-                        <li>
+<!--                        <li>
                             <a href="add-listing.html" class="ttr-material-button">
                                 <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
                                 <span class="ttr-label">Add listing</span>
                             </a>
-                        </li>
+                        </li>-->
                         <li>
                             <a href="#" class="ttr-material-button">
                                 <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -351,10 +345,10 @@
         <main class="ttr-wrapper">
             <div class="container-fluid">
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">User Profile</h4>
+                    <h4 class="breadcrumb-title">Add User</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>User Profile</li>
+                        <li>Add User</li>
                     </ul>
                 </div>	
                 <div class="row">
@@ -362,91 +356,103 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>User Profile</h4>
+                                <h4>Add listing</h4>
                             </div>
                             <div class="widget-inner">
-                                <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userController" method="post">
-                                    <input type="hidden" name="action" value="update"> 
-                                    <input type="hidden" name="id" value="${user.user_id}">
-                                    <div class="">
-                                        <div class="form-group row">
-                                            <div class="col-sm-10  ml-auto">
-                                                <h3>1. Personal Details</h3>
+                                <form class="edit-profile m-b30">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="ml-auto">
+                                                <h3>1. Basic info</h3>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Full Name</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="fullname" type="text" value="${user.full_name}">
+                                        <div class="form-group col-6">
+                                            <label class="col-form-label">Course title</label>
+                                            <div>
+                                                <input class="form-control" type="text" value="">
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">User Account</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="text" value="${user.user_name}" readonly>
+                                        <div class="form-group col-6">
+                                            <label class="col-form-label">Course title</label>
+                                            <div>
+                                                <input class="form-control" type="text" value="">
                                             </div>
                                         </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Phone No.</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="phone" type="text" value="${user.phone}">
+                                        <div class="form-group col-6">
+                                            <label class="col-form-label">Course start</label>
+                                            <div>
+                                                <input class="form-control" type="text" value="">
                                             </div>
                                         </div>
-
+                                        <div class="form-group col-6">
+                                            <label class="col-form-label">Course expire</label>
+                                            <div>
+                                                <input class="form-control" type="text" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-6">
+                                            <label class="col-form-label">Teacher name</label>
+                                            <div>
+                                                <input class="form-control" type="text" value="">
+                                            </div>
+                                        </div>
                                         <div class="seperator"></div>
 
-                                        <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-
-                                    </div>
-                                    <div class="">
-                                        <div class="">
-                                            <div class="row">
-                                                <div class="col-sm-2">
-                                                </div>
-                                                <div class="col-sm-7">
-                                                    <button type="submit" class="btn">Save changes</button>
-                                                    <button type="reset" class="btn-secondry">Cancel</button>
-                                                </div>
+                                        <div class="col-12 m-t20">
+                                            <div class="ml-auto m-b5">
+                                                <h3>2. Description</h3>
                                             </div>
                                         </div>
-                                    </div>
-                                </form>
-                                <form class="edit-profile">
-                                    <div class="">
-                                        <div class="form-group row">
-                                            <div class="col-sm-10 ml-auto">
-                                                <h3>4. Password</h3>
+                                        <div class="form-group col-12">
+                                            <label class="col-form-label">Course description</label>
+                                            <div>
+                                                <textarea class="form-control"> </textarea>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Current Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
+                                        <div class="col-12 m-t20">
+                                            <div class="ml-auto">
+                                                <h3 class="m-form__section">3. Add Item</h3>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">New Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
-                                            </div>
+                                        <div class="col-12">
+                                            <table id="item-add" style="width:100%;">
+                                                <tr class="list-item">
+                                                    <td>
+                                                        <div class="row">
+                                                            <div class="col-md-4">
+                                                                <label class="col-form-label">Course Name</label>
+                                                                <div>
+                                                                    <input class="form-control" type="text" value="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="col-form-label">Course Category</label>
+                                                                <div>
+                                                                    <input class="form-control" type="text" value="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <label class="col-form-label">Course Category</label>
+                                                                <div>
+                                                                    <input class="form-control" type="text" value="">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-2">
+                                                                <label class="col-form-label">Close</label>
+                                                                <div class="form-group">
+                                                                    <a class="delete" href="#"><i class="fa fa-close"></i></a>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            </table>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Re Type Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                        </div>
-                                        <div class="col-sm-7">
+                                        <div class="col-12">
+                                            <button type="button" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add Item</button>
                                             <button type="reset" class="btn">Save changes</button>
-                                            <button type="reset" class="btn-secondry">Cancel</button>
                                         </div>
                                     </div>
-
                                 </form>
                             </div>
                         </div>
@@ -475,8 +481,25 @@
         <script src="admin/assets/vendors/chart/chart.min.js"></script>
         <script src="admin/assets/js/admin.js"></script>
         <script src='admin/assets/vendors/switcher/switcher.js'></script>
+        <script>
+        // Pricing add
+            function newMenuItem() {
+                var newElem = $('tr.list-item').first().clone();
+                newElem.find('input').val('');
+                newElem.appendTo('table#item-add');
+            }
+            if ($("table#item-add").is('*')) {
+                $('.add-item').on('click', function (e) {
+                    e.preventDefault();
+                    newMenuItem();
+                });
+                $(document).on("click", "#item-add .delete", function (e) {
+                    e.preventDefault();
+                    $(this).parent().parent().parent().parent().remove();
+                });
+            }
+        </script>
     </body>
 
-    <!-- Mirrored from educhamp.themetrades.com/demo/admin/user-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:11:35 GMT -->
-
+    <!-- Mirrored from educhamp.themetrades.com/demo/admin/add-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:09:05 GMT -->
 </html>

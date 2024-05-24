@@ -1,5 +1,6 @@
 package dao;
 
+import entity.Role;
 import entity.User;
 import entity.UserList;
 import java.sql.PreparedStatement;
@@ -140,10 +141,9 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean loginAccount(String account, String password) {
-        String query = "SELECT user_name, password FROM user WHERE user_name = ? AND phone = ?";
+        String query = "SELECT user_name, password FROM user WHERE user_name = ? ";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
-            ps.setString(2, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String checkAccount = rs.getString("user_name");
@@ -157,6 +157,45 @@ public class UserDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error logging in user", e);
         }
         return false;
+    }
+
+    public boolean addUser(User user) {
+        String query = "INSERT INTO user (user_name, password, email, full_name, phone, gender, age, status, role_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, user.getUser_name());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getFull_name());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getGender());
+            ps.setInt(7, user.getAge());
+            ps.setBoolean(8, user.isStatus());
+            ps.setInt(9, user.getRole_id());
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error adding user", e);
+            return false;
+        }
+    }
+    public List<Role> getRoles() {
+        List<Role> roles = new ArrayList<>();
+        String query = "SELECT setting_id, setting_name FROM setting WHERE type = 'User role'";
+        try (PreparedStatement ps = connection.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                Role role = new Role(
+                        rs.getInt("setting_id"),
+                        rs.getString("setting_name")
+                );
+                roles.add(role);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching roles", e);
+        }
+        return roles;
     }
 
 }

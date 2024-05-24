@@ -302,11 +302,12 @@
                             </a>
                             <ul>
                                 <li>
-                                    <a href="add-user.html" class="ttr-material-button"><span class="ttr-label">Add User</span></a>
+                                    <a href="userController?action=addUserPage" class="ttr-material-button">
+                                        <span class="ttr-label">Add User</span>
+                                    </a>
                                 </li>
-                                <li>
-                                    <a href="edit-user.html" class="ttr-material-button"><span class="ttr-label">Edit User</span></a>
-                                </li>
+
+
                                 <li>
                                     <a href="user-profile.html" class="ttr-material-button"><span class="ttr-label">User Profile</span></a>
                                 </li>
@@ -375,11 +376,11 @@
                                                 </td>
                                                 <td>${user.setting_name}</td>
                                                 <td>
-                                                    <form action="${pageContext.request.contextPath}/userProfile" method="post">
+                                                    <form action="${pageContext.request.contextPath}/userController" method="post">
                                                         <input type="hidden" name="id" value="${user.user_id}" />
                                                         <button type="submit">Edit</button>
                                                     </form>
-                                                    
+
                                                 </td>
                                             </tr>
                                         </c:forEach>
