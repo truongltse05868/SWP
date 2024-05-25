@@ -21,11 +21,11 @@ public class DBConnect {
             // anh em sửa thành connection của mình nhé. 
             //connection của Truonglt
             String user = "root";
-            
+
 //          String pass = "Mysql-suck"; //duc
-//          String pass = "Simon041098@"; //mạc bục
-            String pass = "Simon0410@"; //maý nhà truonglt
-//          String pass = "Simon@0410"; //máy công ty
+//            String pass = "Simon041098@"; //mạc bục
+//            String pass = "Simon@0410"; //máy công ty
+            String pass = "Simon0410@";
             String url = "jdbc:mysql://127.0.0.1:3306/KRS_SWR?zeroDateTimeBehavior=CONVERT_TO_NULL";
             Class.forName("com.mysql.cj.jdbc.Driver");
             connection = DriverManager.getConnection(url, user, pass);

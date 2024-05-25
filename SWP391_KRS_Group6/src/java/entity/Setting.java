@@ -68,10 +68,5 @@ public class Setting {
     public Setting() {
     }
 
-    @Override
-    public String toString() {
-        return "Setting{" + "settingId=" + settingId + ", settingName=" + settingName + ", type=" + type + ", description=" + description + ", status=" + status + '}';
-    }
-
     
 }

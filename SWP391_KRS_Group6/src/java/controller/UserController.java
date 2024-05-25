@@ -1,9 +1,7 @@
 package controller;
 
-import dao.SettingDAO;
 import dao.UserDAO;
 import entity.Role;
-import entity.Setting;
 import entity.User;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
@@ -16,7 +14,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Vector;
 
 @WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
@@ -27,19 +24,7 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         try {
 //            HttpSession session = request.getSession();
-            SettingDAO settingDAO = new SettingDAO();
-            UserDAO userDAO = new UserDAO();
             String action = request.getParameter("action");
-            String addUser = request.getParameter("add");
-            if(addUser == null){
-                addUser = "addUserJsp";
-            }
-            if (addUser.equals("addUserJsp")) {
-                List<Setting> roles = settingDAO.getActiveUserRoles();
-                request.setAttribute("roles", roles);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("addUser.jsp");
-                dispatcher.forward(request, response);
-            }
 
             if (action != null && action.equals("update")) {
                 updateUser(request, response);
@@ -60,22 +45,22 @@ public class UserController extends HttpServlet {
 //                } else {
 //                    response.sendRedirect("login.html?error=invalid_credentials");
 //                }
-            } //            else if (action != null && action.equals("addUserPage")) {
-            //                // Hiển thị trang để thêm người dùng mới
-            //                // Truy vấn để lấy danh sách các role từ database
-            //                UserDAO roleDAO = new UserDAO();
-            //                List<Role> roles = roleDAO.getRoles();
-            //                request.setAttribute("roles", roles);
-            //                RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
-            //                dispatcher.forward(request, response);
-            //                
-            //            } else if (action != null && action.equals("addUser")) {
-            //                // Xử lý yêu cầu thêm người dùng mới
-            //                addUser(request, response);
-            //            } 
-            else if (action != null && action.equals("profile")){
-                int userId = Integer.parseInt(request.getParameter("id"));
+            } 
+            else if (action != null && action.equals("addUserPage")) {
+                // Hiển thị trang để thêm người dùng mới
+                // Truy vấn để lấy danh sách các role từ database
+                UserDAO roleDAO = new UserDAO();
+                List<Role> roles = roleDAO.getRoles();
+                request.setAttribute("roles", roles);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
+                dispatcher.forward(request, response);
                 
+            } else if (action != null && action.equals("addUser")) {
+                // Xử lý yêu cầu thêm người dùng mới
+                addUser(request, response);
+            } else {
+                int userId = Integer.parseInt(request.getParameter("id"));
+                UserDAO userDAO = new UserDAO();
                 User user = userDAO.getUserById(userId);
                 request.setAttribute("user", user);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/userProfile.jsp");

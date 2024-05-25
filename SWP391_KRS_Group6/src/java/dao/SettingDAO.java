@@ -9,8 +9,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import entity.Setting;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -150,27 +148,6 @@ public class SettingDAO extends DBConnect{
         } catch (SQLException ex) {
             Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return settings;
-    }
-    public List<Setting> getActiveUserRoles() {
-        List<Setting> settings = new ArrayList<>();
-        String sql = "SELECT * FROM setting WHERE type = 'User role'";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                settings.add(new Setting(
-                        rs.getInt("setting_id"),
-                        rs.getString("setting_name"),
-                        rs.getString("type"),
-                        rs.getString("description"),
-                        rs.getBoolean("status")
-                ));
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
         return settings;
     }
 }

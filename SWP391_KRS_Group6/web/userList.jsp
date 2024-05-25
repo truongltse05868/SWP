@@ -302,7 +302,7 @@
                             </a>
                             <ul>
                                 <li>
-                                    <a href="userController" class="ttr-material-button" >
+                                    <a href="userController?action=addUserPage" class="ttr-material-button">
                                         <span class="ttr-label">Add User</span>
                                     </a>
                                 </li>
@@ -376,8 +376,7 @@
                                                 </td>
                                                 <td>${user.setting_name}</td>
                                                 <td>
-                                                    <form action="userController" method="post">
-                                                        <input type="hidden" name="action" value="profile"> 
+                                                    <form action="${pageContext.request.contextPath}/userController" method="post">
                                                         <input type="hidden" name="id" value="${user.user_id}" />
                                                         <button type="submit">Edit</button>
                                                     </form>
