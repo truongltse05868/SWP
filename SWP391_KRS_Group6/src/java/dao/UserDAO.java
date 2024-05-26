@@ -127,11 +127,19 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean updateUser(User user) {
-        String query = "UPDATE user SET full_name=?, phone=? WHERE user_id=?";
+        String query = "UPDATE user SET user_name = ?, password = ?, email = ?, "
+                + "full_name = ?, phone = ?, gender = ?, age = ?, status = ?, role_id = ? WHERE user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, user.getFull_name());
-            ps.setString(2, user.getPhone());
-            ps.setInt(3, user.getUser_id());
+            ps.setString(1, user.getUser_name());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getEmail());
+            ps.setString(4, user.getFull_name());
+            ps.setString(5, user.getPhone());
+            ps.setString(6, user.getGender());
+            ps.setInt(7, user.getAge());
+            ps.setBoolean(8, user.isStatus());
+            ps.setInt(9, user.getRole_id());
+            ps.setInt(10, user.getUser_id());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {

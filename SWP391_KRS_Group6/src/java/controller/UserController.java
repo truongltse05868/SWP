@@ -98,13 +98,15 @@ public class UserController extends HttpServlet {
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
             int age = Integer.parseInt(request.getParameter("age"));
-            boolean status = request.getParameter("status") != null;
+            String statusParam = request.getParameter("status");
+            boolean status = (statusParam != null && statusParam.equals("on"));
             int roleId = Integer.parseInt(request.getParameter("roleId"));
 
             UserDAO userDAO = new UserDAO();
             User user = userDAO.getUserById(userId);
 
             if (user != null) {
+
                 user.setUser_name(userName);
                 user.setPassword(password);
                 user.setEmail(email);
