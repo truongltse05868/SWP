@@ -55,7 +55,6 @@ public class UserController extends HttpServlet {
                 dispatcher.forward(request, response);
 
             } else if (action != null && action.equals("addUser")) {
-
                 // Xử lý yêu cầu thêm người dùng mới
                 addUser(request, response);
             } else {
@@ -94,7 +93,7 @@ public class UserController extends HttpServlet {
             String userName = request.getParameter("userName");
             String password = request.getParameter("password");
             String email = request.getParameter("email");
-            String fullName = request.getParameter("fullname");
+            String fullName = request.getParameter("fullName");
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
             int age = Integer.parseInt(request.getParameter("age"));

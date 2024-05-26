@@ -302,7 +302,7 @@
                             </a>
                             <ul>
                                 <li>
-                                    <a href="userController?action=addUser" class="ttr-material-button">
+                                    <a href="userController?action=addUserPage" class="ttr-material-button">
                                         <span class="ttr-label">Add User</span>
                                     </a>
                                 </li>
