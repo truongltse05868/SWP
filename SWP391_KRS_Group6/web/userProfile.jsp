@@ -395,7 +395,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Full Name</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" name="fullname" type="text" value="${user.full_name}">
+                                                <input class="form-control" name="fullName" type="text" value="${user.full_name}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -419,7 +419,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"  name="status" type="checkbox" ${setting.status ? 'checked' : ''}>
+                                                <input class="form-control"  name="status" type="checkbox" ${user.status ? 'checked' : ''}>
                                             </div>
                                         </div>
                                         <div class="form-group row">
