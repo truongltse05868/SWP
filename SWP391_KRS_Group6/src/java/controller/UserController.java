@@ -45,8 +45,7 @@ public class UserController extends HttpServlet {
 //                } else {
 //                    response.sendRedirect("login.html?error=invalid_credentials");
 //                }
-            } 
-            else if (action != null && action.equals("addUserPage")) {
+            } else if (action != null && action.equals("addUserPage")) {
                 // Hiển thị trang để thêm người dùng mới
                 // Truy vấn để lấy danh sách các role từ database
                 UserDAO roleDAO = new UserDAO();
@@ -54,8 +53,9 @@ public class UserController extends HttpServlet {
                 request.setAttribute("roles", roles);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
                 dispatcher.forward(request, response);
-                
+
             } else if (action != null && action.equals("addUser")) {
+
                 // Xử lý yêu cầu thêm người dùng mới
                 addUser(request, response);
             } else {
@@ -91,15 +91,29 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         try {
             int userId = Integer.parseInt(request.getParameter("id"));
-            String fullname = request.getParameter("fullname");
+            String userName = request.getParameter("userName");
+            String password = request.getParameter("password");
+            String email = request.getParameter("email");
+            String fullName = request.getParameter("fullName");
             String phone = request.getParameter("phone");
+            String gender = request.getParameter("gender");
+            int age = Integer.parseInt(request.getParameter("age"));
+            boolean status = request.getParameter("status") != null;
+            int roleId = Integer.parseInt(request.getParameter("roleId"));
 
             UserDAO userDAO = new UserDAO();
             User user = userDAO.getUserById(userId);
 
             if (user != null) {
-                user.setFull_name(fullname);
+                user.setUser_name(userName);
+                user.setPassword(password);
+                user.setEmail(email);
+                user.setFull_name(fullName);
                 user.setPhone(phone);
+                user.setGender(gender);
+                user.setAge(age);
+                user.setStatus(status);
+                user.setRole_id(roleId);
                 boolean isUpdated = userDAO.updateUser(user);
 
                 if (isUpdated) {

@@ -375,22 +375,57 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">User Name</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" name="userName" type="text" value="${user.user_name}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Password</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" name="password" type="password" value="${user.password}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" name="email" type="email" value="${user.email}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Full Name</label>
                                             <div class="col-sm-7">
                                                 <input class="form-control" name="fullname" type="text" value="${user.full_name}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">User Account</label>
+                                            <label class="col-sm-2 col-form-label">Phone</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" type="text" value="${user.user_name}" readonly>
+                                                <input class="form-control" name="phone" type="tel" value="${user.phone}">
                                             </div>
                                         </div>
-
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Phone No.</label>
+                                            <label class="col-sm-2 col-form-label">Gender</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" name="phone" type="text" value="${user.phone}">
+                                                <input class="form-control" name="gender" type="text" value="${user.gender}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Age</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" name="age" type="number" value="${user.age}">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Status</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control"  name="status" type="checkbox" ${setting.status ? 'checked' : ''}>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Role Id</label>
+                                            <div class="col-sm-7">
+                                                <input class="form-control" name="roleId" type="number" value="${user.role_id}">
                                             </div>
                                         </div>
 
