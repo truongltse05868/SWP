@@ -174,17 +174,23 @@ public class UserDAO extends DBConnect {
             ps.setInt(9, user.getRole_id());
 
             int rowsAffected = ps.executeUpdate();
-            return rowsAffected > 0;
+            if (rowsAffected > 0) {
+                logger.log(Level.INFO, "User added successfully");
+                return true;
+            } else {
+                logger.log(Level.WARNING, "No rows affected");
+                return false;
+            }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error adding user", e);
             return false;
         }
     }
+
     public List<Role> getRoles() {
         List<Role> roles = new ArrayList<>();
         String query = "SELECT setting_id, setting_name FROM setting WHERE type = 'User role'";
-        try (PreparedStatement ps = connection.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 Role role = new Role(
                         rs.getInt("setting_id"),

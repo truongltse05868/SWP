@@ -412,7 +412,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"  name="status" type="checkbox" ${setting.status ? 'checked' : ''}>
+                                                <input class="form-control"  name="status" type="checkbox" ${user.status ? 'checked' : ''}>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -424,7 +424,7 @@
 
                                         <div class="col-12">
                                             <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
-                                            <button type="reset" class="btn">Save changes</button>
+                                            <button type="reset" class="btn">Reset</button>
                                         </div>
                                     </div>
                                 </form>

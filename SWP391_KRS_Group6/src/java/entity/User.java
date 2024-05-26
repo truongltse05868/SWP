@@ -112,7 +112,7 @@ public class User {
     public String toString() {
         return "User{" + "user_id=" + user_id + ", user_name=" + user_name + ", password=" + password + ", email=" + email + ", full_name=" + full_name + ", phone=" + phone + ", gender=" + gender + ", age=" + age + ", status=" + status + ", role_id=" + role_id + '}';
     }
-
+    
     
     public User()
     {

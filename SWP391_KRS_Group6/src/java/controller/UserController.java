@@ -94,7 +94,7 @@ public class UserController extends HttpServlet {
             String userName = request.getParameter("userName");
             String password = request.getParameter("password");
             String email = request.getParameter("email");
-            String fullName = request.getParameter("fullName");
+            String fullName = request.getParameter("fullname");
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
             int age = Integer.parseInt(request.getParameter("age"));
@@ -156,7 +156,7 @@ public class UserController extends HttpServlet {
             String userName = request.getParameter("userName");
             String password = request.getParameter("password");
             String email = request.getParameter("email");
-            String fullName = request.getParameter("fullName");
+            String fullName = request.getParameter("fullname");
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
             int age = Integer.parseInt(request.getParameter("age"));
