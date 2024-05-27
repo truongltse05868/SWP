@@ -432,9 +432,9 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Role</label>
                                             <div class="col-sm-2">
-                                                <select class="form-control" name="roleId">
+                                                <select class="form-control" name="roleId" id="roleSelect">
                                                     <c:forEach var="role" items="${roles}">
-                                                        <option value="${role.settingId}" ${role.settingName == user.setting_name ? 'selected' : ''}>${role.settingName}</option>
+                                                        <option value="${role.settingId}" <c:if test="${role.settingName == user.setting_name}">selected</c:if>>${role.settingName}</option>
                                                     </c:forEach>
                                                 </select>
                                             </div>
@@ -521,6 +521,7 @@
         <script src="admin/assets/vendors/chart/chart.min.js"></script>
         <script src="admin/assets/js/admin.js"></script>
         <script src='admin/assets/vendors/switcher/switcher.js'></script>
+        
     </body>
 
     <!-- Mirrored from educhamp.themetrades.com/demo/admin/user-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:11:35 GMT -->
