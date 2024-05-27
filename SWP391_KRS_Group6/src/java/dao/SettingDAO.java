@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import entity.Setting;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,8 +19,8 @@ import java.util.logging.Logger;
  *
  * @author HuyPC
  */
-public class SettingDAO extends DBConnect{
-    
+public class SettingDAO extends DBConnect {
+
     // Create
     public boolean addSetting(Setting setting) {
         String sql = "INSERT INTO setting (setting_name, type, description, status) VALUES (?, ?, ?, ?)";
@@ -147,6 +149,28 @@ public class SettingDAO extends DBConnect{
             }
         } catch (SQLException ex) {
             Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return settings;
+    }
+
+    //truonglt add getallrole
+    public List<Setting> getAllRole() {
+        List<Setting> settings = new ArrayList<>();
+        String query = "SELECT * FROM krs_swr.setting where type = 'User role';"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                settings.add(new Setting(
+                        rs.getInt("setting_id"),
+                        rs.getString("setting_name"),
+                        rs.getString("type"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                ));
+
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return settings;
     }

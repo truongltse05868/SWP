@@ -1,8 +1,11 @@
 package controller;
 
+import dao.SettingDAO;
 import dao.UserDAO;
 import entity.Role;
+import entity.Setting;
 import entity.User;
+import entity.UserList;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -28,40 +31,32 @@ public class UserController extends HttpServlet {
 
             if (action != null && action.equals("update")) {
                 updateUser(request, response);
-//            } else if (action != null && action.equals("loginPage")) {
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("/login.jsp");
-//                dispatcher.forward(request, response);
-//            } else if (action != null && action.equals("login")) {
-//
-//                String username = request.getParameter("username");
-//                String password = request.getParameter("password");
-//
-//                if (loginAccount(username, password)) {
-//                    session.setAttribute("account", user);
-//                    Cookie userCookie = new Cookie("username", username);
-//                    userCookie.setMaxAge(15); // 15s
-//                    response.addCookie(userCookie);
-//                    response.sendRedirect("index.html");
-//                } else {
-//                    response.sendRedirect("login.html?error=invalid_credentials");
-//                }
-            } else if (action != null && action.equals("addUserPage")) {
-                // Hiển thị trang để thêm người dùng mới
-                // Truy vấn để lấy danh sách các role từ database
-                UserDAO roleDAO = new UserDAO();
-                List<Role> roles = roleDAO.getRoles();
-                request.setAttribute("roles", roles);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
-                dispatcher.forward(request, response);
-
-            } else if (action != null && action.equals("addUser")) {
+            } //            else if (action != null && action.equals("addUserPage")) {
+            //                // Hiển thị trang để thêm người dùng mới
+            //                // Truy vấn để lấy danh sách các role từ database
+            ////                UserDAO roleDAO = new UserDAO();
+            ////                List<Role> roles = roleDAO.getRoles();
+            ////                request.setAttribute("roles", roles);
+            //                SettingDAO settingDAO = new SettingDAO();
+            //                
+            //                List<Setting> roles = settingDAO.getAllRole();
+            //                
+            //                request.setAttribute("roles", roles);
+            //                RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
+            //                dispatcher.forward(request, response);
+            //
+            //            } 
+            else if (action != null && action.equals("addUser")) {
                 // Xử lý yêu cầu thêm người dùng mới
                 addUser(request, response);
             } else {
                 int userId = Integer.parseInt(request.getParameter("id"));
                 UserDAO userDAO = new UserDAO();
-                User user = userDAO.getUserById(userId);
+                SettingDAO settingDAO = new SettingDAO();
+                UserList user = userDAO.getUsersWithRole(userId);
+                List<Setting> roles = settingDAO.getAllRole();
                 request.setAttribute("user", user);
+                request.setAttribute("roles", roles);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("/userProfile.jsp");
                 dispatcher.forward(request, response);
             }
@@ -181,6 +176,19 @@ public class UserController extends HttpServlet {
             boolean isSuccess = userDAO.addUser(user);
 
             // Chuyển hướng về trang addUser.jsp với thông báo kết quả
+            SettingDAO settingDAO = new SettingDAO();
+            List<Setting> roles = settingDAO.getAllRole();
+            request.setAttribute("roles", roles);
+            request.setAttribute("user_name", userName);
+            request.setAttribute("password", password);
+            request.setAttribute("email", email);
+            request.setAttribute("full_name", fullName);
+            request.setAttribute("phone", phone);
+            request.setAttribute("gender", gender);
+            request.setAttribute("age", age);
+            request.setAttribute("status", status);
+            request.setAttribute("roleId", roleId);
+            //
             if (isSuccess) {
                 request.setAttribute("successMessage", "User added successfully.");
             } else {

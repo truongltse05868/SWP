@@ -31,8 +31,6 @@ public class UserListController extends HttpServlet {
         try {
             // Initialize UserDAO
             UserDAO userDAO = new UserDAO();
-            // Fetch list of users from the database
-//            List<User> users = userDAO.getAllUsers();
              List<UserList> users = userDAO.getAllUsersWithRole();
 
             // Set the list of users as a request attribute

@@ -73,18 +73,6 @@ public class UserDAO extends DBConnect {
                         rs.getBoolean("status"),
                         rs.getString("setting_name")
                 );
-//                User user = new User(
-//                        rs.getInt("user_id"),
-//                        rs.getString("user_name"),
-//                        rs.getString("password"),
-//                        rs.getString("email"),
-//                        rs.getString("full_name"),
-//                        rs.getString("phone"),
-//                        rs.getString("gender"),
-//                        rs.getInt("age"),
-//                        rs.getBoolean("status"),
-//                        rs.getInt("role_id")
-//                );
                 usersl.add(userl);
             }
         } catch (SQLException e) {
@@ -93,6 +81,43 @@ public class UserDAO extends DBConnect {
         return usersl;
     }
 
+   public UserList getUsersWithRole(int userId) {
+        UserList usersl = null;
+        String query = "SELECT u.user_id, u.user_name,u.password , u.email, u.full_name, u.phone, u.gender, u.age, u.status, s.setting_name FROM user u JOIN setting s ON s.setting_id = u.role_id WHERE u.user_id = ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    usersl = new UserList(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getInt("age"),
+                            rs.getBoolean("status"),
+                            rs.getString("setting_name")
+                    );
+                }
+            } catch (SQLException e) {
+                logger.log(Level.SEVERE, "Error processing ResultSet", e);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error preparing/executing query: " + query, e);
+        }
+
+        return usersl;
+    }
+
+    /**
+     * Fetches a user by ID from the database.
+     *
+     * @param userId the ID of the user to fetch
+     * @return a User object, or null if not found
+     */
     /**
      * Fetches a user by ID from the database.
      *

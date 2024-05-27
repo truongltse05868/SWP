@@ -4,7 +4,8 @@
     Author     : simon
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -361,66 +362,72 @@
                             <div class="widget-inner">
                                  <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userController" method="post">
                                     <input type="hidden" name="action" value="addUser"> 
-                                    <div class="row">
-                                        <div class="col-12">
-                                            <div class="ml-auto">
-                                                <h3>1. Basic info</h3>
+                                    <div class="">
+                                        <div class="form-group row">
+                                            <div class="col-sm-10  ml-auto">
+                                                <h3>User Info</h3>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">User Name</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="userName" type="text" value="${user.user_name}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="userName" type="text" value="${user_name}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="password" type="password" value="${user.password}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="password" type="password" value="${password}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Email</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="email" type="email" value="${user.email}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="email" type="email" value="${email}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Full Name</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="fullname" type="text" value="${user.full_name}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="fullname" type="text" value="${full_name}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Phone</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="phone" type="tel" value="${user.phone}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="phone" type="tel" value="${phone}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Gender</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="gender" type="text" value="${user.gender}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="gender" type="text" value="${gender}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Age</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="age" type="number" value="${user.age}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="age" type="number" value="${age}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control"  name="status" type="checkbox" ${user.status ? 'checked' : ''}>
+                                            <div class="col-sm-1">
+                                                <input class="form-control"  name="status" type="checkbox" ${status ? 'checked' : ''}>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Role Id</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="roleId" type="number" value="${user.role_id}">
+
+                                            <label class="col-sm-2 col-form-label">Role</label>
+                                            <div class="col-sm-2">
+                                                <select class="form-control" name="roleId">
+                                                    <c:forEach var="role" items="${roles}">
+                                                        <option value="${role.settingId}"<c:if test="${role.settingId == roleId}">selected</c:if>>${role.settingName}</option>
+                                                    </c:forEach>
+                                                </select>
                                             </div>
                                         </div>
+                                        
 
                                         <div class="col-12">
                                             <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add User</button>

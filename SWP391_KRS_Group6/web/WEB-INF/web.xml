@@ -21,6 +21,10 @@
         <servlet-name>Home</servlet-name>
         <servlet-class>controller.Home</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>addUserController</servlet-name>
+        <servlet-class>controller.addUserController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserListController</servlet-name>
         <url-pattern>/userList</url-pattern>
@@ -48,5 +52,9 @@
     <servlet-mapping>
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>addUserController</servlet-name>
+        <url-pattern>/addUserController</url-pattern>
     </servlet-mapping>
 </web-app>

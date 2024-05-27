@@ -374,6 +374,7 @@
                                                 <h3>1. Personal Details</h3>
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">User Name</label>
                                             <div class="col-sm-7">
@@ -422,10 +423,20 @@
                                                 <input class="form-control"  name="status" type="checkbox" ${user.status ? 'checked' : ''}>
                                             </div>
                                         </div>
+                                        <!--                                        <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">Role</label>
+                                                                                    <div class="col-sm-7">
+                                                                                        <input class="form-control" name="roleId" type="text" value="${user.setting_name}">
+                                                                                    </div>
+                                                                                </div>-->
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Role Id</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="roleId" type="number" value="${user.role_id}">
+                                            <label class="col-sm-2 col-form-label">Role</label>
+                                            <div class="col-sm-2">
+                                                <select class="form-control" name="roleId">
+                                                    <c:forEach var="role" items="${roles}">
+                                                        <option value="${role.settingId}" ${role.settingName == user.setting_name ? 'selected' : ''}>${role.settingName}</option>
+                                                    </c:forEach>
+                                                </select>
                                             </div>
                                         </div>
 
