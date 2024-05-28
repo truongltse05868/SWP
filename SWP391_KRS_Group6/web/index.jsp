@@ -64,6 +64,27 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
     <link rel="stylesheet" type="text/css" href="assets/vendors/revolution/css/settings.css">
     <link rel="stylesheet" type="text/css" href="assets/vendors/revolution/css/navigation.css">
     <!-- REVOLUTION SLIDER END -->
+     <script>
+        function sendPostRequest(action) {
+            // Tạo form ẩn
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", "userController");
+            
+            // Tạo input ẩn cho action
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "action");
+            hiddenField.setAttribute("value", action);
+            
+            // Thêm input ẩn vào form
+            form.appendChild(hiddenField);
+            
+            // Thêm form vào body và submit
+            document.body.appendChild(form);
+            form.submit();
+        }
+    </script>
 
 </head>
 <body id="bg">
@@ -94,12 +115,12 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                     <li><a id="registerLink" href="register.html">Register</a></li>
                                     </c:if>
                                     <c:if test="${sessionScope['account'].getRole_id() != null}">
-                                     <li> <a href="contact.html">Hello, ${sessionScope.account.full_name} </a></li>
-                                     <li><a id="logoutLink" href="Logout" >Logout</a></li>
+                                    <li> <a href="contact.html">Hello, ${sessionScope.account.full_name} </a></li>
+                                    <li><a id="logoutLink" href="Logout" >Logout</a></li>
                                     </c:if>
-                                
 
-                               
+
+
 
                             </ul>
                         </div>
@@ -187,7 +208,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                     <li><a href="admin/add-listing.html">Add Listing</a></li>
                                     <li><a href="admin/bookmark.html">Bookmark</a></li>
                                     <li><a href="SettingController">Setting List</a></li>
-                                    <li><a href="userList">User List</a></li>
+                                    <li><a href="userController">User List</a></li>
+                                    <!--<li><a href="#" onclick="submitForm('userListForm')">User List</a></li>-->
+                                    <!--                                    <form id="userListForm" action="userController" method="" style="display: none;">
+                                                                            <input type="hidden" name="action" value="userList">
+                                                                        </form>
+                                                                        <script>
+                                                                            function submitForm(formId) {
+                                                                                document.getElementById(formId).submit();
+                                                                            }
+                                                                        </script>-->
                                     <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
                                         <ul class="sub-menu">
                                             <li><a href="admin/basic-calendar.html">Basic Calendar</a></li>
@@ -323,7 +353,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                         <li><a href="admin/add-listing.html">Add Listing</a></li>
                                         <li><a href="admin/bookmark.html">Bookmark</a></li>
                                         <li><a href="SettingController">Setting List</a></li>
-                                        <li><a href="userList">User List</a></li>
+                                        <!--<li><a href="userController?action=userList">User List</a></li>-->
+<!--                                        <li>
+                                            <form action="userController" method="post" style="display:inline;">
+                                                <input type="hidden" name="action" value="userList">
+                                                <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer;">User List</button>
+                                            </form>
+                                        </li>-->
+                                        <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
                                         <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
                                             <ul class="sub-menu">
                                                 <li><a href="admin/basic-calendar.html">Basic Calendar</a></li>

@@ -30,15 +30,15 @@ public class UserListController extends HttpServlet {
             throws ServletException, IOException {
         try {
             // Initialize UserDAO
-            UserDAO userDAO = new UserDAO();
-             List<UserList> users = userDAO.getAllUsersWithRole();
-
-            // Set the list of users as a request attribute
-            request.setAttribute("users", users);
-
-            // Forward the request to the JSP page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/userList.jsp");
-            dispatcher.forward(request, response);
+//            UserDAO userDAO = new UserDAO();
+//             List<UserList> users = userDAO.getAllUsersWithRole();
+//
+//            // Set the list of users as a request attribute
+//            request.setAttribute("users", users);
+//
+//            // Forward the request to the JSP page
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("/userList.jsp");
+//            dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error processing user list request", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing your request.");

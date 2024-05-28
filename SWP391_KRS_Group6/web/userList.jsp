@@ -365,7 +365,7 @@
                                                 <td>${user.phone}</td>
                                                 <td>${user.gender}</td>
                                                 <td>${user.age}</td>
-                                                
+
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${user.status}">
@@ -376,7 +376,20 @@
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </td>
-                                                <td>${user.setting_name}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${not empty roles}">
+                                                            <c:forEach var="role" items="${roles}">
+                                                                <c:if test="${role.settingId == user.role_id}">
+                                                                    ${role.settingName}
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Role information is unavailable.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/userController" method="post">
                                                         <input type="hidden" name="id" value="${user.user_id}" />
@@ -407,7 +420,7 @@
                 <div class="footer-inner">
                     <div class="footer-item">
                         <div class="footer-title">About Us</div>
-                        <p class="footer-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis varius nisl eget enim varius, a luctus velit facilisis.</p>
+                        <!--<p class="footer-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis varius nisl eget enim varius, a luctus velit facilisis.</p>-->
                     </div>
                     <div class="footer-item">
                         <div class="footer-title">Quick Links</div>

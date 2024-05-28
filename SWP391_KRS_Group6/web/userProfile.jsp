@@ -56,7 +56,27 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <script>
+            function sendPostRequest(action) {
+                // Tạo form ẩn
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "userController");
 
+                // Tạo input ẩn cho action
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "action");
+                hiddenField.setAttribute("value", action);
+
+                // Thêm input ẩn vào form
+                form.appendChild(hiddenField);
+
+                // Thêm form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+        </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
         <c:if test="${not empty successMessage}">
@@ -306,9 +326,10 @@
                             </ul>
                         </li>
                         <li>
-                            <a href="userList" class="ttr-material-button">
-                                <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
-                                <span class="ttr-label">User List</span>
+                            
+                            <a href="userList" onclick="sendPostRequest('userList'); return false;" class="ttr-material-button" >
+                            <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
+                            <span class="ttr-label">User List</span>
                             </a>
                         </li>
                         <li>
@@ -521,7 +542,7 @@
         <script src="admin/assets/vendors/chart/chart.min.js"></script>
         <script src="admin/assets/js/admin.js"></script>
         <script src='admin/assets/vendors/switcher/switcher.js'></script>
-        
+
     </body>
 
     <!-- Mirrored from educhamp.themetrades.com/demo/admin/user-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:11:35 GMT -->
