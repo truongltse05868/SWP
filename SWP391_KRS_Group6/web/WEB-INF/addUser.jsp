@@ -1,14 +1,15 @@
 <%-- 
-    Document   : userProfile
-    Created on : May 20, 2024, 2:41:19 AM
+    Document   : addUser
+    Created on : May 24, 2024, 12:14:43 AM
     Author     : simon
 --%>
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
-    <!-- Mirrored from educhamp.themetrades.com/demo/admin/user-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:11:35 GMT -->
+<html lang="en">
+
+    <!-- Mirrored from educhamp.themetrades.com/demo/admin/add-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:09:05 GMT -->
     <head>
 
         <!-- META ============================================= -->
@@ -76,16 +77,17 @@
                 document.body.appendChild(form);
                 form.submit();
             }
+            function showAlert(message) {
+                alert(message);
+            }
         </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
         <c:if test="${not empty successMessage}">
-            <div class="alert alert-success" role="alert">
-                ${successMessage}
-            </div>
+            <script>
+                showAlert('${successMessage}');
+            </script>
         </c:if>
-
-
         <!-- header start -->
         <header class="ttr-header">
             <div class="ttr-header-wrapper">
@@ -204,7 +206,7 @@
                             </div>
                         </li>
                         <li>
-                            <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="admin/assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+                            <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
                             <div class="ttr-header-submenu">
                                 <ul>
                                     <li><a href="user-profile.html">My profile</a></li>
@@ -333,17 +335,23 @@
                             </a>
                         </li>
                         <li>
+                            <a href="bookmark.html" class="ttr-material-button">
+                                <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
+                                <span class="ttr-label">Bookmarks</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="review.html" class="ttr-material-button">
                                 <span class="ttr-icon"><i class="ti-comments"></i></span>
                                 <span class="ttr-label">Review</span>
                             </a>
                         </li>
-                        <li>
-                            <a href="add-listing.html" class="ttr-material-button">
-                                <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
-                                <span class="ttr-label">Add listing</span>
-                            </a>
-                        </li>
+                        <!--                        <li>
+                                                    <a href="add-listing.html" class="ttr-material-button">
+                                                        <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
+                                                        <span class="ttr-label">Add listing</span>
+                                                    </a>
+                                                </li>-->
                         <li>
                             <a href="#" class="ttr-material-button">
                                 <span class="ttr-icon"><i class="ti-user"></i></span>
@@ -372,10 +380,10 @@
         <main class="ttr-wrapper">
             <div class="container-fluid">
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">User Profile</h4>
+                    <h4 class="breadcrumb-title">Add User</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>User Profile</li>
+                        <li>Add User</li>
                     </ul>
                 </div>	
                 <div class="row">
@@ -383,136 +391,87 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>User Profile</h4>
+                                <h4>Add User</h4>
                             </div>
                             <div class="widget-inner">
                                 <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userController" method="post">
-                                    <input type="hidden" name="action" value="update"> 
-                                    <input type="hidden" name="id" value="${user.user_id}">
+                                    <input type="hidden" name="action" value="addUser"> 
                                     <div class="">
                                         <div class="form-group row">
                                             <div class="col-sm-10  ml-auto">
-                                                <h3>1. Personal Details</h3>
+                                                <h3>User Info</h3>
                                             </div>
                                         </div>
-
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">User Name</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="userName" type="text" value="${user.user_name}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="userName" type="text" value="${user_name}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="password" type="password" value="${user.password}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="password" type="password" value="${password}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Email</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="email" type="email" value="${user.email}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="email" type="email" value="${email}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Full Name</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="fullName" type="text" value="${user.full_name}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="fullname" type="text" value="${full_name}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Phone</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="phone" type="tel" value="${user.phone}">
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="phone" type="tel" value="${phone}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Gender</label>
                                             <div class="col-sm-4">
                                                 <select class="form-control" name="gender">
-                                                    <option value="Male" <c:if test="${user.gender == 'Male'}">selected</c:if>>Male</option>
-                                                    <option value="Female" <c:if test="${user.gender == 'Female'}">selected</c:if>>Female</option>
-                                                    <option value="Other" <c:if test="${user.gender == 'Other'}">selected</c:if>>Other</option>
-
+                                                    <option value="Male" <c:if test="${gender == 'Male'}">selected</c:if>>Male</option>
+                                                    <option value="Female" <c:if test="${gender == 'Female'}">selected</c:if>>Female</option>
+                                                    <option value="Other" <c:if test="${gender == 'Other'}">selected</c:if>>Other</option>
                                                     </select>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">Age</label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" name="age" type="number" value="${user.age}">
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" name="age" type="number" value="${age}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control"  name="status" type="checkbox" ${user.status ? 'checked' : ''}>
+                                            <div class="col-sm-1">
+                                                <input class="form-control"  name="status" type="checkbox" ${status ? 'checked' : ''}>
                                             </div>
                                         </div>
                                         <div class="form-group row">
+
                                             <label class="col-sm-2 col-form-label">Role</label>
                                             <div class="col-sm-2">
-                                                <select class="form-control" name="roleId" id="roleSelect">
+                                                <select class="form-control" name="roleId">
                                                     <c:forEach var="role" items="${roles}">
-                                                        <option value="${role.settingId}" <c:if test="${role.settingId == user.role_id}">selected</c:if>>${role.settingName}</option>
+                                                        <option value="${role.settingId}"<c:if test="${role.settingId == roleId}">selected</c:if>>${role.settingName}</option>
                                                     </c:forEach>
                                                 </select>
                                             </div>
                                         </div>
 
-                                        <div class="seperator"></div>
 
-                                        <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-
-                                    </div>
-                                    <div class="">
-                                        <div class="">
-                                            <div class="row">
-                                                <div class="col-sm-2">
-                                                </div>
-                                                <div class="col-sm-7">
-                                                    <button type="submit" class="btn">Save changes</button>
-                                                    <button type="reset" class="btn-secondry">Cancel</button>
-                                                </div>
-                                            </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
+                                            <button type="reset" class="btn">Reset</button>
                                         </div>
                                     </div>
-                                </form>
-                                <form class="edit-profile">
-                                    <div class="">
-                                        <div class="form-group row">
-                                            <div class="col-sm-10 ml-auto">
-                                                <h3>4. Password</h3>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Current Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">New Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Re Type Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-sm-2">
-                                        </div>
-                                        <div class="col-sm-7">
-                                            <button type="reset" class="btn">Save changes</button>
-                                            <button type="reset" class="btn-secondry">Cancel</button>
-                                        </div>
-                                    </div>
-
                                 </form>
                             </div>
                         </div>
@@ -541,9 +500,25 @@
         <script src="admin/assets/vendors/chart/chart.min.js"></script>
         <script src="admin/assets/js/admin.js"></script>
         <script src='admin/assets/vendors/switcher/switcher.js'></script>
-
+        <script>
+                                // Pricing add
+                                function newMenuItem() {
+                                    var newElem = $('tr.list-item').first().clone();
+                                    newElem.find('input').val('');
+                                    newElem.appendTo('table#item-add');
+                                }
+                                if ($("table#item-add").is('*')) {
+                                    $('.add-item').on('click', function (e) {
+                                        e.preventDefault();
+                                        newMenuItem();
+                                    });
+                                    $(document).on("click", "#item-add .delete", function (e) {
+                                        e.preventDefault();
+                                        $(this).parent().parent().parent().parent().remove();
+                                    });
+                                }
+        </script>
     </body>
 
-    <!-- Mirrored from educhamp.themetrades.com/demo/admin/user-profile.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:11:35 GMT -->
-
+    <!-- Mirrored from educhamp.themetrades.com/demo/admin/add-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:09:05 GMT -->
 </html>

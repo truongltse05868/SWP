@@ -109,7 +109,7 @@ public class UserController extends HttpServlet {
             List<Setting> roles = settingDAO.getAllRole();
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/userProfile.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list user", e);
@@ -125,7 +125,7 @@ public class UserController extends HttpServlet {
             List<Setting> roles = settingDAO.getAllRole();
 
             request.setAttribute("roles", roles);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/addUser.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get add user page", e);
@@ -144,7 +144,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("users", users);
             request.setAttribute("roles", roles);
             // Forward the request to the JSP page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("/userList.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list user", e);
@@ -156,7 +156,7 @@ public class UserController extends HttpServlet {
         try {
             int userId = Integer.parseInt(request.getParameter("id"));
             String userName = request.getParameter("userName");
-            String password = request.getParameter("password");
+//            String password = request.getParameter("password");
             String email = request.getParameter("email");
             String fullName = request.getParameter("fullName");
             String phone = request.getParameter("phone");
@@ -172,7 +172,7 @@ public class UserController extends HttpServlet {
             if (user != null) {
 
                 user.setUser_name(userName);
-                user.setPassword(password);
+//                user.setPassword(password);
                 user.setEmail(email);
                 user.setFull_name(fullName);
                 user.setPhone(phone);
@@ -182,12 +182,17 @@ public class UserController extends HttpServlet {
                 user.setRole_id(roleId);
                 boolean isUpdated = userDAO.updateUser(user);
 
-                if (isUpdated) {
-                    request.setAttribute("successMessage", "Lưu thành công.");
-                } else {
-                    request.setAttribute("successMessage", "Lưu thành công.");
-                }
-                response.sendRedirect(request.getContextPath() + "/userController?id=" + userId);
+                String message = isUpdated ? "Lưu thành công." : "Cập nhật không thành công.";
+                request.setAttribute("successMessage", message);
+//                response.sendRedirect(request.getContextPath() + "/userController?id=" + userId);
+                // save xong lấy các thông tin vừa lưu để đẩy về jsp(vẫn giữ nguyên data của page không có mất hết data khi call jsp)
+                // call cách khác thì truyền id vào không bảo mật tí nào
+                SettingDAO settingDAO = new SettingDAO();
+                List<Setting> roles = settingDAO.getAllRole();
+                request.setAttribute("user", user);
+                request.setAttribute("roles", roles);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+                dispatcher.forward(request, response);
 
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
@@ -244,7 +249,8 @@ public class UserController extends HttpServlet {
             // Thêm người dùng vào cơ sở dữ liệu
             UserDAO userDAO = new UserDAO();
             boolean isSuccess = userDAO.addUser(user);
-
+            String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
+            request.setAttribute("successMessage", message);
             // Chuyển hướng về trang addUser.jsp với thông báo kết quả
             SettingDAO settingDAO = new SettingDAO();
             List<Setting> roles = settingDAO.getAllRole();
@@ -259,16 +265,11 @@ public class UserController extends HttpServlet {
             request.setAttribute("status", status);
             request.setAttribute("roleId", roleId);
             //
-            if (isSuccess) {
-                request.setAttribute("successMessage", "User added successfully.");
-            } else {
-                request.setAttribute("errorMessage", "Failed to add user.");
-            }
-            request.getRequestDispatcher("/addUser.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
         } catch (Exception e) {
             // Xử lý ngoại lệ nếu có
             request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-            request.getRequestDispatcher("/addUser.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
         }
     }
 

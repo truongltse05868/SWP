@@ -73,7 +73,7 @@ public class SettingController extends HttpServlet {
                 request.setAttribute("setting", setting);
 
                 // Forward the request to the JSP page
-                RequestDispatcher dispatcher = request.getRequestDispatcher("admin/SettingDisplay.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/SettingDisplay.jsp");
                 dispatcher.forward(request, response);
 
             }
@@ -108,7 +108,7 @@ public class SettingController extends HttpServlet {
                     Setting setting = dao.getSettingById(pid);
                     request.setAttribute("setting", setting);
 
-                    dispath(request, response, "/admin/SettingForm.jsp");
+                    dispath(request, response, "WEB-INF/SettingForm.jsp");
                 } else {
                     String settingId = request.getParameter("setting_id");
                     String settingName = request.getParameter("setting_name");
