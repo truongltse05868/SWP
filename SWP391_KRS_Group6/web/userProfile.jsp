@@ -326,10 +326,10 @@
                             </ul>
                         </li>
                         <li>
-                            
+
                             <a href="userList" onclick="sendPostRequest('userList'); return false;" class="ttr-material-button" >
-                            <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
-                            <span class="ttr-label">User List</span>
+                                <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
+                                <span class="ttr-label">User List</span>
                             </a>
                         </li>
                         <li>
@@ -428,14 +428,19 @@
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Gender</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="gender" type="text" value="${user.gender}">
+                                            <div class="col-sm-4">
+                                                <select class="form-control" name="gender">
+                                                    <option value="Male" <c:if test="${user.gender == 'Male'}">selected</c:if>>Male</option>
+                                                    <option value="Female" <c:if test="${user.gender == 'Female'}">selected</c:if>>Female</option>
+                                                    <option value="Other" <c:if test="${user.gender == 'Other'}">selected</c:if>>Other</option>
+
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Age</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="age" type="number" value="${user.age}">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Age</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control" name="age" type="number" value="${user.age}">
                                             </div>
                                         </div>
                                         <div class="form-group row">

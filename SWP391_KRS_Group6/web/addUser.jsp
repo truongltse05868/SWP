@@ -57,7 +57,27 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <script>
+            function sendPostRequest(action) {
+                // Tạo form ẩn
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "userController");
 
+                // Tạo input ẩn cho action
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "action");
+                hiddenField.setAttribute("value", action);
+
+                // Thêm input ẩn vào form
+                form.appendChild(hiddenField);
+
+                // Thêm form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+        </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
@@ -301,6 +321,13 @@
                             </ul>
                         </li>
                         <li>
+
+                            <a href="userList" onclick="sendPostRequest('userList'); return false;" class="ttr-material-button" >
+                                <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
+                                <span class="ttr-label">User List</span>
+                            </a>
+                        </li>
+                        <li>
                             <a href="bookmark.html" class="ttr-material-button">
                                 <span class="ttr-icon"><i class="ti-bookmark-alt"></i></span>
                                 <span class="ttr-label">Bookmarks</span>
@@ -360,7 +387,7 @@
                                 <h4>Add User</h4>
                             </div>
                             <div class="widget-inner">
-                                 <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userController" method="post">
+                                <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userController" method="post">
                                     <input type="hidden" name="action" value="addUser"> 
                                     <div class="">
                                         <div class="form-group row">
@@ -401,13 +428,17 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Gender</label>
                                             <div class="col-sm-4">
-                                                <input class="form-control" name="gender" type="text" value="${gender}">
+                                                <select class="form-control" name="gender">
+                                                    <option value="Male" <c:if test="${gender == 'Male'}">selected</c:if>>Male</option>
+                                                    <option value="Female" <c:if test="${gender == 'Female'}">selected</c:if>>Female</option>
+                                                    <option value="Other" <c:if test="${gender == 'Other'}">selected</c:if>>Other</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Age</label>
-                                            <div class="col-sm-4">
-                                                <input class="form-control" name="age" type="number" value="${age}">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Age</label>
+                                                <div class="col-sm-4">
+                                                    <input class="form-control" name="age" type="number" value="${age}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -427,7 +458,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        
+
 
                                         <div class="col-12">
                                             <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
@@ -463,22 +494,22 @@
         <script src="admin/assets/js/admin.js"></script>
         <script src='admin/assets/vendors/switcher/switcher.js'></script>
         <script>
-            // Pricing add
-            function newMenuItem() {
-                var newElem = $('tr.list-item').first().clone();
-                newElem.find('input').val('');
-                newElem.appendTo('table#item-add');
-            }
-            if ($("table#item-add").is('*')) {
-                $('.add-item').on('click', function (e) {
-                    e.preventDefault();
-                    newMenuItem();
-                });
-                $(document).on("click", "#item-add .delete", function (e) {
-                    e.preventDefault();
-                    $(this).parent().parent().parent().parent().remove();
-                });
-            }
+                                // Pricing add
+                                function newMenuItem() {
+                                    var newElem = $('tr.list-item').first().clone();
+                                    newElem.find('input').val('');
+                                    newElem.appendTo('table#item-add');
+                                }
+                                if ($("table#item-add").is('*')) {
+                                    $('.add-item').on('click', function (e) {
+                                        e.preventDefault();
+                                        newMenuItem();
+                                    });
+                                    $(document).on("click", "#item-add .delete", function (e) {
+                                        e.preventDefault();
+                                        $(this).parent().parent().parent().parent().remove();
+                                    });
+                                }
         </script>
     </body>
 
