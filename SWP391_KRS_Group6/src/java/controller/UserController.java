@@ -2,17 +2,13 @@ package controller;
 
 import dao.SettingDAO;
 import dao.UserDAO;
-import entity.Role;
 import entity.Setting;
 import entity.User;
-import entity.UserList;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,9 +16,9 @@ import java.util.List;
 
 //@WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
-    
+
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
-    
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -65,7 +61,9 @@ public class UserController extends HttpServlet {
                 action = "default";
             }
             switch (action) {
-                
+                case "addUserPage":
+                    addUserPage(request, response);
+                    break;
                 case "addUser":
                     // Xử lý yêu cầu thêm người dùng mới
                     addUser(request, response);
@@ -88,26 +86,26 @@ public class UserController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing your request.");
         }
     }
-    
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     private void getUserProfle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             int userId = Integer.parseInt(request.getParameter("id"));
             UserDAO userDAO = new UserDAO();
             SettingDAO settingDAO = new SettingDAO();
-            UserList user = userDAO.getUsersWithRole(userId);
+            User user = userDAO.getUserById(userId);
             List<Setting> roles = settingDAO.getAllRole();
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
@@ -116,6 +114,21 @@ public class UserController extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list user", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list user.");
+        }
+    }
+
+    private void addUserPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            SettingDAO settingDAO = new SettingDAO();
+
+            List<Setting> roles = settingDAO.getAllRole();
+
+            request.setAttribute("roles", roles);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get add user page", e);
         }
     }
 
@@ -137,7 +150,7 @@ public class UserController extends HttpServlet {
             logger.log(Level.SEVERE, "Error get list user", e);
         }
     }
-    
+
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -152,12 +165,12 @@ public class UserController extends HttpServlet {
             String statusParam = request.getParameter("status");
             boolean status = (statusParam != null && statusParam.equals("on"));
             int roleId = Integer.parseInt(request.getParameter("roleId"));
-            
+
             UserDAO userDAO = new UserDAO();
             User user = userDAO.getUserById(userId);
-            
+
             if (user != null) {
-                
+
                 user.setUser_name(userName);
                 user.setPassword(password);
                 user.setEmail(email);
@@ -168,14 +181,14 @@ public class UserController extends HttpServlet {
                 user.setStatus(status);
                 user.setRole_id(roleId);
                 boolean isUpdated = userDAO.updateUser(user);
-                
+
                 if (isUpdated) {
                     request.setAttribute("successMessage", "Lưu thành công.");
                 } else {
                     request.setAttribute("successMessage", "Lưu thành công.");
                 }
                 response.sendRedirect(request.getContextPath() + "/userController?id=" + userId);
-                
+
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
             }
@@ -187,21 +200,21 @@ public class UserController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
         }
     }
-    
+
     private boolean loginAccount(String username, String password)
             throws ServletException, IOException {
         try {
-            
+
             UserDAO userDAO = new UserDAO();
             boolean user = userDAO.loginAccount(username, password);
-            
+
             return user != false;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating user", e);
         }
         return false;
     }
-    
+
     private void addUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -258,10 +271,10 @@ public class UserController extends HttpServlet {
             request.getRequestDispatcher("/addUser.jsp").forward(request, response);
         }
     }
-    
+
     @Override
     public String getServletInfo() {
         return "Short description";
     }
-    
+
 }

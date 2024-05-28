@@ -55,7 +55,27 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <script>
+            function sendPostRequest(action) {
+                // Tạo form ẩn
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "userController");
 
+                // Tạo input ẩn cho action
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "action");
+                hiddenField.setAttribute("value", action);
+
+                // Thêm input ẩn vào form
+                form.appendChild(hiddenField);
+
+                // Thêm form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+        </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
@@ -301,12 +321,17 @@
                                 <span class="ttr-arrow-icon"><i class="fa fa-angle-right"></i></span>
                             </a>
                             <ul>
+                                <!--                                <li>
+                                                                    <a href="addUserController" class="ttr-material-button">
+                                                                        <span class="ttr-label">Add User</span>
+                                                                    </a>
+                                                                </li>-->
                                 <li>
-                                    <a href="addUserController" class="ttr-material-button">
-                                        <span class="ttr-label">Add User</span>
+                                    <a href="AddUser" class="ttr-material-button" onclick="sendPostRequest('addUserPage'); return false;">
+                                        <span class="ttr-label">Add User
+                                        </span>
                                     </a>
                                 </li>
-
 
                                 <li>
                                     <a href="user-profile.html" class="ttr-material-button"><span class="ttr-label">User Profile</span></a>
@@ -345,7 +370,7 @@
                                 <c:if test="${not empty users}">
                                     <table >
                                         <tr>
-                                            <th>ID</th>
+<!--                                            <th>ID</th>-->
                                             <th>Username</th>
                                             <th>Email</th>
                                             <th>Full Name</th>
@@ -358,7 +383,7 @@
                                         </tr>
                                         <c:forEach var="user" items="${users}">
                                             <tr>
-                                                <td>${user.user_id}</td>
+                                                
                                                 <td>${user.user_name}</td>
                                                 <td>${user.email}</td>
                                                 <td>${user.full_name}</td>
