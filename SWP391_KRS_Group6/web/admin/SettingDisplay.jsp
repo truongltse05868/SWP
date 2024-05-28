@@ -368,7 +368,7 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                     <a href="SettingController?service=updateSetting&pid=${setting.settingId}">update</button>
+                                                     <a class="btn btn-primary btn-sm" href="SettingController?service=updateSetting&pid=${setting.settingId}">update</button>
                                                 </td>
                                             </tr>
                                         </c:forEach>

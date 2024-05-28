@@ -343,7 +343,7 @@
                         <div class="widget-box">
                             <div class="widget-inner">
                                 <c:if test="${not empty users}">
-                                    <table>
+                                    <table >
                                         <tr>
                                             <th>ID</th>
                                             <th>Username</th>
@@ -354,6 +354,7 @@
                                             <th>Age</th>
                                             <th>Status</th>
                                             <th>Role </th>
+                                            <th>Update</th>
                                         </tr>
                                         <c:forEach var="user" items="${users}">
                                             <tr>
@@ -364,6 +365,7 @@
                                                 <td>${user.phone}</td>
                                                 <td>${user.gender}</td>
                                                 <td>${user.age}</td>
+                                                
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${user.status}">
@@ -378,7 +380,7 @@
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/userController" method="post">
                                                         <input type="hidden" name="id" value="${user.user_id}" />
-                                                        <button type="submit">Edit</button>
+                                                        <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                                                     </form>
 
                                                 </td>
