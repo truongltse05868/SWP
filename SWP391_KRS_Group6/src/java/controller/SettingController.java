@@ -18,7 +18,6 @@ import java.sql.ResultSet;
 import java.util.Vector;
 import dao.SettingDAO;
 
-@WebServlet(name = "SettingController", urlPatterns = {"/SettingURL"})
 public class SettingController extends HttpServlet {
 
     /**
