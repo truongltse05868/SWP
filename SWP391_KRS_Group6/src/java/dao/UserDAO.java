@@ -82,8 +82,8 @@ public class UserDAO extends DBConnect {
     public boolean saveOtpToDatabase(String email, String otp) {
         String query = "UPDATE user SET otp = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, email);
-            ps.setString(2, otp);
+            ps.setString(1, otp);
+            ps.setString(2, email);
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -199,21 +199,25 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
+     public boolean updatePassOTP(String password, String email, String otp) {
+        String query = "UPDATE user SET password = ? WHERE email = ? AND otp = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, password );
+            ps.setString(2, email);
+            ps.setString(3, otp);
+            int rowsAffected = ps.executeUpdate();
+            // Kiểm tra số hàng bị ảnh hưởng
+            if (rowsAffected > 0) {
+                logger.log(Level.INFO, "Password updated successfully for email: {0}", email);
+            } else {
+                logger.log(Level.WARNING, "No rows updated. Check if email: {0} and otp: {1} are correct.", new Object[]{email, otp});
+            }
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error otp", e);
+            return false;
+        }
+    }
 
-//    public List<Role> getRoles() {
-//        List<Role> roles = new ArrayList<>();
-//        String query = "SELECT setting_id, setting_name FROM setting WHERE type = 'User role'";
-//        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-//            while (rs.next()) {
-//                Role role = new Role(
-//                        rs.getInt("setting_id"),
-//                        rs.getString("setting_name")
-//                );
-//                roles.add(role);
-//            }
-//        } catch (SQLException e) {
-//            logger.log(Level.SEVERE, "Error fetching roles", e);
-//        }
-//        return roles;
-//    }
+
 }
