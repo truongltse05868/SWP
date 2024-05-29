@@ -476,13 +476,15 @@
                                                 </div>
                                                 <div class="col-sm-7">
                                                     <button type="submit" class="btn">Save changes</button>
-                                                    <button type="reset" class="btn-secondry">Cancel</button>
+                                                    <button type="button" onclick="sendPostRequest('userList'); return false;" class="btn-secondry">Back</button>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </form>
-                                <form class="edit-profile">
+                                <form class="edit-profile" action="${pageContext.request.contextPath}/userController" method="post">
+                                    <input type="hidden" name="action" value="changePassAdmin"> 
+                                    <input type="hidden" name="id" value="${user.user_id}">
                                     <div class="">
                                         <div class="form-group row">
                                             <div class="col-sm-10 ml-auto">
@@ -498,13 +500,13 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">New Password</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
+                                                <input class="form-control" type="password" name="password" value="">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Re Type Password</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
+                                                <input class="form-control" type="password" name="repassword" value="">
                                             </div>
                                         </div>
                                     </div>
@@ -512,8 +514,8 @@
                                         <div class="col-sm-2">
                                         </div>
                                         <div class="col-sm-7">
-                                            <button type="reset" class="btn">Save changes</button>
-                                            <button type="reset" class="btn-secondry">Cancel</button>
+                                            <button type="submit" class="btn">Save changes</button>
+                                            <button type="button" onclick="sendPostRequest('userList'); return false;" class="btn-secondry">Back</button>
                                         </div>
                                     </div>
 
