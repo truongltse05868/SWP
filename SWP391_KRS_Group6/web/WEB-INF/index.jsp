@@ -113,11 +113,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                 <c:if test="${sessionScope['account'].getRole_id() == null}">
                                     <li><a id="loginLink" href="Login" >Login</a></li>
                                     <li><a id="registerLink" href="register.html">Register</a></li>
+                                    <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequest('forgotPassPage'); return false;">ForgotPassword</a></li>
                                     </c:if>
                                     <c:if test="${sessionScope['account'].getRole_id() != null}">
                                     <li> <a href="contact.html">Hello, ${sessionScope.account.full_name} </a></li>
                                     <li><a id="logoutLink" href="Logout" >Logout</a></li>
                                     </c:if>
+                                    
 
 
 

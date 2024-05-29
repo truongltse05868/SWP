@@ -77,6 +77,9 @@ public class UserController extends HttpServlet {
                 case "changePassAdmin":
                     changePassAdmin(request, response);
                     break;
+                case "forgotPassPage":
+                    forgotPassPage(request, response);
+                    break;
                 default:
                     getUserProfle(request, response);
                     break;
@@ -235,7 +238,7 @@ public class UserController extends HttpServlet {
                     request.setAttribute("roles", roles);
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
                     dispatcher.forward(request, response);
-                }else{
+                } else {
                     message = "Mật khẩu không khớp";
                     request.setAttribute("successMessage", message);
                 }
@@ -317,6 +320,29 @@ public class UserController extends HttpServlet {
             request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
         }
+    }
+
+    private void forgotPassPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+
+            request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+        }
+
+    }
+        private void forgotPass(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            
+            request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+        }
+
     }
 
     @Override
