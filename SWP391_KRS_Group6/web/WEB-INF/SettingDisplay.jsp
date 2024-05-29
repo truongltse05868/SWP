@@ -368,7 +368,12 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                     <a class="btn btn-primary btn-sm" href="SettingController?service=updateSetting&pid=${setting.settingId}">update</button>
+                                                    <form method="post" action="SettingController" style="display:inline;">
+                                                        <input type="hidden" name="service" value="updateSetting">
+                                                        <input type="hidden" name="pid" value="${setting.settingId}">
+                                                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                                    </form>
+
                                                 </td>
                                             </tr>
                                         </c:forEach>
