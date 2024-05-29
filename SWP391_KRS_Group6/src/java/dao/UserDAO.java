@@ -51,7 +51,7 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-<<<<<<< HEAD
+
 
     public List<User> checkLogin(String account, String password) {
 
@@ -72,7 +72,8 @@ public class UserDAO extends DBConnect {
                             rs.getString("gender"),
                             rs.getInt("age"),
                             rs.getBoolean("status"),
-                            rs.getInt("role_id")
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
                     );
                     users.add(user);
                 }
@@ -141,8 +142,6 @@ public class UserDAO extends DBConnect {
 //
 //        return usersl;
 //    }
-=======
->>>>>>> 706b06503444c854b25e3dc30f0a57c62473cae9
 
     public List<User> getAllUserActive() {
         List<User> users = new ArrayList<>();
