@@ -406,12 +406,12 @@
                                                 <input class="form-control" name="userName" type="text" value="${user.user_name}">
                                             </div>
                                         </div>
-<!--                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" name="password" type="password" value="${user.password}">
-                                            </div>
-                                        </div>-->
+                                        <!--                                        <div class="form-group row">
+                                                                                    <label class="col-sm-2 col-form-label">Password</label>
+                                                                                    <div class="col-sm-7">
+                                                                                        <input class="form-control" name="password" type="password" value="${user.password}">
+                                                                                    </div>
+                                                                                </div>-->
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-7">
@@ -491,35 +491,77 @@
                                                 <h3>2. Password</h3>
                                             </div>
                                         </div>
-<!--                                        <div class="form-group row">
+                                        <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Current Password</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" type="password" value="">
-                                            </div>
-                                        </div>-->
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">New Password</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control" type="password" name="password" value="">
+                                                <div class="input-group">
+                                                    <input class="form-control" name="currentPassword" type="password" required>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Re Type Password</label>
+                                            <label class="col-sm-2 col-form-label">New Password</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" type="password" name="repassword" value="">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="password" name="newPassword" required>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Re-type New Password</label>
+                                            <div class="col-sm-7">
+                                                <div class="input-group">
+                                                    <input class="form-control" type="password" name="reNewPassword" required>
+                                                    <div class="input-group-append">
+                                                        <button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-sm-2">
-                                        </div>
+                                        <div class="col-sm-2"></div>
                                         <div class="col-sm-7">
                                             <button type="submit" class="btn">Save changes</button>
-                                            <button type="button" onclick="sendPostRequest('userList'); return false;" class="btn-secondry">Back</button>
+                                            <button type="button" onclick="sendPostRequest('userList'); return false;" class="btn btn-secondary">Back</button>
                                         </div>
                                     </div>
-
                                 </form>
+
+                                <script>
+                                    document.querySelectorAll('.toggle-password').forEach(button => {
+                                        button.addEventListener('click', () => {
+                                            const input = button.closest('.input-group').querySelector('input');
+                                            const icon = button.querySelector('i');
+                                            if (input.type === 'password') {
+                                                input.type = 'text';
+                                                icon.classList.remove('fa-eye');
+                                                icon.classList.add('fa-eye-slash');
+                                            } else {
+                                                input.type = 'password';
+                                                icon.classList.remove('fa-eye-slash');
+                                                icon.classList.add('fa-eye');
+                                            }
+                                        });
+                                    });
+
+                                    document.querySelector('form').addEventListener('submit', function (e) {
+                                        const newPassword = document.querySelector('input[name="newPassword"]').value;
+                                        const reNewPassword = document.querySelector('input[name="reNewPassword"]').value;
+
+                                        if (newPassword !== reNewPassword) {
+                                            e.preventDefault();
+                                            alert('New passwords do not match.');
+                                        }
+                                    });
+                                </script>
+
                             </div>
                         </div>
                     </div>

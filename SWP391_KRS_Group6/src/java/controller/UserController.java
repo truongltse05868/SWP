@@ -178,47 +178,54 @@ public class UserController extends HttpServlet {
     }
 
     private void changePassAdmin(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            int userId = Integer.parseInt(request.getParameter("id"));
-            String password = request.getParameter("password");
-            String repassword = request.getParameter("repassword");
-            String message = "";
-            UserDAO userDAO = new UserDAO();
-            User user = userDAO.getUserById(userId);
+        throws ServletException, IOException {
+    try {
+        int userId = Integer.parseInt(request.getParameter("id"));
+        String currentPassword = request.getParameter("currentPassword");
+        String newPassword = request.getParameter("newPassword");
+        String reNewPassword = request.getParameter("reNewPassword");
+        String message = "";
 
-            if (user != null) {
-                if (password.equals(repassword)) {
-                    user.setPassword(password);
-                    boolean isUpdated = userDAO.updateUser(user);
+        UserDAO userDAO = new UserDAO();
+        User user = userDAO.getUserById(userId);
 
-                    message = isUpdated ? "Cập nhật mật khẩu thành công." : "Cập nhật mật khẩu không thành công.";
-                    request.setAttribute("successMessage", message);
-//                response.sendRedirect(request.getContextPath() + "/userController?id=" + userId);
-                    // save xong lấy các thông tin vừa lưu để đẩy về jsp(vẫn giữ nguyên data của page không có mất hết data khi call jsp)
-                    // call cách khác thì truyền id vào không bảo mật tí nào
-                    SettingDAO settingDAO = new SettingDAO();
-                    List<Setting> roles = settingDAO.getAllRole();
-                    request.setAttribute("user", user);
-                    request.setAttribute("roles", roles);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
-                    dispatcher.forward(request, response);
-                } else {
-                    message = "Mật khẩu không khớp";
-                    request.setAttribute("successMessage", message);
-                }
-
+        if (user != null) {
+            if (!user.getPassword().equals(currentPassword)) {
+                message = "Current password is incorrect.";
+                request.setAttribute("errorMessage", message);
+            } else if (!newPassword.equals(reNewPassword)) {
+                message = "New passwords do not match.";
+                request.setAttribute("errorMessage", message);
             } else {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+                user.setPassword(newPassword);
+                boolean isUpdated = userDAO.updateUser(user);
+
+                message = isUpdated ? "Password updated successfully." : "Password update failed.";
+                request.setAttribute("successMessage", message);
+
+                SettingDAO settingDAO = new SettingDAO();
+                List<Setting> roles = settingDAO.getAllRole();
+                request.setAttribute("user", user);
+                request.setAttribute("roles", roles);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+                dispatcher.forward(request, response);
+                return;
             }
-        } catch (NumberFormatException e) {
-            logger.log(Level.SEVERE, "Invalid user ID format", e);
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error updating user", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
+        } else {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
         }
+    } catch (NumberFormatException e) {
+        logger.log(Level.SEVERE, "Invalid user ID format", e);
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
+    } catch (Exception e) {
+        logger.log(Level.SEVERE, "Error updating user", e);
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
     }
+
+    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+    dispatcher.forward(request, response);
+}
+
 
     private boolean loginAccount(String username, String password)
             throws ServletException, IOException {
