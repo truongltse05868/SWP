@@ -50,6 +50,36 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
+
+    public List<User> checkLogin(String account, String password) {
+
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE `user_name` = ? and `password` = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, account);
+            ps.setString(2, password);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getInt("age"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id")
+                    );
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Email or password wrong!", e);
+        }
+        return users;
+    }
 //
 //    public List<UserList> getAllUsersWithRole() {
 //        List<UserList> usersl = new ArrayList<>();
@@ -172,7 +202,7 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean loginAccount(String account, String password) {
-        String query = "SELECT user_name, password FROM user WHERE user_name = ? ";
+        String query = "SELECT * FROM user WHERE `user_name` = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
             try (ResultSet rs = ps.executeQuery()) {
@@ -234,5 +264,4 @@ public class UserDAO extends DBConnect {
 //        }
 //        return roles;
 //    }
-
 }

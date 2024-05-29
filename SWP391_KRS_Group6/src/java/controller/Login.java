@@ -72,20 +72,17 @@ public class Login extends HttpServlet {
             String username = request.getParameter("username");
             String pass = request.getParameter("password");
             UserDAO udao = new UserDAO();
-            List<User> userList = udao.getAllUsers();
+            List<User> userList = udao.checkLogin(username, pass);
             String mess = "Email or password wrong!";
-            for (User user : userList) {
-                if (user.getUser_name().equals(username) && user.getPassword().equals(pass)) {
-                    session.setAttribute("account", user);
-                    mess = "ok";
-                }
-            }
-            if (mess.equals("ok")) {
+          
+            if (userList != null) {
+                User user = userList.get(0); // Assuming that checkLogin returns a list with one user if credentials are correct
+                session.setAttribute("account", user);
                 response.sendRedirect("Home");
                 return;
             } else {
                 request.setAttribute("mess", mess);
-                request.getRequestDispatcher("login.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
         }
