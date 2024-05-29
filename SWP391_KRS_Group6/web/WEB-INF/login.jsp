@@ -12,6 +12,8 @@
 
 
     <head>
+        
+        
 
         <!-- META ============================================= -->
         <meta charset="utf-8">
@@ -57,7 +59,29 @@
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
 
+        <script>
+                function sendPostRequestForPass(action) {
+            // Tạo form ẩn
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", "ForgotPasswordController");
+            
+            // Tạo input ẩn cho action
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "action");
+            hiddenField.setAttribute("value", action);
+            
+            // Thêm input ẩn vào form
+            form.appendChild(hiddenField);
+            
+            // Thêm form vào body và submit
+            document.body.appendChild(form);
+            form.submit();
+        }
+        </script>
     </head>
+    
     <body id="bg">
         <div class="page-wraper">
             <div id="loading-icon-bx"></div>
@@ -96,7 +120,7 @@
                                             <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
                                             <label class="custom-control-label" for="customControlAutosizing">Remember me</label>
                                         </div>
-                                        <a href="forget-password.html" class="ml-auto">Forgot Password?</a>
+                                        <a class="ml-auto" id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage'); return false;">ForgotPassword</a>
                                     </div>
                                 </div>
                                 <div class="col-lg-12 m-b30">
