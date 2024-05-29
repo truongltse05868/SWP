@@ -4,6 +4,7 @@ package entity;
  * User entity represents a user in the system.
  */
 public class User {
+
     private int user_id;
     private String user_name;
     private String password;
@@ -14,8 +15,9 @@ public class User {
     private int age;
     private boolean status;
     private int role_id;
+    private String otp;
 
-    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, int age, boolean status, int role_id) {
+    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, int age, boolean status, int role_id, String otp) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.password = password;
@@ -26,6 +28,15 @@ public class User {
         this.age = age;
         this.status = status;
         this.role_id = role_id;
+        this.otp = otp;
+    }
+
+    public String getOtp() {
+        return otp;
+    }
+
+    public void setOtp(String otp) {
+        this.otp = otp;
     }
 
     public int getUser_id() {
@@ -112,10 +123,8 @@ public class User {
     public String toString() {
         return "User{" + "user_id=" + user_id + ", user_name=" + user_name + ", password=" + password + ", email=" + email + ", full_name=" + full_name + ", phone=" + phone + ", gender=" + gender + ", age=" + age + ", status=" + status + ", role_id=" + role_id + '}';
     }
-    
-    
-    public User()
-    {
-        
+
+    public User() {
+
     }
 }

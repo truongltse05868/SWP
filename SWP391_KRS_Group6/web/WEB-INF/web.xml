@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
     <display-name>KRS</display-name>
-<!--    <servlet>
+    <!--    <servlet>
         <servlet-name>UserListController</servlet-name>
         <servlet-class>controller.UserListController</servlet-class>
     </servlet>-->
@@ -21,17 +21,21 @@
         <servlet-name>Home</servlet-name>
         <servlet-class>controller.Home</servlet-class>
     </servlet>
-<!--    <servlet>
+    <!--    <servlet>
         <servlet-name>addUserController</servlet-name>
         <servlet-class>controller.addUserController</servlet-class>
     </servlet>-->
-<!--    <servlet-mapping>
+    <!--    <servlet-mapping>
         <servlet-name>UserListController</servlet-name>
         <url-pattern>/userList</url-pattern>
     </servlet-mapping>-->
     <servlet>
         <servlet-name>UserController</servlet-name>
         <servlet-class>controller.UserController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <servlet-class>controller.ForgotPasswordController</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserController</servlet-name>
@@ -53,8 +57,12 @@
         <servlet-name>Home</servlet-name>
         <url-pattern>/Home</url-pattern>
     </servlet-mapping>
-<!--    <servlet-mapping>
+    <!--    <servlet-mapping>
         <servlet-name>addUserController</servlet-name>
         <url-pattern>/addUserController</url-pattern>
     </servlet-mapping>-->
+    <servlet-mapping>
+        <servlet-name>ForgotPasswordController</servlet-name>
+        <url-pattern>/ForgotPasswordController</url-pattern>
+    </servlet-mapping>
 </web-app>

@@ -24,38 +24,6 @@ public class UserController extends HttpServlet {
         try {
 //            HttpSession session = request.getSession();
             String action = request.getParameter("action");
-
-//            if (action != null && action.equals("update")) {
-//                updateUser(request, response);
-//            } //            else if (action != null && action.equals("addUserPage")) {
-//            //                // Hiển thị trang để thêm người dùng mới
-//            //                // Truy vấn để lấy danh sách các role từ database
-//            ////                UserDAO roleDAO = new UserDAO();
-//            ////                List<Role> roles = roleDAO.getRoles();
-//            ////                request.setAttribute("roles", roles);
-//            //                SettingDAO settingDAO = new SettingDAO();
-//            //                
-//            //                List<Setting> roles = settingDAO.getAllRole();
-//            //                
-//            //                request.setAttribute("roles", roles);
-//            //                RequestDispatcher dispatcher = request.getRequestDispatcher("/addUser.jsp");
-//            //                dispatcher.forward(request, response);
-//            //
-//            //            } 
-//            else if (action != null && action.equals("addUser")) {
-//                // Xử lý yêu cầu thêm người dùng mới
-//                addUser(request, response);
-//            } else {
-//                int userId = Integer.parseInt(request.getParameter("id"));
-//                UserDAO userDAO = new UserDAO();
-//                SettingDAO settingDAO = new SettingDAO();
-//                UserList user = userDAO.getUsersWithRole(userId);
-//                List<Setting> roles = settingDAO.getAllRole();
-//                request.setAttribute("user", user);
-//                request.setAttribute("roles", roles);
-//                RequestDispatcher dispatcher = request.getRequestDispatcher("/userProfile.jsp");
-//                dispatcher.forward(request, response);
-//            }
             //truonglt update gộp controller
             if (action == null) {
                 action = "default";
@@ -235,7 +203,7 @@ public class UserController extends HttpServlet {
                     request.setAttribute("roles", roles);
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
                     dispatcher.forward(request, response);
-                }else{
+                } else {
                     message = "Mật khẩu không khớp";
                     request.setAttribute("successMessage", message);
                 }
@@ -318,6 +286,7 @@ public class UserController extends HttpServlet {
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
         }
     }
+
 
     @Override
     public String getServletInfo() {
