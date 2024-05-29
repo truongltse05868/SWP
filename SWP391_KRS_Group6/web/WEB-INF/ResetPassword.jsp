@@ -53,7 +53,7 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-        <style>
+<!--        <style>
             .hidden {
                 display: none;
             }
@@ -63,7 +63,7 @@
                 document.getElementById("emailForm").classList.add("hidden");
                 document.getElementById("otpForm").classList.remove("hidden");
             }
-        </script>
+        </script>-->
     </head>
     <body id="bg">
         <div class="page-wraper">
@@ -79,7 +79,8 @@
                             <p>Login Your Account <a href="login.html">Click here</a></p>
                         </div>
                         <div id="emailForm">
-                            <form class="contact-bx">
+                            <form class="contact-bx" action="${pageContext.request.contextPath}/ForgotPasswordController" method="post">
+                                <input type="hidden" name="action" value="checkEmail"> 
                                 <div class="row placeani">
                                     <div class="col-lg-12">
                                         <div class="form-group">
@@ -98,7 +99,8 @@
                             <p id="message">${message}</p>
                         </div>
                         <div id="otpForm" class="hidden">
-                            <form action="resetPassword" method="post">
+                            <form class="contact-bx" action="${pageContext.request.contextPath}/ForgotPasswordController" method="post">
+                                <input type="hidden" name="action" value="renewpass"> 
                                 <input type="hidden" name="email" value="${email}" class="form-control">
                                 <label for="otp">OTP:</label>
                                 <input type="text" id="otp" name="otp" required class="form-control">

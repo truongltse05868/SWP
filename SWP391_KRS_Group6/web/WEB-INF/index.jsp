@@ -84,6 +84,25 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             document.body.appendChild(form);
             form.submit();
         }
+        function sendPostRequestForPass(action) {
+            // Tạo form ẩn
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", "ForgotPasswordController");
+            
+            // Tạo input ẩn cho action
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "action");
+            hiddenField.setAttribute("value", action);
+            
+            // Thêm input ẩn vào form
+            form.appendChild(hiddenField);
+            
+            // Thêm form vào body và submit
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 
 </head>
@@ -113,7 +132,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                 <c:if test="${sessionScope['account'].getRole_id() == null}">
                                     <li><a id="loginLink" href="Login" >Login</a></li>
                                     <li><a id="registerLink" href="register.html">Register</a></li>
-                                    <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequest('forgotPassPage'); return false;">ForgotPassword</a></li>
+                                    <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage'); return false;">ForgotPassword</a></li>
                                     </c:if>
                                     <c:if test="${sessionScope['account'].getRole_id() != null}">
                                     <li> <a href="contact.html">Hello, ${sessionScope.account.full_name} </a></li>

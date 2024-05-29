@@ -1,33 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
-//import jakarta.servlet.RequestDispatcher;
-//import jakarta.servlet.ServletException;
-//import jakarta.servlet.http.HttpServlet;
-//import jakarta.servlet.http.HttpServletRequest;
-//import jakarta.servlet.http.HttpServletResponse;
-//import jakarta.websocket.Session;
+
 import dao.UserDAO;
 import entity.User;
-import java.io.PrintWriter;
-//import java.net.PasswordAuthentication;
-//import jdk.internal.net.http.websocket.Transport;
-import javax.mail.*;
-import javax.mail.internet.*;
-import java.util.Properties;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Properties;
 import java.util.UUID;
-import javax.servlet.RequestDispatcher;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 /**
  *
@@ -44,20 +37,28 @@ public class ForgotPasswordController extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    private static final Logger logger = Logger.getLogger(UserController.class.getName());
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet ForgotPasswordController</title>");
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet ForgotPasswordController at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
+        try {
+            String action = request.getParameter("action");
+            if (action == null) {
+                action = "default";
+            }
+            switch (action) {
+                case "forgotPassPage":
+                    forgotPassPage(request, response);
+                    break;
+                case "checkEmail":
+                    checkMail(request, response);
+                    break;
+                default:
+//                    getUserProfle(request, response);
+                    break;
+            }
+        } catch (Exception e) {
+
         }
     }
 
@@ -87,30 +88,66 @@ public class ForgotPasswordController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String email = request.getParameter("email");
+        processRequest(request, response);
+    }
 
-        // Kiểm tra email có tồn tại trong database
-        boolean emailExists = checkEmailExists(email);
+    private void checkMail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
 
-        if (emailExists) {
-            // Tạo mã OTP và lưu vào database
-            String otp = generateOTP();
-            saveOtpToDatabase(email, otp);
+            String email = request.getParameter("email");
 
-            // Gửi email OTP
-            sendOtpEmail(email, otp);
+            // Kiểm tra email có tồn tại trong database
+            boolean emailExists = checkEmailExists(email);
 
-            // Chuyển hướng đến trang resetPassword.jsp với email
-            request.setAttribute("email", email);
-            request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("resetPassword.jsp");
-            dispatcher.forward(request, response);
-        } else {
-            // Email không tồn tại
-            request.setAttribute("message", "Email không tồn tại.");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("resetPassword.jsp");
-            dispatcher.forward(request, response);
+            if (emailExists) {
+                // Tạo mã OTP và lưu vào database
+                String otp = generateOTP();
+                saveOtpToDatabase(email, otp);
+
+                // Gửi email OTP
+                sendOtpEmail(email, otp);
+
+                // Chuyển hướng đến trang resetPassword.jsp với email
+                request.setAttribute("email", email);
+                request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("resetPassword.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                // Email không tồn tại
+                request.setAttribute("message", "Email không tồn tại.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("resetPassword.jsp");
+                dispatcher.forward(request, response);
+            }
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
         }
+
+    }
+
+    private void forgotPassPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+
+            request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+        }
+
+    }
+
+    private void forgotPass(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+
+            request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+        }
+
     }
 
     private boolean checkEmailExists(String email) {
@@ -137,7 +174,7 @@ public class ForgotPasswordController extends HttpServlet {
         // Implement database save logic here
         UserDAO emails = new UserDAO();
         emails.saveOtpToDatabase(email, otp);
-        
+
     }
 
     private void sendOtpEmail(String email, String otp) {
