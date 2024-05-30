@@ -113,7 +113,7 @@ public class ForgotPasswordController extends HttpServlet {
                     request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/confirmOTP.jsp");
                     dispatcher.forward(request, response);
-                }else{
+                } else {
                     request.setAttribute("message", "Lỗi hệ thống OTP");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
                 }
@@ -192,29 +192,31 @@ public class ForgotPasswordController extends HttpServlet {
                     if (currentTime <= user.getOtp_expiry().getTime()) {
                         boolean isUpdated = userDAO.updatePassOTP(repass, email, otp);
                         if (isUpdated) {
-                            request.setAttribute("successMessage", "Cập nhật mật khẩu thành công");
+                            request.setAttribute("message", "Cập nhật mật khẩu thành công");
                             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                         } else {
-                            request.setAttribute("successMessage", "Cập nhật mật khẩu không thành công");
-                            request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+                            request.setAttribute("message", "Cập nhật mật khẩu không thành công");
+//                            request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
                         }
                     } else {
-                        request.setAttribute("successMessage", "OTP đã hết hạn");
-                        request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+                        request.setAttribute("message", "OTP đã hết hạn");
+//                        request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
                     }
                 } else {
-                    request.setAttribute("successMessage", "OTP không đúng");
-                    request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+                    request.setAttribute("message", "OTP không đúng");
+//                    request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
                 }
             } else {
-                request.setAttribute("successMessage", "Mật khẩu không khớp");
-                request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+                request.setAttribute("message", "Mật khẩu không khớp");
+//                request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating user", e);
-            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
-            request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
+            request.setAttribute("message", "An error occurred: " + e.getMessage());
+//            request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
         }
+        // No need to forward if already on the correct page
+        request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").include(request, response);
     }
 
     private boolean checkEmailExists(String email) {
@@ -247,7 +249,7 @@ public class ForgotPasswordController extends HttpServlet {
     private boolean sendOtpEmail(String email, String otp) {
         String host = "live.smtp.mailtrap.io";
         final String user = "api";
-        final String password = "493194ac9b130696d038a55e69ce89cc"; // thay thế bằng mật khẩu thực tế từ Mailtrap
+        final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
 
         Properties props = new Properties();
         props.put("mail.smtp.host", host);
@@ -265,9 +267,9 @@ public class ForgotPasswordController extends HttpServlet {
         try {
             MimeMessage message = new MimeMessage(session);
 //            mailtrap@krsg6.com
-            message.setFrom(new InternetAddress("mailtrap@demomailtrap.com"));
+            message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            message.setSubject("KRS_G6");
+            message.setSubject("KRS_G6 Reset Password");
             message.setText("Your OTP code is: " + otp);
             Transport.send(message);
             System.out.println("OTP email sent successfully...");

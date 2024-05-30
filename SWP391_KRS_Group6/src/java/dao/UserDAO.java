@@ -147,7 +147,7 @@ public class UserDAO extends DBConnect {
         String query = "UPDATE user SET otp = ?, otp_expiry = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, otp);
-            long expiryTime = System.currentTimeMillis() + 5 * 60 * 1000;
+            long expiryTime = System.currentTimeMillis() + 1 * 60 * 1000;
             Timestamp otp_expiry = new Timestamp(expiryTime);
             ps.setTimestamp(2, otp_expiry);
             ps.setString(3, email);
