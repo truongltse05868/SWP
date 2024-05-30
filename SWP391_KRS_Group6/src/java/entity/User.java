@@ -1,5 +1,7 @@
 package entity;
 
+import java.sql.Timestamp;
+
 /**
  * User entity represents a user in the system.
  */
@@ -16,6 +18,22 @@ public class User {
     private boolean status;
     private int role_id;
     private String otp;
+    private Timestamp otp_expiry;
+
+    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, int age, boolean status, int role_id, String otp, Timestamp otp_expiry) {
+        this.user_id = user_id;
+        this.user_name = user_name;
+        this.password = password;
+        this.email = email;
+        this.full_name = full_name;
+        this.phone = phone;
+        this.gender = gender;
+        this.age = age;
+        this.status = status;
+        this.role_id = role_id;
+        this.otp = otp;
+        this.otp_expiry = otp_expiry;
+    }
 
     public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, int age, boolean status, int role_id, String otp) {
         this.user_id = user_id;
@@ -29,6 +47,14 @@ public class User {
         this.status = status;
         this.role_id = role_id;
         this.otp = otp;
+    }
+
+    public Timestamp getOtp_expiry() {
+        return otp_expiry;
+    }
+
+    public void setOtp_expiry(Timestamp otp_expiry) {
+        this.otp_expiry = otp_expiry;
     }
 
     public String getOtp() {

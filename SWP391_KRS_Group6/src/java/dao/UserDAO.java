@@ -1,11 +1,13 @@
 package dao;
 
 import entity.User;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -13,9 +15,9 @@ import java.util.logging.Logger;
  * UserDAO handles all database operations related to the User entity.
  */
 public class UserDAO extends DBConnect {
-
+    
     private static final Logger logger = Logger.getLogger(UserDAO.class.getName());
-
+    
     public UserDAO() {
         super(); // Gọi constructor của superclass để khởi tạo kết nối
     }
@@ -29,7 +31,7 @@ public class UserDAO extends DBConnect {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user"; // Ensure table name matches the one in your database
         try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-
+            
             while (rs.next()) {
                 User user = new User(
                         rs.getInt("user_id"),
@@ -51,9 +53,9 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-
+    
     public List<User> checkLogin(String account, String password) {
-
+        
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user WHERE `user_name` = ? and `password` = ? and status = 1";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -82,7 +84,7 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-
+    
     public boolean checkEmailExists(String email) {
         String query = "SELECT COUNT(*) FROM user WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -97,7 +99,7 @@ public class UserDAO extends DBConnect {
         }
         return false;
     }
-
+    
     public boolean checkUsernameExists(String userName) {
         String query = "SELECT COUNT(*) FROM user WHERE user_name = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -112,12 +114,12 @@ public class UserDAO extends DBConnect {
         }
         return false;
     }
-
+    
     public List<User> getAllUserActive() {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user where status = 1"; // Ensure table name matches the one in your database
         try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-
+            
             while (rs.next()) {
                 User user = new User(
                         rs.getInt("user_id"),
@@ -142,10 +144,13 @@ public class UserDAO extends DBConnect {
 //update otp by email
 
     public boolean saveOtpToDatabase(String email, String otp) {
-        String query = "UPDATE user SET otp = ? WHERE email = ?";
+        String query = "UPDATE user SET otp = ?, otp_expiry = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, otp);
-            ps.setString(2, email);
+            long expiryTime = System.currentTimeMillis() + 5 * 60 * 1000;
+            Timestamp otp_expiry = new Timestamp(expiryTime);
+            ps.setTimestamp(2, otp_expiry);
+            ps.setString(3, email);
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -154,12 +159,6 @@ public class UserDAO extends DBConnect {
         }
     }
 
-    /**
-     * Fetches a user by ID from the database.
-     *
-     * @param userId the ID of the user to fetch
-     * @return a User object, or null if not found
-     */
     /**
      * Fetches a user by ID from the database.
      *
@@ -193,7 +192,36 @@ public class UserDAO extends DBConnect {
         }
         return user;
     }
-
+    
+    public User getUserByEmail(String email) {
+        User user = null;
+        String query = "SELECT * FROM user WHERE email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getInt("age"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp"),
+                            rs.getTimestamp("otp_expiry")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+        }
+        return user;
+    }
+    
     public boolean updateUser(User user) {
         String query = "UPDATE user SET user_name = ?, password = ?, email = ?, "
                 + "full_name = ?, phone = ?, gender = ?, age = ?, status = ?, role_id = ? WHERE user_id = ?";
@@ -215,7 +243,7 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
-
+    
     public boolean loginAccount(String account, String password) {
         String query = "SELECT * FROM user WHERE `user_name` = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -234,7 +262,7 @@ public class UserDAO extends DBConnect {
         }
         return false;
     }
-
+    
     public boolean addUser(User user) {
         String query = "INSERT INTO user (user_name, password, email, full_name, phone, gender, age, status, role_id) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -248,7 +276,7 @@ public class UserDAO extends DBConnect {
             ps.setInt(7, user.getAge());
             ps.setBoolean(8, user.isStatus());
             ps.setInt(9, user.getRole_id());
-
+            
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 logger.log(Level.INFO, "User added successfully");
@@ -262,7 +290,7 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
-
+    
     public boolean updatePassOTP(String password, String email, String otp) {
         String query = "UPDATE user SET password = ? WHERE email = ? AND otp = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -282,5 +310,5 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
-
+    
 }
