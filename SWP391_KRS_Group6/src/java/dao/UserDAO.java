@@ -52,7 +52,6 @@ public class UserDAO extends DBConnect {
         return users;
     }
 
-
     public List<User> checkLogin(String account, String password) {
 
         List<User> users = new ArrayList<>();
@@ -83,65 +82,36 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-//
-//    public List<UserList> getAllUsersWithRole() {
-//        List<UserList> usersl = new ArrayList<>();
-//        String query = "SELECT u.user_id, u.user_name,u.password , u.email, u.full_name, u.phone, u.gender, u.age, u.status, s.setting_name\n"
-//                + "FROM user u\n"
-//                + "JOIN setting s ON s.setting_id = u.role_id;"; // Ensure table name matches the one in your database
-//        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-//
-//            while (rs.next()) {
-//                UserList userl = new UserList(
-//                        rs.getInt("user_id"),
-//                        rs.getString("user_name"),
-//                        rs.getString("password"),
-//                        rs.getString("email"),
-//                        rs.getString("full_name"),
-//                        rs.getString("phone"),
-//                        rs.getString("gender"),
-//                        rs.getInt("age"),
-//                        rs.getBoolean("status"),
-//                        rs.getString("setting_name")
-//                );
-//                usersl.add(userl);
-//            }
-//        } catch (SQLException e) {
-//            logger.log(Level.SEVERE, "Error fetching all users", e);
-//        }
-//        return usersl;
-//    }
-//
-//   public UserList getUsersWithRole(int userId) {
-//        UserList usersl = null;
-//        String query = "SELECT u.user_id, u.user_name,u.password , u.email, u.full_name, u.phone, u.gender, u.age, u.status, s.setting_name FROM user u JOIN setting s ON s.setting_id = u.role_id WHERE u.user_id = ?";
-//
-//        try (PreparedStatement ps = connection.prepareStatement(query)) {
-//            ps.setInt(1, userId);
-//            try (ResultSet rs = ps.executeQuery()) {
-//                if (rs.next()) {
-//                    usersl = new UserList(
-//                            rs.getInt("user_id"),
-//                            rs.getString("user_name"),
-//                            rs.getString("password"),
-//                            rs.getString("email"),
-//                            rs.getString("full_name"),
-//                            rs.getString("phone"),
-//                            rs.getString("gender"),
-//                            rs.getInt("age"),
-//                            rs.getBoolean("status"),
-//                            rs.getString("setting_name")
-//                    );
-//                }
-//            } catch (SQLException e) {
-//                logger.log(Level.SEVERE, "Error processing ResultSet", e);
-//            }
-//        } catch (SQLException e) {
-//            logger.log(Level.SEVERE, "Error preparing/executing query: " + query, e);
-//        }
-//
-//        return usersl;
-//    }
+
+    public boolean checkEmailExists(String email) {
+        String query = "SELECT COUNT(*) FROM user WHERE email = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching email", e);
+        }
+        return false;
+    }
+
+    public boolean checkUsernameExists(String userName) {
+        String query = "SELECT COUNT(*) FROM user WHERE user_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, userName);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user_name", e);
+        }
+        return false;
+    }
 
     public List<User> getAllUserActive() {
         List<User> users = new ArrayList<>();
@@ -170,6 +140,7 @@ public class UserDAO extends DBConnect {
         return users;
     }
 //update otp by email
+
     public boolean saveOtpToDatabase(String email, String otp) {
         String query = "UPDATE user SET otp = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -182,6 +153,7 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
+
     /**
      * Fetches a user by ID from the database.
      *
@@ -290,10 +262,11 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
-     public boolean updatePassOTP(String password, String email, String otp) {
+
+    public boolean updatePassOTP(String password, String email, String otp) {
         String query = "UPDATE user SET password = ? WHERE email = ? AND otp = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, password );
+            ps.setString(1, password);
             ps.setString(2, email);
             ps.setString(3, otp);
             int rowsAffected = ps.executeUpdate();
@@ -309,6 +282,5 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
-
 
 }

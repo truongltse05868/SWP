@@ -178,54 +178,53 @@ public class UserController extends HttpServlet {
     }
 
     private void changePassAdmin(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-    try {
-        int userId = Integer.parseInt(request.getParameter("id"));
-        String currentPassword = request.getParameter("currentPassword");
-        String newPassword = request.getParameter("newPassword");
-        String reNewPassword = request.getParameter("reNewPassword");
-        String message = "";
+            throws ServletException, IOException {
+        try {
+            int userId = Integer.parseInt(request.getParameter("id"));
+            String currentPassword = request.getParameter("currentPassword");
+            String newPassword = request.getParameter("newPassword");
+            String reNewPassword = request.getParameter("reNewPassword");
+            String message = "";
 
-        UserDAO userDAO = new UserDAO();
-        User user = userDAO.getUserById(userId);
+            UserDAO userDAO = new UserDAO();
+            User user = userDAO.getUserById(userId);
 
-        if (user != null) {
-            if (!user.getPassword().equals(currentPassword)) {
-                message = "Current password is incorrect.";
-                request.setAttribute("errorMessage", message);
-            } else if (!newPassword.equals(reNewPassword)) {
-                message = "New passwords do not match.";
-                request.setAttribute("errorMessage", message);
+            if (user != null) {
+                if (!user.getPassword().equals(currentPassword)) {
+                    message = "Current password is incorrect.";
+                    request.setAttribute("errorMessage", message);
+                } else if (!newPassword.equals(reNewPassword)) {
+                    message = "New passwords do not match.";
+                    request.setAttribute("errorMessage", message);
+                } else {
+                    user.setPassword(newPassword);
+                    boolean isUpdated = userDAO.updateUser(user);
+
+                    message = isUpdated ? "Password updated successfully." : "Password update failed.";
+                    request.setAttribute("successMessage", message);
+
+                    SettingDAO settingDAO = new SettingDAO();
+                    List<Setting> roles = settingDAO.getAllRole();
+                    request.setAttribute("user", user);
+                    request.setAttribute("roles", roles);
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+                    dispatcher.forward(request, response);
+                    return;
+                }
             } else {
-                user.setPassword(newPassword);
-                boolean isUpdated = userDAO.updateUser(user);
-
-                message = isUpdated ? "Password updated successfully." : "Password update failed.";
-                request.setAttribute("successMessage", message);
-
-                SettingDAO settingDAO = new SettingDAO();
-                List<Setting> roles = settingDAO.getAllRole();
-                request.setAttribute("user", user);
-                request.setAttribute("roles", roles);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
-                dispatcher.forward(request, response);
-                return;
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
             }
-        } else {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid user ID format", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
         }
-    } catch (NumberFormatException e) {
-        logger.log(Level.SEVERE, "Invalid user ID format", e);
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
-    } catch (Exception e) {
-        logger.log(Level.SEVERE, "Error updating user", e);
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
+
+        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+        dispatcher.forward(request, response);
     }
-
-    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
-    dispatcher.forward(request, response);
-}
-
 
     private boolean loginAccount(String username, String password)
             throws ServletException, IOException {
@@ -267,11 +266,24 @@ public class UserController extends HttpServlet {
             user.setStatus(status);
             user.setRole_id(roleId);
 
-            // Thêm người dùng vào cơ sở dữ liệu
             UserDAO userDAO = new UserDAO();
-            boolean isSuccess = userDAO.addUser(user);
-            String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
-            request.setAttribute("successMessage", message);
+            //check email and tên account
+            // Kiểm tra email và tên người dùng đã tồn tại hay chưa
+            boolean emailExists = userDAO.checkEmailExists(email);
+            boolean usernameExists = userDAO.checkUsernameExists(userName);
+
+            if (emailExists && usernameExists) {
+                request.setAttribute("successMessage", "Email và tên người dùng đã tồn tại.");
+            } else if (emailExists) {
+                request.setAttribute("successMessage", "Email đã tồn tại.");
+            } else if (usernameExists) {
+                request.setAttribute("successMessage", "Tên người dùng đã tồn tại.");
+            } else {
+                // Thêm người dùng vào cơ sở dữ liệu
+                boolean isSuccess = userDAO.addUser(user);
+                String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
+                request.setAttribute("successMessage", message);
+            }
             // Chuyển hướng về trang addUser.jsp với thông báo kết quả
             SettingDAO settingDAO = new SettingDAO();
             List<Setting> roles = settingDAO.getAllRole();
@@ -287,13 +299,13 @@ public class UserController extends HttpServlet {
             request.setAttribute("roleId", roleId);
             //
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
+            
         } catch (Exception e) {
             // Xử lý ngoại lệ nếu có
             request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
         }
     }
-
 
     @Override
     public String getServletInfo() {
