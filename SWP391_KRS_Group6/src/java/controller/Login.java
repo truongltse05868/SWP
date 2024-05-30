@@ -16,12 +16,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import entity.User;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author chi
  */
 public class Login extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(Login.class.getName());
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -32,11 +36,11 @@ public class Login extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-
-    }
+//    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        response.setContentType("text/html;charset=UTF-8");
+//
+//    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
@@ -72,19 +76,24 @@ public class Login extends HttpServlet {
             String username = request.getParameter("username");
             String pass = request.getParameter("password");
             UserDAO udao = new UserDAO();
-            List<User> userList = udao.checkLogin(username, pass);
+            User user = udao.checkRoleLogin(username, pass);
             String mess = "Email or password wrong!";
-          
-            if (userList != null) {
-                User user = userList.get(0); // Assuming that checkLogin returns a list with one user if credentials are correct
+
+            if (user != null) {
                 session.setAttribute("account", user);
-                response.sendRedirect("Home");
-                return;
+                if (user.getRole_id() == 4) { //  role_id = 4 là admin
+                    response.sendRedirect("Home"); // Chuyển hướng tới trang admin
+                } else {
+                    response.sendRedirect("Home"); // Chuyển hướng tới trang người dùng thông thường
+                }
             } else {
                 request.setAttribute("mess", mess);
                 request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error during login process", e);
+            request.setAttribute("mess", "An error occurred during login. Please try again.");
+            request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
         }
     }
 

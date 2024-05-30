@@ -6,6 +6,8 @@
 
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="entity.User" %>
+
 <!DOCTYPE html>
 
 <!DOCTYPE html>
@@ -64,22 +66,22 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
     <link rel="stylesheet" type="text/css" href="assets/vendors/revolution/css/settings.css">
     <link rel="stylesheet" type="text/css" href="assets/vendors/revolution/css/navigation.css">
     <!-- REVOLUTION SLIDER END -->
-     <script>
+    <script>
         function sendPostRequest(action) {
             // Tạo form ẩn
             var form = document.createElement("form");
             form.setAttribute("method", "post");
             form.setAttribute("action", "userController");
-            
+
             // Tạo input ẩn cho action
             var hiddenField = document.createElement("input");
             hiddenField.setAttribute("type", "hidden");
             hiddenField.setAttribute("name", "action");
             hiddenField.setAttribute("value", action);
-            
+
             // Thêm input ẩn vào form
             form.appendChild(hiddenField);
-            
+
             // Thêm form vào body và submit
             document.body.appendChild(form);
             form.submit();
@@ -89,16 +91,16 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             var form = document.createElement("form");
             form.setAttribute("method", "post");
             form.setAttribute("action", "ForgotPasswordController");
-            
+
             // Tạo input ẩn cho action
             var hiddenField = document.createElement("input");
             hiddenField.setAttribute("type", "hidden");
             hiddenField.setAttribute("name", "action");
             hiddenField.setAttribute("value", action);
-            
+
             // Thêm input ẩn vào form
             form.appendChild(hiddenField);
-            
+
             // Thêm form vào body và submit
             document.body.appendChild(form);
             form.submit();
@@ -132,13 +134,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                 <c:if test="${sessionScope['account'].getRole_id() == null}">
                                     <li><a id="loginLink" href="Login" >Login</a></li>
                                     <li><a id="registerLink" href="register.html">Register</a></li>
-                                    <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage'); return false;">ForgotPassword</a></li>
+                                    <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
+                                            return false;">ForgotPassword</a></li>
                                     </c:if>
                                     <c:if test="${sessionScope['account'].getRole_id() != null}">
                                     <li> <a href="contact.html">Hello, ${sessionScope.account.full_name} </a></li>
                                     <li><a id="logoutLink" href="Logout" >Logout</a></li>
                                     </c:if>
-                                    
+
 
 
 
@@ -368,19 +371,13 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                         <li><a href="blog-details.html">Blog Details</a></li>
                                     </ul>
                                 </li>
+                                <c:if test="${sessionScope['account'].getRole_id() == 4}">
                                 <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">
                                         <li><a href="admin/dashboard.html">Dashboard</a></li>
                                         <li><a href="admin/add-listing.html">Add Listing</a></li>
                                         <li><a href="admin/bookmark.html">Bookmark</a></li>
                                         <li><a href="SettingController">Setting List</a></li>
-                                        <!--<li><a href="userController?action=userList">User List</a></li>-->
-<!--                                        <li>
-                                            <form action="userController" method="post" style="display:inline;">
-                                                <input type="hidden" name="action" value="userList">
-                                                <button type="submit" style="background:none; border:none; color:blue; text-decoration:underline; cursor:pointer;">User List</button>
-                                            </form>
-                                        </li>-->
                                         <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
                                         <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
                                             <ul class="sub-menu">
@@ -397,6 +394,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                         </li>
                                     </ul>
                                 </li>
+                                </c:if>
+
+
+
                             </ul>
                             <div class="nav-social-link">
                                 <a href="javascript:;"><i class="fa fa-facebook"></i></a>
@@ -1313,91 +1314,91 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
     <script src="assets/vendors/revolution/js/extensions/revolution.extension.slideanims.min.js"></script>
     <script src="assets/vendors/revolution/js/extensions/revolution.extension.video.min.js"></script>
     <script>
-        jQuery(document).ready(function () {
-            var ttrevapi;
-            var tpj = jQuery;
-            if (tpj("#rev_slider_486_1").revolution == undefined) {
-                revslider_showDoubleJqueryError("#rev_slider_486_1");
-            } else {
-                ttrevapi = tpj("#rev_slider_486_1").show().revolution({
-                    sliderType: "standard",
-                    jsFileLocation: "assets/vendors/revolution/js/",
-                    sliderLayout: "fullwidth",
-                    dottedOverlay: "none",
-                    delay: 9000,
-                    navigation: {
-                        keyboardNavigation: "on",
-                        keyboard_direction: "horizontal",
-                        mouseScrollNavigation: "off",
-                        mouseScrollReverse: "default",
-                        onHoverStop: "on",
-                        touch: {
-                            touchenabled: "on",
-                            swipe_threshold: 75,
-                            swipe_min_touches: 1,
-                            swipe_direction: "horizontal",
-                            drag_block_vertical: false
-                        }
-                        ,
-                        arrows: {
-                            style: "uranus",
-                            enable: true,
-                            hide_onmobile: false,
-                            hide_onleave: false,
-                            tmp: '',
-                            left: {
-                                h_align: "left",
-                                v_align: "center",
-                                h_offset: 10,
-                                v_offset: 0
-                            },
-                            right: {
-                                h_align: "right",
-                                v_align: "center",
-                                h_offset: 10,
-                                v_offset: 0
+            jQuery(document).ready(function () {
+                var ttrevapi;
+                var tpj = jQuery;
+                if (tpj("#rev_slider_486_1").revolution == undefined) {
+                    revslider_showDoubleJqueryError("#rev_slider_486_1");
+                } else {
+                    ttrevapi = tpj("#rev_slider_486_1").show().revolution({
+                        sliderType: "standard",
+                        jsFileLocation: "assets/vendors/revolution/js/",
+                        sliderLayout: "fullwidth",
+                        dottedOverlay: "none",
+                        delay: 9000,
+                        navigation: {
+                            keyboardNavigation: "on",
+                            keyboard_direction: "horizontal",
+                            mouseScrollNavigation: "off",
+                            mouseScrollReverse: "default",
+                            onHoverStop: "on",
+                            touch: {
+                                touchenabled: "on",
+                                swipe_threshold: 75,
+                                swipe_min_touches: 1,
+                                swipe_direction: "horizontal",
+                                drag_block_vertical: false
                             }
-                        },
+                            ,
+                            arrows: {
+                                style: "uranus",
+                                enable: true,
+                                hide_onmobile: false,
+                                hide_onleave: false,
+                                tmp: '',
+                                left: {
+                                    h_align: "left",
+                                    v_align: "center",
+                                    h_offset: 10,
+                                    v_offset: 0
+                                },
+                                right: {
+                                    h_align: "right",
+                                    v_align: "center",
+                                    h_offset: 10,
+                                    v_offset: 0
+                                }
+                            },
 
-                    },
-                    viewPort: {
-                        enable: true,
-                        outof: "pause",
-                        visible_area: "80%",
-                        presize: false
-                    },
-                    responsiveLevels: [1240, 1024, 778, 480],
-                    visibilityLevels: [1240, 1024, 778, 480],
-                    gridwidth: [1240, 1024, 778, 480],
-                    gridheight: [768, 600, 600, 600],
-                    lazyType: "none",
-                    parallax: {
-                        type: "scroll",
-                        origo: "enterpoint",
-                        speed: 400,
-                        levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 46, 47, 48, 49, 50, 55],
-                        type: "scroll",
-                    },
-                    shadow: 0,
-                    spinner: "off",
-                    stopLoop: "off",
-                    stopAfterLoops: -1,
-                    stopAtSlide: -1,
-                    shuffle: "off",
-                    autoHeight: "off",
-                    hideThumbsOnMobile: "off",
-                    hideSliderAtLimit: 0,
-                    hideCaptionAtLimit: 0,
-                    hideAllCaptionAtLilmit: 0,
-                    debugMode: false,
-                    fallbacks: {
-                        simplifyAll: "off",
-                        nextSlideOnWindowFocus: "off",
-                        disableFocusListener: false,
-                    }
-                });
-            }
-        });
+                        },
+                        viewPort: {
+                            enable: true,
+                            outof: "pause",
+                            visible_area: "80%",
+                            presize: false
+                        },
+                        responsiveLevels: [1240, 1024, 778, 480],
+                        visibilityLevels: [1240, 1024, 778, 480],
+                        gridwidth: [1240, 1024, 778, 480],
+                        gridheight: [768, 600, 600, 600],
+                        lazyType: "none",
+                        parallax: {
+                            type: "scroll",
+                            origo: "enterpoint",
+                            speed: 400,
+                            levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 46, 47, 48, 49, 50, 55],
+                            type: "scroll",
+                        },
+                        shadow: 0,
+                        spinner: "off",
+                        stopLoop: "off",
+                        stopAfterLoops: -1,
+                        stopAtSlide: -1,
+                        shuffle: "off",
+                        autoHeight: "off",
+                        hideThumbsOnMobile: "off",
+                        hideSliderAtLimit: 0,
+                        hideCaptionAtLimit: 0,
+                        hideAllCaptionAtLilmit: 0,
+                        debugMode: false,
+                        fallbacks: {
+                            simplifyAll: "off",
+                            nextSlideOnWindowFocus: "off",
+                            disableFocusListener: false,
+                        }
+                    });
+                }
+            });
     </script>
 </body>
 </html>

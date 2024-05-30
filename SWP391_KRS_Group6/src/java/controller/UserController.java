@@ -12,6 +12,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 
 //@WebServlet(name = "UserController", urlPatterns = {"/UserController"})
@@ -22,7 +23,13 @@ public class UserController extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-//            HttpSession session = request.getSession();
+            HttpSession session = request.getSession(false);
+            User currentUser = (User) session.getAttribute("account");
+
+            if (currentUser == null || currentUser.getRole_id() != 4) { // Kiểm tra quyền admin
+                response.sendRedirect("Home"); // Chuyển hướng đến trang login
+                return;
+            }
             String action = request.getParameter("action");
             //truonglt update gộp controller
             if (action == null) {
