@@ -56,7 +56,7 @@ public class UserDAO extends DBConnect {
     public List<User> checkLogin(String account, String password) {
 
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE `user_name` = ? and `password` = ?";
+        String query = "SELECT * FROM user WHERE `user_name` = ? and `password` = ? and status = 1";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
             ps.setString(2, password);

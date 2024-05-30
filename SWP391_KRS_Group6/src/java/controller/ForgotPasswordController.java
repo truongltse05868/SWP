@@ -117,7 +117,7 @@ public class ForgotPasswordController extends HttpServlet {
                 // Chuyển hướng đến trang resetPassword.jsp với email
                 request.setAttribute("email", email);
                 request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/confirmOTP.jsp");
                 dispatcher.forward(request, response);
             } else {
                 // Email không tồn tại
@@ -188,7 +188,7 @@ public class ForgotPasswordController extends HttpServlet {
                 return true; // Email tồn tại
             }
         }
-        return true; // Giả sử email tồn tại
+        return false; // email không tồn tại
     }
 
     private String generateOTP() {

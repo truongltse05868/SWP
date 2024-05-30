@@ -53,17 +53,17 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-<!--        <style>
-            .hidden {
-                display: none;
-            }
-        </style>
-        <script>
-            function showOtpForm() {
-                document.getElementById("emailForm").classList.add("hidden");
-                document.getElementById("otpForm").classList.remove("hidden");
-            }
-        </script>-->
+        <!--        <style>
+                    .hidden {
+                        display: none;
+                    }
+                </style>
+                <script>
+                    function showOtpForm() {
+                        document.getElementById("emailForm").classList.add("hidden");
+                        document.getElementById("otpForm").classList.remove("hidden");
+                    }
+                </script>-->
     </head>
     <body id="bg">
         <div class="page-wraper">
@@ -80,14 +80,27 @@
                         </div>
                         <div>
                             <form class="contact-bx" action="${pageContext.request.contextPath}/ForgotPasswordController" method="post">
-                                <input type="hidden" name="action" value="checkEmail"> 
+                                <input type="hidden" name="action" value="renewpass"> 
+                                <input type="hidden" name="email" value="${email}" class="form-control">
                                 <div class="row placeani">
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <label for="email">Your Email:</label>
-<!--                                                <input type="email" id="email" name="email" required>-->
-                                                <input id="email" name="email" type="email" required="" class="form-control">
+                                                <label for="email">OTP:</label>
+                                                <input type="text" id="otp" name="otp" required class="form-control">
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <label for="newPassword">New Password:</label>
+                                                <input type="password" id="newPassword" name="newPassword" required class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <label for="reNewPassword">Re-enter New Password:</label>
+                                                <input type="password" id="reNewPassword" name="reNewPassword" required class="form-control">
                                             </div>
                                         </div>
                                     </div>
