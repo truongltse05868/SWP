@@ -84,6 +84,15 @@ CREATE TABLE IF NOT EXISTS `class` (
     FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
 );
 
+-- Table to store study sets
+CREATE TABLE IF NOT EXISTS `study_set` (
+    set_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    subject_id INT NOT NULL,
+    FOREIGN KEY (subject_id) REFERENCES subject(subject_id),
+    FOREIGN KEY (user_id) REFERENCES user(user_id)
+);
+
 -- Table to store terms and definitions related to a study set
 CREATE TABLE IF NOT EXISTS `term` (
     term_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -92,15 +101,6 @@ CREATE TABLE IF NOT EXISTS `term` (
     `definition` NVARCHAR(20),
     `status` BIT DEFAULT 0 NOT NULL,
     FOREIGN KEY (set_id) REFERENCES study_set(set_id)
-);
-
--- Table to store study sets
-CREATE TABLE IF NOT EXISTS `study_set` (
-    set_id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    subject_id INT NOT NULL,
-    FOREIGN KEY (subject_id) REFERENCES subject(subject_id),
-    FOREIGN KEY (user_id) REFERENCES user(user_id)
 );
 
 -- Table to store the relationship between classes and users
