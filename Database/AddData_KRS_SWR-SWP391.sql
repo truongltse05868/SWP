@@ -1,4 +1,3 @@
-
 INSERT INTO setting (setting_name, `type`, `description`, `status`)
 VALUES 
     ('Admin', 'Role', 'Administrator role', 1),
@@ -34,7 +33,6 @@ INSERT INTO `class` (subject_id, `status`)
 VALUES 
     (1, 1), -- Assuming subject_id 1 is Mathematics
     (2, 1); -- Assuming subject_id 2 is Science
-
 INSERT INTO `study_set` (user_id, subject_id)
 VALUES 
     (1, 1), -- Assuming user_id 1 is associated with Mathematics
