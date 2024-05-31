@@ -371,7 +371,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                         <li><a href="blog-details.html">Blog Details</a></li>
                                     </ul>
                                 </li>
-                                <c:if test="${sessionScope['account'].getRole_id() == 4}">
+                                <c:if test="${sessionScope['account'].getRole_id() == 1}">
                                 <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">
                                         <li><a href="admin/dashboard.html">Dashboard</a></li>

@@ -156,7 +156,7 @@ public class SettingDAO extends DBConnect {
     //truonglt add getallrole
     public List<Setting> getAllRole() {
         List<Setting> settings = new ArrayList<>();
-        String query = "SELECT * FROM krs_swr.setting where type = 'User role';"; // Ensure table name matches the one in your database
+        String query = "SELECT * FROM setting where type = 'Role';"; // Ensure table name matches the one in your database
         try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
 
             while (rs.next()) {

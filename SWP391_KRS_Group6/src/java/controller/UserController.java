@@ -26,7 +26,7 @@ public class UserController extends HttpServlet {
             HttpSession session = request.getSession(false);
             User currentUser = (User) session.getAttribute("account");
 
-            if (currentUser == null || currentUser.getRole_id() != 4) { // Kiểm tra quyền admin
+            if (currentUser == null || currentUser.getRole_id() != 1) { // Kiểm tra quyền admin
                 response.sendRedirect("Home"); // Chuyển hướng đến trang login
                 return;
             }

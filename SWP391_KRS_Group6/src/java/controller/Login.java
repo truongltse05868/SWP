@@ -81,7 +81,7 @@ public class Login extends HttpServlet {
 
             if (user != null) {
                 session.setAttribute("account", user);
-                if (user.getRole_id() == 4) { //  role_id = 4 là admin
+                if (user.getRole_id() == 1) { //  role_id = 1 là admin
                     response.sendRedirect("Home"); // Chuyển hướng tới trang admin
                 } else {
                     response.sendRedirect("Home"); // Chuyển hướng tới trang người dùng thông thường
