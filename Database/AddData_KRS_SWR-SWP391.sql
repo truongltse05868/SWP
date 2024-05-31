@@ -33,14 +33,14 @@ INSERT INTO `class` (subject_id, `status`)
 VALUES 
     (1, 1), -- Assuming subject_id 1 is Mathematics
     (2, 1); -- Assuming subject_id 2 is Science
-INSERT INTO `term` (set_id, term, `definition`, `status`)
-VALUES 
-    (1, 'Algebra', 'Branch of math', 1),
-    (1, 'Biology', 'Study of life', 1);
 INSERT INTO `study_set` (user_id, subject_id)
 VALUES 
     (1, 1), -- Assuming user_id 1 is associated with Mathematics
     (2, 2); -- Assuming user_id 2 is associated with Science
+INSERT INTO `term` (set_id, term, `definition`, `status`)
+VALUES 
+    (1, 'Algebra', 'Branch of math', 1),
+    (1, 'Biology', 'Study of life', 1);
 INSERT INTO `class_user` (user_id, class_id, teacher_user, `status`)
 VALUES 
     (1, 1, 'Prof. John', 1),
