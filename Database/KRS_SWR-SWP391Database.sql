@@ -1,3 +1,5 @@
+USE KRS_SWR
+
 -- Table to store settings such as roles, types, etc.
 CREATE TABLE if not exists setting (
     setting_id INT AUTO_INCREMENT PRIMARY KEY,
