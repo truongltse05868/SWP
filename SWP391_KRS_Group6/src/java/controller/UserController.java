@@ -52,6 +52,11 @@ public class UserController extends HttpServlet {
                 case "changePassAdmin":
                     changePassAdmin(request, response);
                     break;
+                case "profileUserPage":
+                    getProfileUser(request, response);
+                    break;
+                case "":
+                    break;
                 default:
                     getUserProfle(request, response);
                     break;
@@ -75,6 +80,24 @@ public class UserController extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
+    }
+
+    private void getProfileUser(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            UserDAO userDAO = new UserDAO();
+            SettingDAO settingDAO = new SettingDAO();
+            User user = userDAO.getUserById(userId);
+            List<Setting> roles = settingDAO.getAllRole();
+            request.setAttribute("user", user);
+            request.setAttribute("roles", roles);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ProfileUser.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list user", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list user.");
+        }
     }
 
     private void getUserProfle(HttpServletRequest request, HttpServletResponse response)
@@ -306,7 +329,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("roleId", roleId);
             //
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
-            
+
         } catch (Exception e) {
             // Xử lý ngoại lệ nếu có
             request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());

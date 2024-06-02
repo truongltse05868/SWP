@@ -105,6 +105,33 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             document.body.appendChild(form);
             form.submit();
         }
+
+        function sendPostRequestProfile(action, userId) {
+            // Tạo form ẩn
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", "userController");
+
+            // Tạo input ẩn cho action
+            var hiddenActionField = document.createElement("input");
+            hiddenActionField.setAttribute("type", "hidden");
+            hiddenActionField.setAttribute("name", "action");
+            hiddenActionField.setAttribute("value", action);
+
+            // Tạo input ẩn cho userId
+            var hiddenUserIdField = document.createElement("input");
+            hiddenUserIdField.setAttribute("type", "hidden");
+            hiddenUserIdField.setAttribute("name", "userId");
+            hiddenUserIdField.setAttribute("value", userId);
+
+            // Thêm các input ẩn vào form
+            form.appendChild(hiddenActionField);
+            form.appendChild(hiddenUserIdField);
+
+            // Thêm form vào body và submit
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
 
 </head>
@@ -340,7 +367,11 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                             </ul>
                                         </li>
                                         <li><a href="portfolio.html">Portfolio</a></li>
-                                        <li><a href="profile.html">Profile</a></li>
+                                            <c:if test="${sessionScope['account'] != null}">
+                                            <li><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
+                                                    return false;">Profile</a></li>
+                                            </c:if>
+
                                         <li><a href="membership.html">Membership</a></li>
                                         <li><a href="error-404.html">404 Page</a></li>
                                     </ul>
@@ -372,28 +403,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                     </ul>
                                 </li>
                                 <c:if test="${sessionScope['account'].getRole_id() == 1}">
-                                <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
-                                    <ul class="sub-menu">
-                                        <li><a href="admin/dashboard.html">Dashboard</a></li>
-                                        <li><a href="admin/add-listing.html">Add Listing</a></li>
-                                        <li><a href="admin/bookmark.html">Bookmark</a></li>
-                                        <li><a href="SettingController">Setting List</a></li>
-                                        <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
-                                        <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
-                                            <ul class="sub-menu">
-                                                <li><a href="admin/basic-calendar.html">Basic Calendar</a></li>
-                                                <li><a href="admin/list-view-calendar.html">List View Calendar</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="javascript:;">Mailbox<i class="fa fa-angle-right"></i></a>
-                                            <ul class="sub-menu">
-                                                <li><a href="admin/mailbox.html">Mailbox</a></li>
-                                                <li><a href="admin/mailbox-compose.html">Compose</a></li>
-                                                <li><a href="admin/mailbox-read.html">Mail Read</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
+                                    <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
+                                        <ul class="sub-menu">
+                                            <li><a href="admin/dashboard.html">Dashboard</a></li>
+                                            <li><a href="admin/add-listing.html">Add Listing</a></li>
+                                            <li><a href="admin/bookmark.html">Bookmark</a></li>
+                                            <li><a href="SettingController">Setting List</a></li>
+                                            <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
+                                            <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
+                                                <ul class="sub-menu">
+                                                    <li><a href="admin/basic-calendar.html">Basic Calendar</a></li>
+                                                    <li><a href="admin/list-view-calendar.html">List View Calendar</a></li>
+                                                </ul>
+                                            </li>
+                                            <li><a href="javascript:;">Mailbox<i class="fa fa-angle-right"></i></a>
+                                                <ul class="sub-menu">
+                                                    <li><a href="admin/mailbox.html">Mailbox</a></li>
+                                                    <li><a href="admin/mailbox-compose.html">Compose</a></li>
+                                                    <li><a href="admin/mailbox-read.html">Mail Read</a></li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
                                 </c:if>
 
 
@@ -1314,91 +1345,91 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
     <script src="assets/vendors/revolution/js/extensions/revolution.extension.slideanims.min.js"></script>
     <script src="assets/vendors/revolution/js/extensions/revolution.extension.video.min.js"></script>
     <script>
-            jQuery(document).ready(function () {
-                var ttrevapi;
-                var tpj = jQuery;
-                if (tpj("#rev_slider_486_1").revolution == undefined) {
-                    revslider_showDoubleJqueryError("#rev_slider_486_1");
-                } else {
-                    ttrevapi = tpj("#rev_slider_486_1").show().revolution({
-                        sliderType: "standard",
-                        jsFileLocation: "assets/vendors/revolution/js/",
-                        sliderLayout: "fullwidth",
-                        dottedOverlay: "none",
-                        delay: 9000,
-                        navigation: {
-                            keyboardNavigation: "on",
-                            keyboard_direction: "horizontal",
-                            mouseScrollNavigation: "off",
-                            mouseScrollReverse: "default",
-                            onHoverStop: "on",
-                            touch: {
-                                touchenabled: "on",
-                                swipe_threshold: 75,
-                                swipe_min_touches: 1,
-                                swipe_direction: "horizontal",
-                                drag_block_vertical: false
-                            }
-                            ,
-                            arrows: {
-                                style: "uranus",
-                                enable: true,
-                                hide_onmobile: false,
-                                hide_onleave: false,
-                                tmp: '',
-                                left: {
-                                    h_align: "left",
-                                    v_align: "center",
-                                    h_offset: 10,
-                                    v_offset: 0
-                                },
-                                right: {
-                                    h_align: "right",
-                                    v_align: "center",
-                                    h_offset: 10,
-                                    v_offset: 0
-                                }
-                            },
+                                                jQuery(document).ready(function () {
+                                                    var ttrevapi;
+                                                    var tpj = jQuery;
+                                                    if (tpj("#rev_slider_486_1").revolution == undefined) {
+                                                        revslider_showDoubleJqueryError("#rev_slider_486_1");
+                                                    } else {
+                                                        ttrevapi = tpj("#rev_slider_486_1").show().revolution({
+                                                            sliderType: "standard",
+                                                            jsFileLocation: "assets/vendors/revolution/js/",
+                                                            sliderLayout: "fullwidth",
+                                                            dottedOverlay: "none",
+                                                            delay: 9000,
+                                                            navigation: {
+                                                                keyboardNavigation: "on",
+                                                                keyboard_direction: "horizontal",
+                                                                mouseScrollNavigation: "off",
+                                                                mouseScrollReverse: "default",
+                                                                onHoverStop: "on",
+                                                                touch: {
+                                                                    touchenabled: "on",
+                                                                    swipe_threshold: 75,
+                                                                    swipe_min_touches: 1,
+                                                                    swipe_direction: "horizontal",
+                                                                    drag_block_vertical: false
+                                                                }
+                                                                ,
+                                                                arrows: {
+                                                                    style: "uranus",
+                                                                    enable: true,
+                                                                    hide_onmobile: false,
+                                                                    hide_onleave: false,
+                                                                    tmp: '',
+                                                                    left: {
+                                                                        h_align: "left",
+                                                                        v_align: "center",
+                                                                        h_offset: 10,
+                                                                        v_offset: 0
+                                                                    },
+                                                                    right: {
+                                                                        h_align: "right",
+                                                                        v_align: "center",
+                                                                        h_offset: 10,
+                                                                        v_offset: 0
+                                                                    }
+                                                                },
 
-                        },
-                        viewPort: {
-                            enable: true,
-                            outof: "pause",
-                            visible_area: "80%",
-                            presize: false
-                        },
-                        responsiveLevels: [1240, 1024, 778, 480],
-                        visibilityLevels: [1240, 1024, 778, 480],
-                        gridwidth: [1240, 1024, 778, 480],
-                        gridheight: [768, 600, 600, 600],
-                        lazyType: "none",
-                        parallax: {
-                            type: "scroll",
-                            origo: "enterpoint",
-                            speed: 400,
-                            levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 46, 47, 48, 49, 50, 55],
-                            type: "scroll",
-                        },
-                        shadow: 0,
-                        spinner: "off",
-                        stopLoop: "off",
-                        stopAfterLoops: -1,
-                        stopAtSlide: -1,
-                        shuffle: "off",
-                        autoHeight: "off",
-                        hideThumbsOnMobile: "off",
-                        hideSliderAtLimit: 0,
-                        hideCaptionAtLimit: 0,
-                        hideAllCaptionAtLilmit: 0,
-                        debugMode: false,
-                        fallbacks: {
-                            simplifyAll: "off",
-                            nextSlideOnWindowFocus: "off",
-                            disableFocusListener: false,
-                        }
-                    });
-                }
-            });
+                                                            },
+                                                            viewPort: {
+                                                                enable: true,
+                                                                outof: "pause",
+                                                                visible_area: "80%",
+                                                                presize: false
+                                                            },
+                                                            responsiveLevels: [1240, 1024, 778, 480],
+                                                            visibilityLevels: [1240, 1024, 778, 480],
+                                                            gridwidth: [1240, 1024, 778, 480],
+                                                            gridheight: [768, 600, 600, 600],
+                                                            lazyType: "none",
+                                                            parallax: {
+                                                                type: "scroll",
+                                                                origo: "enterpoint",
+                                                                speed: 400,
+                                                                levels: [5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 46, 47, 48, 49, 50, 55],
+                                                                type: "scroll",
+                                                            },
+                                                            shadow: 0,
+                                                            spinner: "off",
+                                                            stopLoop: "off",
+                                                            stopAfterLoops: -1,
+                                                            stopAtSlide: -1,
+                                                            shuffle: "off",
+                                                            autoHeight: "off",
+                                                            hideThumbsOnMobile: "off",
+                                                            hideSliderAtLimit: 0,
+                                                            hideCaptionAtLimit: 0,
+                                                            hideAllCaptionAtLilmit: 0,
+                                                            debugMode: false,
+                                                            fallbacks: {
+                                                                simplifyAll: "off",
+                                                                nextSlideOnWindowFocus: "off",
+                                                                disableFocusListener: false,
+                                                            }
+                                                        });
+                                                    }
+                                                });
     </script>
 </body>
 </html>
