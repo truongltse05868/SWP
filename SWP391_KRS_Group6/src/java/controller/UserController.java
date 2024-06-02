@@ -26,40 +26,47 @@ public class UserController extends HttpServlet {
             HttpSession session = request.getSession(false);
             User currentUser = (User) session.getAttribute("account");
 
-            if (currentUser == null || currentUser.getRole_id() != 1) { // Kiểm tra quyền admin
-                response.sendRedirect("Home"); // Chuyển hướng đến trang login
+            if (currentUser == null) {
+                // Nếu không có phiên đăng nhập, chuyển hướng đến trang đăng nhập
+                response.sendRedirect("Home");
                 return;
             }
+
             String action = request.getParameter("action");
-            //truonglt update gộp controller
-            if (action == null) {
-                action = "default";
-            }
-            switch (action) {
-                case "addUserPage":
-                    addUserPage(request, response);
-                    break;
-                case "addUser":
-                    // Xử lý yêu cầu thêm người dùng mới
-                    addUser(request, response);
-                    break;
-                case "update":
-                    updateUser(request, response);
-                    break;
-                case "userList":
-                    getListUser(request, response);
-                    break;
-                case "changePassAdmin":
-                    changePassAdmin(request, response);
-                    break;
-                case "profileUserPage":
-                    getProfileUser(request, response);
-                    break;
-                case "":
-                    break;
-                default:
-                    getUserProfle(request, response);
-                    break;
+
+// Kiểm tra quyền truy cập của người dùng
+            if (currentUser.getRole_id() == 1) {
+                // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
+                switch (action) {
+                    case "addUserPage":
+                        addUserPage(request, response);
+                        break;
+                    case "addUser":
+                        addUser(request, response);
+                        break;
+                    case "update":
+                        updateUser(request, response);
+                        break;
+                    case "userList":
+                        getListUser(request, response);
+                        break;
+                    case "changePassAdmin":
+                        changePassAdmin(request, response);
+                        break;
+                    default:
+                        getUserProfle(request, response);
+                        break;
+                }
+            } else {
+                // Nếu không phải là quản trị viên, chỉ cho phép truy cập vào trang thông tin cá nhân
+                switch (action) {
+                    case "profileUserPage":
+                        getProfileUser(request, response);
+                        break;
+                    default:
+                        getUserProfle(request, response);
+                        break;
+                }
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid user ID format", e);
@@ -99,6 +106,7 @@ public class UserController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list user.");
         }
     }
+//cái dưới là của admin xem.
 
     private void getUserProfle(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -211,7 +219,7 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         try {
             int userId = Integer.parseInt(request.getParameter("id"));
-            String currentPassword = request.getParameter("currentPassword");
+//            String currentPassword = request.getParameter("currentPassword");
             String newPassword = request.getParameter("newPassword");
             String reNewPassword = request.getParameter("reNewPassword");
             String message = "";
@@ -220,12 +228,13 @@ public class UserController extends HttpServlet {
             User user = userDAO.getUserById(userId);
 
             if (user != null) {
-                if (!user.getPassword().equals(currentPassword)) {
-                    message = "Current password is incorrect.";
-                    request.setAttribute("errorMessage", message);
-                } else if (!newPassword.equals(reNewPassword)) {
+//                if (!user.getPassword().equals(currentPassword)) {
+//                    message = "Current password is incorrect.";
+//                    request.setAttribute("errorMessage", message);
+//                } else 
+                if (!newPassword.equals(reNewPassword)) {
                     message = "New passwords do not match.";
-                    request.setAttribute("errorMessage", message);
+                    request.setAttribute("successMessage", message);
                 } else {
                     user.setPassword(newPassword);
                     boolean isUpdated = userDAO.updateUser(user);
