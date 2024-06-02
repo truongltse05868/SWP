@@ -160,7 +160,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                 </li>
                                 <c:if test="${sessionScope['account'].getRole_id() == null}">
                                     <li><a id="loginLink" href="Login" >Login</a></li>
-                                    <li><a id="registerLink" href="register.html">Register</a></li>
+                                    <li><a id="registerLink" href="RegisterController">Register</a></li>
                                     <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
                                             return false;">ForgotPassword</a></li>
                                     </c:if>

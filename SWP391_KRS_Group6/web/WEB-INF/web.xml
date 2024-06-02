@@ -37,6 +37,14 @@
         <servlet-name>ForgotPasswordController</servlet-name>
         <servlet-class>controller.ForgotPasswordController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>RegisterController</servlet-name>
+        <servlet-class>controller.RegisterController</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>EmailConfirmController</servlet-name>
+        <servlet-class>controller.EmailConfirmController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserController</servlet-name>
         <url-pattern>/userController</url-pattern>
@@ -64,5 +72,13 @@
     <servlet-mapping>
         <servlet-name>ForgotPasswordController</servlet-name>
         <url-pattern>/ForgotPasswordController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>RegisterController</servlet-name>
+        <url-pattern>/RegisterController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>EmailConfirmController</servlet-name>
+        <url-pattern>/EmailConfirm</url-pattern>
     </servlet-mapping>
 </web-app>

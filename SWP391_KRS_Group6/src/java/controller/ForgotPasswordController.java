@@ -142,39 +142,7 @@ public class ForgotPasswordController extends HttpServlet {
         }
 
     }
-//
-//    private void updatePassOTP(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        try {
-//            String email = request.getParameter("email");
-//            String pass = request.getParameter("newPassword");
-//            String repass = request.getParameter("reNewPassword");
-//            if (pass.equals(repass)) {
-//                String otp = request.getParameter("otp");
-//                UserDAO password = new UserDAO();
-//                boolean isUpdated = password.updatePassOTP(repass, email, otp);
-//
-//                String message = "";
-//                if (isUpdated != true) {
-//                    request.setAttribute("successMessage", "OTP không đúng");
-//                    request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
-//                } else {
-//                    request.setAttribute("successMessage", "Cập nhật mật khẩu thành công");
-//                    request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
-//                }
-//            } else {
-//                request.setAttribute("successMessage", "Mật khẩu không khớp");
-//                request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
-//            }
-//
-////            isUpdated ? "Cập nhật mật khẩu thành công." : "Cập nhật mật khẩu không thành công.";
-////            request.setAttribute("successMessage", message);
-////            request.getRequestDispatcher("WEB-INF/ResetPassword.jsp").forward(request, response);
-//        } catch (Exception e) {
-//            logger.log(Level.SEVERE, "Error updating user", e);
-//        }
-//
-//    }
+
 
     private void updatePassOTP(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

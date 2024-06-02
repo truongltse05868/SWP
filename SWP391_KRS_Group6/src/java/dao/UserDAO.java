@@ -193,6 +193,51 @@ public class UserDAO extends DBConnect {
         return user;
     }
 
+    public boolean addUserRegister(User user) {
+        String query = "INSERT INTO user (user_name, password,full_name, email, status, role_id, otp) "
+                + "VALUES (?, ?, ? , ?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, user.getUser_name());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getFull_name());
+            ps.setString(4, user.getEmail());
+            ps.setBoolean(5, user.isStatus());
+            ps.setInt(6, user.getRole_id()); //mặc định là student
+            ps.setString(7, user.getOtp());
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.log(Level.INFO, "User added successfully");
+                return true;
+            } else {
+                logger.log(Level.WARNING, "No rows affected");
+                return false;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error adding user", e);
+            return false;
+        }
+    }
+
+    public boolean confirmUser(String email,String otp) {
+        String query = "UPDATE user SET status = ? WHERE email = ? and otp = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setBoolean(1, true);
+            ps.setString(2, email);
+            ps.setString(3, otp);
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.log(Level.INFO, "User confirm successfully");
+                return true;
+            } else {
+                logger.log(Level.WARNING, "No rows affected");
+                return false;
+            }
+        } catch (SQLException e) {
+           logger.log(Level.SEVERE, "Error user confirm", e);
+            return false;
+        }
+    }
+
     public User getUserByEmail(String email) {
         User user = null;
         String query = "SELECT * FROM user WHERE email = ?";
