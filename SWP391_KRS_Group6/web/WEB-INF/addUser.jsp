@@ -33,7 +33,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
 
         <!-- PAGE TITLE HERE ============================================= -->
-        <title>EduChamp : Education HTML Template </title>
+        <title>EduChamp : Add User </title>
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -406,30 +406,37 @@
                                             <label class="col-sm-2 col-form-label">User Name</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="userName" type="text" value="${user_name}">
+                                                <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['usernameError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Password</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="password" type="password" value="${password}">
+                                                <span class="error" style="font-size: smaller;">${errors['passError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="email" type="email" value="${email}">
+                                                <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Full Name</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="fullname" type="text" value="${full_name}">
+                                                <span class="error" style="font-size: smaller;">${errors['fullnameError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Phone</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="phone" type="tel" value="${phone}">
+                                                <span class="error" style="font-size: smaller;">${errors['phoneError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -446,6 +453,7 @@
                                                 <label class="col-sm-2 col-form-label">Age</label>
                                                 <div class="col-sm-4">
                                                     <input class="form-control" name="age" type="number" value="${age}">
+                                                    <span class="error" style="font-size: smaller;">${errors['ageError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">

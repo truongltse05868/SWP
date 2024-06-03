@@ -80,9 +80,9 @@
                                         <div class="input-group">
                                             <label>Your User Name</label>
                                             <input name="username" type="text" required="" class="form-control" value="${username}">
-                                            <span class="error">${errors['usernameError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['usernameError']}</span>
                                             
-                                            <span class="error">${errors['existsError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
                                         </div>
 
                                     </div>
@@ -92,8 +92,8 @@
                                         <div class="input-group">
                                             <label>Your Email Address</label>
                                             <input name="email" type="email" required="" class="form-control" value="${email}">
-                                            <span class="error">${errors['emailError']}</span>
-                                            <span class="error">${errors['existsError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
                                         </div>
 
                                     </div>
@@ -103,7 +103,7 @@
                                         <div class="input-group"> 
                                             <label>Your Password</label>
                                             <input name="password" type="password" class="form-control" required="">
-                                            <span class="error">${errors['passError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['passError']}</span>
                                         </div>
 
                                     </div>
@@ -113,7 +113,7 @@
                                         <div class="input-group"> 
                                             <label>Re Your Password</label>
                                             <input name="repassword" type="password" class="form-control" required="">
-                                            <span class="error">${errors['repassError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['repassError']}</span>
                                         </div>
 
                                     </div>

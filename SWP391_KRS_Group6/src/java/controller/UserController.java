@@ -13,7 +13,10 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 //@WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
@@ -53,8 +56,11 @@ public class UserController extends HttpServlet {
                     case "changePassAdmin":
                         changePassAdmin(request, response);
                         break;
-                    default:
+                    case "editUserProfile":
                         getUserProfle(request, response);
+                        break;
+                    default:
+//                        getUserProfle(request, response);
                         break;
                 }
             } else {
@@ -62,9 +68,6 @@ public class UserController extends HttpServlet {
                 switch (action) {
                     case "profileUserPage":
                         getProfileUser(request, response);
-                        break;
-                    default:
-                        getUserProfle(request, response);
                         break;
                 }
             }
@@ -218,8 +221,10 @@ public class UserController extends HttpServlet {
     private void changePassAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            SettingDAO settingDAO = new SettingDAO();
+            List<Setting> roles = settingDAO.getAllRole();
+
             int userId = Integer.parseInt(request.getParameter("id"));
-//            String currentPassword = request.getParameter("currentPassword");
             String newPassword = request.getParameter("newPassword");
             String reNewPassword = request.getParameter("reNewPassword");
             String message = "";
@@ -228,31 +233,23 @@ public class UserController extends HttpServlet {
             User user = userDAO.getUserById(userId);
 
             if (user != null) {
-//                if (!user.getPassword().equals(currentPassword)) {
-//                    message = "Current password is incorrect.";
-//                    request.setAttribute("errorMessage", message);
-//                } else 
-                if (!newPassword.equals(reNewPassword)) {
-                    message = "New passwords do not match.";
-                    request.setAttribute("successMessage", message);
+                if (!newPassword.equals(reNewPassword) || !validatePassword(newPassword)) {
+                    message = "New password does not meet requirements.";
                 } else {
                     user.setPassword(newPassword);
                     boolean isUpdated = userDAO.updateUser(user);
-
                     message = isUpdated ? "Password updated successfully." : "Password update failed.";
-                    request.setAttribute("successMessage", message);
-
-                    SettingDAO settingDAO = new SettingDAO();
-                    List<Setting> roles = settingDAO.getAllRole();
-                    request.setAttribute("user", user);
-                    request.setAttribute("roles", roles);
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
-                    dispatcher.forward(request, response);
-                    return;
                 }
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+                return;
             }
+
+            request.setAttribute("successMessage", message);
+            request.setAttribute("user", user);
+            request.setAttribute("roles", roles);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+            dispatcher.forward(request, response);
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid user ID format", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
@@ -260,9 +257,6 @@ public class UserController extends HttpServlet {
             logger.log(Level.SEVERE, "Error updating user", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
         }
-
-        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
-        dispatcher.forward(request, response);
     }
 
     private boolean loginAccount(String username, String password)
@@ -282,6 +276,10 @@ public class UserController extends HttpServlet {
     private void addUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            SettingDAO settingDAO = new SettingDAO();
+            List<Setting> roles = settingDAO.getAllRole();
+            // Danh sách các thông báo lỗi
+            Map<String, String> errors = new HashMap<>();
             // Lấy thông tin từ form
             String userName = request.getParameter("userName");
             String password = request.getParameter("password");
@@ -311,21 +309,54 @@ public class UserController extends HttpServlet {
             boolean emailExists = userDAO.checkEmailExists(email);
             boolean usernameExists = userDAO.checkUsernameExists(userName);
 
-            if (emailExists && usernameExists) {
-                request.setAttribute("successMessage", "Email và tên người dùng đã tồn tại.");
-            } else if (emailExists) {
-                request.setAttribute("successMessage", "Email đã tồn tại.");
-            } else if (usernameExists) {
-                request.setAttribute("successMessage", "Tên người dùng đã tồn tại.");
-            } else {
-                // Thêm người dùng vào cơ sở dữ liệu
-                boolean isSuccess = userDAO.addUser(user);
-                String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
-                request.setAttribute("successMessage", message);
+            // Validate các trường
+            if (!validateEmail(email)) {
+                errors.put("emailError", "Email không hợp lệ.");
             }
+
+            if (!validatePassword(password)) {
+                errors.put("passError", "Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số.");
+            }
+
+            if (!validateUsername(userName)) {
+                errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
+            }
+
+            if (!isValidPhone(phone)) {
+                errors.put("phoneError", "Số điện thoại có 10 chữ số và bắt đầu bằng số 0");
+            }
+            if (!isValidAge(age)) {
+                errors.put("ageError", "Độ tuổi phù hợp như là học sinh sinh viên");
+            }
+            if (!isValidFullName(fullName)) {
+                errors.put("fullnameError", "Độ dài không quá 100");
+            }
+            if (userDAO.checkEmailExists(email) || userDAO.checkUsernameExists(userName)) {
+                errors.put("existsError", "Email hoặc Username đã tồn tại.");
+            }
+
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                request.setAttribute("roles", roles);
+                request.setAttribute("user_name", userName);
+                request.setAttribute("password", password);
+                request.setAttribute("email", email);
+                request.setAttribute("full_name", fullName);
+                request.setAttribute("phone", phone);
+                request.setAttribute("gender", gender);
+                request.setAttribute("age", age);
+                request.setAttribute("status", status);
+                request.setAttribute("roleId", roleId);
+                request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
+                return;
+            }
+
+            // Thêm người dùng vào cơ sở dữ liệu
+            boolean isSuccess = userDAO.addUser(user);
+            String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
+            request.setAttribute("successMessage", message);
+
             // Chuyển hướng về trang addUser.jsp với thông báo kết quả
-            SettingDAO settingDAO = new SettingDAO();
-            List<Setting> roles = settingDAO.getAllRole();
             request.setAttribute("roles", roles);
             request.setAttribute("user_name", userName);
             request.setAttribute("password", password);
@@ -344,6 +375,54 @@ public class UserController extends HttpServlet {
             request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
         }
+    }
+
+    private boolean isValidFullName(String fullName) {
+        // Kiểm tra xem fullName có rỗng không
+        if (fullName == null || fullName.trim().isEmpty()) {
+            return false;
+        }
+        // Kiểm tra độ dài của fullName (không quá 100 ký tự)
+        if (fullName.length() > 100) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateEmail(String email) {
+        String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+        return Pattern.matches(emailRegex, email);
+    }
+
+    private boolean validatePassword(String password) {
+        // Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$";
+        return Pattern.matches(passwordRegex, password);
+    }
+
+    private boolean validateUsername(String username) {
+        // Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng
+        String usernameRegex = "^[a-zA-Z0-9]{3,20}$";
+        return Pattern.matches(usernameRegex, username);
+    }
+
+    private boolean isValidPhone(String phone) {
+        // Kiểm tra xem phone có rỗng không
+        if (phone == null || phone.trim().isEmpty()) {
+            return false;
+        }
+        // Kiểm tra định dạng của số điện thoại bằng biểu thức chính quy
+        // ở đây bạn có thể thực hiện kiểm tra theo định dạng cụ thể của số điện thoại trong quốc gia của bạn
+        // Ví dụ: "^\\d{10}$" cho 10 chữ số, hoặc kiểm tra có chứa ký tự đặc biệt nào khác không
+        if (!phone.matches("^0\\d{9}$")) {
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isValidAge(int age) {
+        // Kiểm tra xem age có nằm trong khoảng từ 1 đến 150 không (giả sử đây là giới hạn hợp lệ cho tuổi)
+        return age >= 1 && age <= 150;
     }
 
     @Override

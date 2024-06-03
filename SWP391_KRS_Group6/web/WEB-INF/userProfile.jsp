@@ -491,22 +491,12 @@
                                                 <h3>2. Password</h3>
                                             </div>
                                         </div>
-<!--                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Current Password</label>
-                                            <div class="col-sm-7">
-                                                <div class="input-group">
-                                                    <input class="form-control" name="currentPassword" type="password" required>
-                                                    <div class="input-group-append">
-                                                        <button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>-->
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">New Password</label>
                                             <div class="col-sm-7">
                                                 <div class="input-group">
                                                     <input class="form-control" type="password" name="newPassword" required>
+                                                    <span class="error" style="font-size: smaller;">${errors['passError']}</span>
                                                     <div class="input-group-append">
                                                         <button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button>
                                                     </div>
@@ -518,6 +508,7 @@
                                             <div class="col-sm-7">
                                                 <div class="input-group">
                                                     <input class="form-control" type="password" name="reNewPassword" required>
+                                                    <span class="error" style="font-size: smaller;">${errors['pass2Error']}</span>
                                                     <div class="input-group-append">
                                                         <button type="button" class="btn btn-outline-secondary toggle-password"><i class="fa fa-eye"></i></button>
                                                     </div>

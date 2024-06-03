@@ -418,6 +418,7 @@
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/userController" method="post">
                                                         <input type="hidden" name="id" value="${user.user_id}" />
+                                                        <input type="hidden" name="action" value="editUserProfile">
                                                         <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                                                     </form>
 
