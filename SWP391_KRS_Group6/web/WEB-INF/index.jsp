@@ -376,6 +376,23 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
                                         <li><a href="error-404.html">404 Page</a></li>
                                     </ul>
                                 </li>
+                                <li class="add-mega-menu"><a href="javascript:;">Our Classes <i class="fa fa-chevron-down"></i></a>
+                                    <ul class="sub-menu add-menu">
+                                        <li class="add-menu-left">
+                                            <h5 class="menu-adv-title">Our Classes</h5>
+                                            <ul>
+                                                <li><a href="ClassController">Classes </a></li>
+                                                <li><a href="courses-details.html">Classes Details</a></li>
+                                                <li><a href="profile.html">Instructor Profile</a></li>
+                                                <li><a href="event.html">Upcoming Event</a></li>
+                                                <li><a href="membership.html">Membership</a></li>
+                                            </ul>
+                                        </li>
+                                        <li class="add-menu-right">
+                                            <img src="assets/images/adv/adv.jpg" alt=""/>
+                                        </li>
+                                    </ul>
+                                </li>
                                 <li class="add-mega-menu"><a href="javascript:;">Our Courses <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu add-menu">
                                         <li class="add-menu-left">
