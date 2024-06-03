@@ -81,6 +81,8 @@
                                             <label>Your User Name</label>
                                             <input name="username" type="text" required="" class="form-control" value="${username}">
                                             <span class="error">${errors['usernameError']}</span>
+                                            
+                                            <span class="error">${errors['existsError']}</span>
                                         </div>
 
                                     </div>
@@ -91,6 +93,7 @@
                                             <label>Your Email Address</label>
                                             <input name="email" type="email" required="" class="form-control" value="${email}">
                                             <span class="error">${errors['emailError']}</span>
+                                            <span class="error">${errors['existsError']}</span>
                                         </div>
 
                                     </div>
@@ -118,7 +121,7 @@
                                 <div class="col-lg-12 m-b30">
                                     <button name="submit" type="submit" value="Submit" class="btn button-md">Sign Up</button>
                                 </div>
-                                <div>
+<!--                                <div>
                                     <%
         String errorMessage = (String) request.getAttribute("errorMessage");
         if (errorMessage != null) {
@@ -130,7 +133,7 @@
             out.println("<p style='color:green;'>" + successMessage + "</p>");
         }
                                     %>
-                                </div>
+                                </div>-->
                                 <div class="col-lg-12">
                                     <h6>Sign Up with Social media</h6>
                                     <div class="d-flex">

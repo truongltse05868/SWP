@@ -160,7 +160,7 @@ public class RegisterController extends HttpServlet {
                 String confirmationLink = "http://localhost:8080/SWP391_KRS_Group6/EmailConfirm?email=" + email + "&otp=" + otp;
 
                 // Gửi email xác nhận
-                sendEmail(email, confirmationLink);
+                sendEmail(email, confirmationLink, userName);
 
                 request.setAttribute("successMessage", "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận.");
 //                request.getRequestDispatcher("Login").forward(request, response);
@@ -189,7 +189,7 @@ public class RegisterController extends HttpServlet {
         return isSaveOTP;
     }
 
-    private void sendEmail(String recipientEmail, String confirmationLink) {
+    private void sendEmail(String recipientEmail, String confirmationLink, String email) {
         String host = "live.smtp.mailtrap.io";
         final String user = "api";
         final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
@@ -213,7 +213,7 @@ public class RegisterController extends HttpServlet {
             message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
             message.setSubject("Email Confirmation");
-            message.setText("Dear user,"
+            message.setText("Dear " + email + ""
                     + "\n\n Please click the following link to confirm your email address: "
                     + confirmationLink);
 
