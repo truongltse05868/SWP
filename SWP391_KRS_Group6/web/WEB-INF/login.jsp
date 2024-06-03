@@ -12,8 +12,8 @@
 
 
     <head>
-        
-        
+
+
 
         <!-- META ============================================= -->
         <meta charset="utf-8">
@@ -60,28 +60,28 @@
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
 
         <script>
-                function sendPostRequestForPass(action) {
-            // Tạo form ẩn
-            var form = document.createElement("form");
-            form.setAttribute("method", "post");
-            form.setAttribute("action", "ForgotPasswordController");
-            
-            // Tạo input ẩn cho action
-            var hiddenField = document.createElement("input");
-            hiddenField.setAttribute("type", "hidden");
-            hiddenField.setAttribute("name", "action");
-            hiddenField.setAttribute("value", action);
-            
-            // Thêm input ẩn vào form
-            form.appendChild(hiddenField);
-            
-            // Thêm form vào body và submit
-            document.body.appendChild(form);
-            form.submit();
-        }
+            function sendPostRequestForPass(action) {
+                // Tạo form ẩn
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "ForgotPasswordController");
+
+                // Tạo input ẩn cho action
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "action");
+                hiddenField.setAttribute("value", action);
+
+                // Thêm input ẩn vào form
+                form.appendChild(hiddenField);
+
+                // Thêm form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            }
         </script>
     </head>
-    
+
     <body id="bg">
         <div class="page-wraper">
             <div id="loading-icon-bx"></div>
@@ -123,6 +123,19 @@
                                         <a class="ml-auto" id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage'); return false;">ForgotPassword</a>
                                     </div>
                                 </div>
+                                <div>
+                                    <%
+        String errorMessage = (String) request.getAttribute("errorMessage");
+        if (errorMessage != null) {
+            out.println("<p style='color:red;'>" + errorMessage + "</p>");
+        }
+
+        String successMessage = (String) request.getAttribute("successMessage");
+        if (successMessage != null) {
+            out.println("<p style='color:green;'>" + successMessage + "</p>");
+        }
+                                    %>
+                                </div>
                                 <div class="col-lg-12 m-b30">
                                     <button type="submit" class="btn button-md">Login</button>
                                 </div>
@@ -135,7 +148,7 @@
                                 </div>
                             </div>
                         </form>
-                        
+
                     </div>
                 </div>
             </div>

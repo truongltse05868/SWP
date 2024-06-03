@@ -113,13 +113,17 @@ public class RegisterController extends HttpServlet {
             String repass = request.getParameter("repassword");
             String otp = generateOTP();
             if (userDAO.checkEmailExists(email) || userDAO.checkUsernameExists(userName)) {
-                request.setAttribute("message", "Email hoặc Username đã tồn tại.");
+                request.setAttribute("username", userName);
+                request.setAttribute("email", email);
+                request.setAttribute("errorMessage", "Email hoặc Username đã tồn tại.");
                 request.getRequestDispatcher("WEB-INF/Register.jsp").forward(request, response);
                 return;
             }
 
             if (!pass.equals(repass)) {
-                request.setAttribute("message", "Password và Repassword không trùng khớp.");
+                request.setAttribute("username", userName);
+                request.setAttribute("email", email);
+                request.setAttribute("errorMessage", "Password và Repassword không trùng khớp.");
                 request.getRequestDispatcher("WEB-INF/Register.jsp").forward(request, response);
                 return;
             }
@@ -139,10 +143,11 @@ public class RegisterController extends HttpServlet {
                 // Gửi email xác nhận
                 sendEmail(email, confirmationLink);
 
-                request.setAttribute("message", "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận.");
+                request.setAttribute("successMessage", "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận.");
+//                request.getRequestDispatcher("Login").forward(request, response);
                 request.getRequestDispatcher("Login").forward(request, response);
             } else {
-                request.setAttribute("message", "lỗi gì đó chưa check được");
+                request.setAttribute("errorMessage", "lỗi gì đó chưa check được");
             }
 
         } catch (Exception e) {

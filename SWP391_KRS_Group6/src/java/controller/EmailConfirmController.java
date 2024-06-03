@@ -64,7 +64,7 @@ public class EmailConfirmController extends HttpServlet {
 
         boolean confirm = user.confirmUser(email, otp);
         if (confirm) {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("Login");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmEmailSuccess.jsp");
             dispatcher.forward(request, response);
         }else{
             RequestDispatcher dispatcher = request.getRequestDispatcher("RegisterController");

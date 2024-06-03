@@ -393,7 +393,7 @@
                                         </div>
                                     </c:if>
                                     <c:if test="${empty classes}">
-                                        <p>No users found.</p>
+                                        <p>No Classes found.</p>
                                     </c:if>
                                     <div class="col-lg-12 m-b20">
                                         <div class="pagination-bx rounded-sm gray clearfix">

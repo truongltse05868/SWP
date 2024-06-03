@@ -75,7 +75,7 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <label>Your Name</label>
-                                            <input name="username" type="text" required="" class="form-control">
+                                            <input name="username" type="text" required="" class="form-control" value="${username}">
                                         </div>
                                     </div>
                                 </div>
@@ -83,7 +83,7 @@
                                     <div class="form-group">
                                         <div class="input-group">
                                             <label>Your Email Address</label>
-                                            <input name="email" type="email" required="" class="form-control">
+                                            <input name="email" type="email" required="" class="form-control" value="${email}">
                                         </div>
                                     </div>
                                 </div>
@@ -106,16 +106,8 @@
                                 <div class="col-lg-12 m-b30">
                                     <button name="submit" type="submit" value="Submit" class="btn button-md">Sign Up</button>
                                 </div>
-                                <div class="col-lg-12">
-                                    <h6>Sign Up with Social media</h6>
-                                    <div class="d-flex">
-                                        <!--<a class="btn flex-fill m-r5 facebook" href="#"><i class="fa fa-facebook"></i>Facebook</a>-->
-                                        <a class="btn flex-fill m-l5 google-plus" href="#"><i class="fa fa-google-plus"></i>Google</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                        <%
+                                <div>
+                                    <%
         String errorMessage = (String) request.getAttribute("errorMessage");
         if (errorMessage != null) {
             out.println("<p style='color:red;'>" + errorMessage + "</p>");
@@ -125,7 +117,18 @@
         if (successMessage != null) {
             out.println("<p style='color:green;'>" + successMessage + "</p>");
         }
-                        %>
+                                    %>
+                                </div>
+                                <div class="col-lg-12">
+                                    <h6>Sign Up with Social media</h6>
+                                    <div class="d-flex">
+                                        <!--<a class="btn flex-fill m-r5 facebook" href="#"><i class="fa fa-facebook"></i>Facebook</a>-->
+                                        <a class="btn flex-fill m-l5 google-plus" href="#"><i class="fa fa-google-plus"></i>Google</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+
                     </div>
                 </div>
             </div>
