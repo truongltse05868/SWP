@@ -20,6 +20,9 @@ import java.util.UUID;
 import jakarta.mail.*;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -112,18 +115,34 @@ public class RegisterController extends HttpServlet {
             String pass = request.getParameter("password");
             String repass = request.getParameter("repassword");
             String otp = generateOTP();
+            // Danh sách các thông báo lỗi
+            Map<String, String> errors = new HashMap<>();
+
+            // Validate các trường
+            if (!validateEmail(email)) {
+                errors.put("emailError", "Email không hợp lệ.");
+            }
+
+            if (!validatePassword(pass)) {
+                errors.put("passError", "Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số.");
+            }
+
+            if (!validateUsername(userName)) {
+                errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
+            }
+
             if (userDAO.checkEmailExists(email) || userDAO.checkUsernameExists(userName)) {
-                request.setAttribute("username", userName);
-                request.setAttribute("email", email);
-                request.setAttribute("errorMessage", "Email hoặc Username đã tồn tại.");
-                request.getRequestDispatcher("WEB-INF/Register.jsp").forward(request, response);
-                return;
+                errors.put("existsError", "Email hoặc Username đã tồn tại.");
             }
 
             if (!pass.equals(repass)) {
+                errors.put("repassError", "Password và Repassword không trùng khớp.");
+            }
+
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
                 request.setAttribute("username", userName);
                 request.setAttribute("email", email);
-                request.setAttribute("errorMessage", "Password và Repassword không trùng khớp.");
                 request.getRequestDispatcher("WEB-INF/Register.jsp").forward(request, response);
                 return;
             }
@@ -204,6 +223,23 @@ public class RegisterController extends HttpServlet {
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private boolean validateEmail(String email) {
+        String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
+        return Pattern.matches(emailRegex, email);
+    }
+
+    private boolean validatePassword(String password) {
+        // Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$";
+        return Pattern.matches(passwordRegex, password);
+    }
+
+    private boolean validateUsername(String username) {
+        // Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng
+        String usernameRegex = "^[a-zA-Z0-9]{3,20}$";
+        return Pattern.matches(usernameRegex, username);
     }
 
     /**

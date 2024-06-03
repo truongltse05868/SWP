@@ -67,6 +67,7 @@ public class EmailConfirmController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmEmailSuccess.jsp");
             dispatcher.forward(request, response);
         }else{
+            request.setAttribute("errorMessage", "Quá hạn xác nhận");
             RequestDispatcher dispatcher = request.getRequestDispatcher("RegisterController");
             dispatcher.forward(request, response);
         }

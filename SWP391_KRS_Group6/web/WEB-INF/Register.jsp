@@ -53,7 +53,11 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-
+        <style>
+            .error {
+                color: red;
+            }
+        </style>
     </head>
     <body id="bg">
         <div class="page-wraper">
@@ -74,9 +78,11 @@
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <div class="input-group">
-                                            <label>Your Name</label>
+                                            <label>Your User Name</label>
                                             <input name="username" type="text" required="" class="form-control" value="${username}">
+                                            <span class="error">${errors['usernameError']}</span>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -84,7 +90,9 @@
                                         <div class="input-group">
                                             <label>Your Email Address</label>
                                             <input name="email" type="email" required="" class="form-control" value="${email}">
+                                            <span class="error">${errors['emailError']}</span>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -92,7 +100,9 @@
                                         <div class="input-group"> 
                                             <label>Your Password</label>
                                             <input name="password" type="password" class="form-control" required="">
+                                            <span class="error">${errors['passError']}</span>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-12">
@@ -100,7 +110,9 @@
                                         <div class="input-group"> 
                                             <label>Re Your Password</label>
                                             <input name="repassword" type="password" class="form-control" required="">
+                                            <span class="error">${errors['repassError']}</span>
                                         </div>
+
                                     </div>
                                 </div>
                                 <div class="col-lg-12 m-b30">

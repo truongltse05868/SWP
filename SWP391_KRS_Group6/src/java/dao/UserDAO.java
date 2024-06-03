@@ -86,9 +86,10 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean checkEmailExists(String email) {
-        String query = "SELECT COUNT(*) FROM user WHERE email = ?";
+        String query = "SELECT COUNT(*) FROM user WHERE email = ? and status = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, email);
+            ps.setBoolean(2, true);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
@@ -101,9 +102,10 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean checkUsernameExists(String userName) {
-        String query = "SELECT COUNT(*) FROM user WHERE user_name = ?";
+        String query = "SELECT COUNT(*) FROM user WHERE user_name = ? and status = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, userName);
+            ps.setBoolean(2, true);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1) > 0;
@@ -194,8 +196,8 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean addUserRegister(User user) {
-        String query = "INSERT INTO user (user_name, password,full_name, email, status, role_id, otp) "
-                + "VALUES (?, ?, ? , ?, ?, ?, ?)";
+        String query = "INSERT INTO user (user_name, password,full_name, email, status, role_id, otp, otp_expiry) "
+                + "VALUES (?, ?, ? , ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, user.getUser_name());
             ps.setString(2, user.getPassword());
@@ -204,6 +206,9 @@ public class UserDAO extends DBConnect {
             ps.setBoolean(5, user.isStatus());
             ps.setInt(6, user.getRole_id()); //mặc định là student
             ps.setString(7, user.getOtp());
+            long expiryTime = System.currentTimeMillis() + 1 * 60 * 1000;
+            Timestamp otp_expiry = new Timestamp(expiryTime);
+            ps.setTimestamp(8, otp_expiry);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 logger.log(Level.INFO, "User added successfully");
@@ -219,17 +224,20 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean confirmUser(String email,String otp) {
-        String query = "UPDATE user SET status = ? WHERE email = ? and otp = ?";
+        // Tạo một timestamp cho thời điểm hiện tại
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        String query = "UPDATE user SET status = ? WHERE email = ? and otp = ? and otp_expiry > ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setBoolean(1, true);
             ps.setString(2, email);
             ps.setString(3, otp);
+            ps.setTimestamp(4, currentTime);
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
                 logger.log(Level.INFO, "User confirm successfully");
                 return true;
             } else {
-                logger.log(Level.WARNING, "No rows affected");
+                logger.log(Level.WARNING, "No rows affected or OTP expired");
                 return false;
             }
         } catch (SQLException e) {
@@ -290,9 +298,10 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean loginAccount(String account, String password) {
-        String query = "SELECT * FROM user WHERE `user_name` = ?";
+        String query = "SELECT * FROM user WHERE `user_name` = ? and status = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
+            ps.setBoolean(2, true);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String checkAccount = rs.getString("user_name");
@@ -337,11 +346,12 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean updatePassOTP(String password, String email, String otp) {
-        String query = "UPDATE user SET password = ? WHERE email = ? AND otp = ?";
+        String query = "UPDATE user SET password = ?, status = ? WHERE email = ? AND otp = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, password);
-            ps.setString(2, email);
-            ps.setString(3, otp);
+            ps.setBoolean(2, true);
+            ps.setString(3, email);
+            ps.setString(4, otp);
             int rowsAffected = ps.executeUpdate();
             // Kiểm tra số hàng bị ảnh hưởng
             if (rowsAffected > 0) {
