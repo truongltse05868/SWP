@@ -1,4 +1,4 @@
-USE KRS_SWR
+USE KRS_SWP;
 
 -- Table to store settings such as roles, types, etc.
 CREATE TABLE if not exists setting (
@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `post_category` (
 CREATE TABLE IF NOT EXISTS `class` (
     class_id INT AUTO_INCREMENT PRIMARY KEY,
     subject_id INT NOT NULL,
+    class_name NVARCHAR(255),
     `status` bit DEFAULT 0 NOT NULL,
     FOREIGN KEY (subject_id) REFERENCES subject(subject_id)
 );

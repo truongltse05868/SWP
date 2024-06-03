@@ -6,10 +6,12 @@ package controller;
 
 import dao.ClassDAO;
 import dao.SettingDAO;
+import dao.SubjectDAO;
 import dao.UserDAO;
 import entity.Setting;
 import entity.User;
 import entity.Class;
+import entity.Subject;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -119,8 +121,11 @@ public class ClassController extends HttpServlet {
             throws ServletException, IOException {
         try {
              ClassDAO classDAO = new ClassDAO();
+             SubjectDAO subjectDAO = new SubjectDAO();
             List<Class> classList = classDAO.getAllClass();
+            List<Subject> subjectList = subjectDAO.getAllSubjects();
             request.setAttribute("classes", classList);
+            request.setAttribute("subjectList", subjectList);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {

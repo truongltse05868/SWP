@@ -9,8 +9,10 @@ package entity;
  * @author Simon
  */
 public class Class {
+
     private int class_id;
     private int subject_id;
+    private String class_name;
     private boolean status;
 
     public Class() {
@@ -20,6 +22,21 @@ public class Class {
         this.class_id = class_id;
         this.subject_id = subject_id;
         this.status = status;
+    }
+
+    public Class(int class_id, int subject_id, String class_name, boolean status) {
+        this.class_id = class_id;
+        this.subject_id = subject_id;
+        this.class_name = class_name;
+        this.status = status;
+    }
+
+    public String getClass_name() {
+        return class_name;
+    }
+
+    public void setClass_name(String class_name) {
+        this.class_name = class_name;
     }
 
     public int getClass_id() {
@@ -48,13 +65,11 @@ public class Class {
 
     @Override
     public String toString() {
-        return "Class{" +
-                "class_id=" + class_id +
-                ", subject_id=" + subject_id +
-                ", status=" + status +
-                '}';
+        return "Class{"
+                + "class_id=" + class_id
+                + ", subject_id=" + subject_id
+                + ", status=" + status
+                + '}';
     }
 
-    
-    
 }

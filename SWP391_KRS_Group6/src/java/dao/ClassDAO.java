@@ -7,9 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.logging.Logger;
 
 /**
@@ -34,7 +32,9 @@ public class ClassDAO extends DBConnect{
                 Class classs = new Class(
                         rs.getInt("class_id"),
                         rs.getInt("subject_id"),
+                        rs.getString("class_name"),
                         rs.getBoolean("status")
+                        
                 );
                 classList.add(classs);
             }

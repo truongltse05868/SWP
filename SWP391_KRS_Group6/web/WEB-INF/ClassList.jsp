@@ -85,11 +85,11 @@
                                         <li><a id="registerLink" href="RegisterController">Register</a></li>
                                         <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
                                                 return false;">ForgotPassword</a></li>
-                                    </c:if>
-                                    <c:if test="${sessionScope['account'].getRole_id() != null}">
+                                        </c:if>
+                                        <c:if test="${sessionScope['account'].getRole_id() != null}">
                                         <li> <a href="contact.html">Hello, ${sessionScope.account.full_name} </a></li>
                                         <li><a id="logoutLink" href="Logout" >Logout</a></li>
-                                    </c:if>
+                                        </c:if>
                                 </ul>
                             </div>
                         </div>
@@ -351,8 +351,22 @@
                                                             <a href="#" class="btn">Read More</a>
                                                         </div>
                                                         <div class="info-bx text-center">
-                                                            <h5><a href="#">Class ID: ${classList.class_id}</a></h5>
-                                                            <span>Subject ID: ${classList.subject_id}</span>
+                                                            <h5><a href="#">Class: ${classList.class_name}</a></h5>
+                                                            
+                                                            <span>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty subjectList}">
+                                                                        <c:forEach var="subjects" items="${subjectList}">
+                                                                            <c:if test="${subjects.subject_id == classList.subject_id}">
+                                                                                ${subjects.subject_name}
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        No subject found
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </span>
                                                         </div>
                                                         <div class="cours-more-info">
                                                             <div class="review">
