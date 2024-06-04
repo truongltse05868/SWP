@@ -29,7 +29,7 @@
 	
 	<!-- FAVICONS ICON ============================================= -->
 	<link rel="icon" href="../error-404.html" type="image/x-icon" />
-	<link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png" />
+	<link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
 	
 	<!-- PAGE TITLE HERE ============================================= -->
 	<title>EduChamp : Education HTML Template </title>
@@ -43,19 +43,19 @@
 	<![endif]-->
 	
 	<!-- All PLUGINS CSS ============================================= -->
-	<link rel="stylesheet" type="text/css" href="assets/css/assets.css">
-	<link rel="stylesheet" type="text/css" href="assets/vendors/calendar/fullcalendar.css">
+	<link rel="stylesheet" type="text/css" href="admin/assets/css/assets.css">
+	<link rel="stylesheet" type="text/css" href="admin/assets/vendors/calendar/fullcalendar.css">
 	
 	<!-- TYPOGRAPHY ============================================= -->
-	<link rel="stylesheet" type="text/css" href="assets/css/typography.css">
+	<link rel="stylesheet" type="text/css" href="admin/assets/css/typography.css">
 	
 	<!-- SHORTCODES ============================================= -->
-	<link rel="stylesheet" type="text/css" href="assets/css/shortcodes/shortcodes.css">
+	<link rel="stylesheet" type="text/css" href="admin/assets/css/shortcodes/shortcodes.css">
 	
 	<!-- STYLESHEETS ============================================= -->
-	<link rel="stylesheet" type="text/css" href="assets/css/style.css">
-	<link rel="stylesheet" type="text/css" href="assets/css/dashboard.css">
-	<link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+	<link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
+	<link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
+	<link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
 	
 </head>
 <body class="ttr-opened-sidebar ttr-pinned-sidebar">
@@ -73,8 +73,8 @@
 			<div class="ttr-logo-box">
 				<div>
 					<a href="index.html" class="ttr-logo">
-						<img class="ttr-logo-mobile" alt="" src="assets/images/logo-mobile.png" width="30" height="30">
-						<img class="ttr-logo-desktop" alt="" src="assets/images/logo-white.png" width="160" height="27">
+						<img class="ttr-logo-mobile" alt="" src="admin/assets/images/logo-mobile.png" width="30" height="30">
+						<img class="ttr-logo-desktop" alt="" src="admin/assets/images/logo-white.png" width="160" height="27">
 					</a>
 				</div>
 			</div>
@@ -178,7 +178,7 @@
 						</div>
 					</li>
 					<li>
-						<a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+						<a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="admin/assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
 						<div class="ttr-header-submenu">
 							<ul>
 								<li><a href="user-profile.html">My profile</a></li>
@@ -241,7 +241,7 @@
 		<div class="ttr-sidebar-wrapper content-scroll">
 			<!-- side menu logo start -->
 			<div class="ttr-sidebar-logo">
-				<a href="#"><img alt="" src="assets/images/logo.png" width="122" height="27"></a>
+				<a href="#"><img alt="" src="admin/assets/images/logo.png" width="122" height="27"></a>
 				<!-- <div class="ttr-sidebar-pin-button" title="Pin/Unpin Menu">
 					<i class="material-icons ttr-fixed-icon">gps_fixed</i>
 					<i class="material-icons ttr-not-fixed-icon">gps_not_fixed</i>
@@ -472,7 +472,7 @@
 								<ul>
 									<li>
 										<span class="new-users-pic">
-											<img src="assets/images/testimonials/pic1.jpg" alt=""/>
+											<img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
 										</span>
 										<span class="new-users-text">
 											<a href="#" class="new-users-name">Anna Strong </a>
@@ -484,7 +484,7 @@
 									</li>
 									<li>
 										<span class="new-users-pic">
-											<img src="assets/images/testimonials/pic2.jpg" alt=""/>
+											<img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
 										</span>
 										<span class="new-users-text">
 											<a href="#" class="new-users-name"> Milano Esco </a>
@@ -496,7 +496,7 @@
 									</li>
 									<li>
 										<span class="new-users-pic">
-											<img src="assets/images/testimonials/pic1.jpg" alt=""/>
+											<img src="admin/assets/images/testimonials/pic1.jpg" alt=""/>
 										</span>
 										<span class="new-users-text">
 											<a href="#" class="new-users-name">Nick Bold  </a>
@@ -508,7 +508,7 @@
 									</li>
 									<li>
 										<span class="new-users-pic">
-											<img src="assets/images/testimonials/pic2.jpg" alt=""/>
+											<img src="admin/assets/images/testimonials/pic2.jpg" alt=""/>
 										</span>
 										<span class="new-users-text">
 											<a href="#" class="new-users-name">Wiltor Delton </a>
@@ -520,7 +520,7 @@
 									</li>
 									<li>
 										<span class="new-users-pic">
-											<img src="assets/images/testimonials/pic3.jpg" alt=""/>
+											<img src="admin/assets/images/testimonials/pic3.jpg" alt=""/>
 										</span>
 										<span class="new-users-text">
 											<a href="#" class="new-users-name">Nick Stone </a>
