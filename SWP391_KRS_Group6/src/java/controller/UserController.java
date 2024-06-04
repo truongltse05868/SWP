@@ -51,13 +51,19 @@ public class UserController extends HttpServlet {
                         updateUser(request, response);
                         break;
                     case "userList":
-                        getListUser(request, response);
+                        getListUser2(request, response);
                         break;
                     case "changePassAdmin":
                         changePassAdmin(request, response);
                         break;
                     case "editUserProfile":
                         getUserProfle(request, response);
+                        break;
+                    case "searchUsername":
+                        getListUser2(request, response);
+                        break;
+                    case "sortField":
+                        getListUser2(request, response);
                         break;
                     default:
 //                        getUserProfle(request, response);
@@ -374,6 +380,42 @@ public class UserController extends HttpServlet {
             // Xử lý ngoại lệ nếu có
             request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
+        }
+    }
+
+    //sort and search
+    private void getListUser2(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            UserDAO userDAO = new UserDAO();
+            SettingDAO roleDAO = new SettingDAO();
+            List<User> users;
+            List<Setting> roles = roleDAO.getAllRole();
+
+            // Lấy tham số tìm kiếm và sắp xếp
+            String searchUsername = request.getParameter("searchUsername");
+            String sortField = request.getParameter("sortField");
+
+            if (searchUsername != null && !searchUsername.isEmpty()) {
+                users = userDAO.searchUsersByUsername(searchUsername);
+            } else if (sortField != null && !sortField.isEmpty()) {
+                users = userDAO.getUsersSortedBy(sortField);
+            } else {
+                users = userDAO.getAllUsers();
+            }
+
+            // Set the list of users as a request attribute
+            request.setAttribute("users", users);
+            request.setAttribute("roles", roles);
+            request.setAttribute("searchUsername", searchUsername);
+            request.setAttribute("sortField", sortField);
+
+            // Forward the request to the JSP page
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list user", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
         }
     }
 
