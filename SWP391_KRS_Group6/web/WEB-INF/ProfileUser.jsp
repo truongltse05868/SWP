@@ -610,34 +610,27 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Full Name</label>
+                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">User Name</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
                                                                 <input class="form-control" type="text" value="${user.user_name}">
                                                             </div>
                                                         </div>
-<!--                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Occupation</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="CTO">
-                                                            </div>
-                                                        </div>-->
-<!--                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Company Name</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="EduChamp">
-                                                                <span class="help">If you want your invoices addressed to a company. Leave blank to use your full name.</span>
-                                                            </div>
-                                                        </div>-->
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Phone No.</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
                                                                 <input class="form-control" type="text" value="${user.phone}">
                                                             </div>
                                                         </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Full Name</label>
+                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
+                                                                <input class="form-control" type="text" value="${user.full_name}">
+                                                            </div>
+                                                        </div>
 
                                                         <div class="seperator"></div>
 
-                                                        <div class="form-group row">
+<!--                                                        <div class="form-group row">
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-10 ml-auto">
                                                                 <h3>2. Address</h3>
                                                             </div>
@@ -665,8 +658,8 @@
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
                                                                 <input class="form-control" type="text" value="000702">
                                                             </div>
-                                                        </div>
-
+                                                        </div>-->
+<!--
                                                         <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
 
                                                         <div class="form-group row">
@@ -698,7 +691,7 @@
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
                                                                 <input class="form-control" type="text" value="www.instagram.com">
                                                             </div>
-                                                        </div>
+                                                        </div>-->
                                                     </div>
                                                     <div class="">
                                                         <div class="">
