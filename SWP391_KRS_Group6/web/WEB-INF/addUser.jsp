@@ -352,18 +352,28 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Gender</label>
                                             <div class="col-sm-4">
-                                                <select class="form-control" name="gender">
-                                                    <option value="Male" <c:if test="${gender == 'Male'}">selected</c:if>>Male</option>
-                                                    <option value="Female" <c:if test="${gender == 'Female'}">selected</c:if>>Female</option>
-                                                    <option value="Other" <c:if test="${gender == 'Other'}">selected</c:if>>Other</option>
-                                                    </select>
+                                                <div class="form-check">
+                                                    <input type="radio" class="form-check-input" name="gender" id="male" value="Male" <c:if test="${gender == 'Male'}">checked</c:if>>
+                                                        <label class="form-check-label" for="male">Male</label>
+
+
+                                                        <input type="radio" class="form-check-input" name="gender" id="female" value="Female" <c:if test="${gender == 'Female'}">checked</c:if>>
+                                                        <label class="form-check-label" for="female">Female</label>
+
+
+                                                        <input type="radio" class="form-check-input" name="gender" id="other" value="Other" <c:if test="${gender == 'Other'}">checked</c:if>>
+                                                        <label class="form-check-label" for="other">Other</label>
+                                                    </div>
                                                 </div>
+
                                             </div>
+
+
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">Age</label>
                                                 <div class="col-sm-4">
-                                                    <input class="form-control" name="age" type="number" value="${age}">
-                                                    <span class="error" style="font-size: smaller;">${errors['ageError']}</span>
+                                                    <input class="form-control" name="age" type="text" value="${age}">
+                                                <span class="error" style="font-size: smaller;">${errors['ageError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -419,22 +429,22 @@
         <script src="admin/assets/js/admin.js"></script>
         <script src='admin/assets/vendors/switcher/switcher.js'></script>
         <script>
-                                // Pricing add
-                                function newMenuItem() {
-                                    var newElem = $('tr.list-item').first().clone();
-                                    newElem.find('input').val('');
-                                    newElem.appendTo('table#item-add');
-                                }
-                                if ($("table#item-add").is('*')) {
-                                    $('.add-item').on('click', function (e) {
-                                        e.preventDefault();
-                                        newMenuItem();
-                                    });
-                                    $(document).on("click", "#item-add .delete", function (e) {
-                                        e.preventDefault();
-                                        $(this).parent().parent().parent().parent().remove();
-                                    });
-                                }
+                // Pricing add
+                function newMenuItem() {
+                    var newElem = $('tr.list-item').first().clone();
+                    newElem.find('input').val('');
+                    newElem.appendTo('table#item-add');
+                }
+                if ($("table#item-add").is('*')) {
+                    $('.add-item').on('click', function (e) {
+                        e.preventDefault();
+                        newMenuItem();
+                    });
+                    $(document).on("click", "#item-add .delete", function (e) {
+                        e.preventDefault();
+                        $(this).parent().parent().parent().parent().remove();
+                    });
+                }
         </script>
     </body>
 

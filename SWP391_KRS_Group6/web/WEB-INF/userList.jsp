@@ -98,23 +98,33 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="widget-inner">
+                                <form class="row col-sm-3" method="post" action="userController">
+                                    <div class="col">
+                                        <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
+                                    </div>
+                                    <div class="col-auto">
+                                        <input type="hidden" name="action" value="searchUsername">
+                                        <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="widget-inner">
                                 <c:if test="${not empty users}">
                                     <table >
                                         <tr>
-<!--                                            <th>ID</th>-->
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Full Name</th>
-                                            <th>Phone</th>
+                                            <th><a href="userController?action=sortField&sortField=user_name">Username</a></th>
+                                            <th><a href="userController?action=sortField&sortField=full_name">Full Name</a></th>
+                                            <th><a href="userController?action=sortField&sortField=email">Email</a></th>
+                                            <th><a href="userController?action=sortField&sortField=phone">Phone</a></th>
                                             <th>Gender</th>
                                             <th>Age</th>
-                                            <th>Status</th>
-                                            <th>Role </th>
+                                            <th><a href="?sortField=status">Status</a></th>
+                                            <th>Role</th>
                                             <th>Update</th>
                                         </tr>
                                         <c:forEach var="user" items="${users}">
                                             <tr>
-                                                
+
                                                 <td>${user.user_name}</td>
                                                 <td>${user.email}</td>
                                                 <td>${user.full_name}</td>

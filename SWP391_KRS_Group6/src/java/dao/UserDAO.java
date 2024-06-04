@@ -53,6 +53,62 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
+// Method to get users by username
+
+    public List<User> searchUsersByUsername(String username) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE user_name LIKE ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, "%" + username + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getInt("age"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                // Populate user object
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error searching users by username", e);
+        }
+        return users;
+    }
+
+    public List<User> getUsersSortedBy(String field) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user ORDER BY " + field;
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getInt("age"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                // Populate user object
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error sorting users by " + field, e);
+        }
+        return users;
+    }
 
     public List<User> checkLogin(String account, String password) {
 
@@ -223,7 +279,7 @@ public class UserDAO extends DBConnect {
         }
     }
 
-    public boolean confirmUser(String email,String otp) {
+    public boolean confirmUser(String email, String otp) {
         // Tạo một timestamp cho thời điểm hiện tại
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         String query = "UPDATE user SET status = ? WHERE email = ? and otp = ? and otp_expiry > ?";
@@ -241,7 +297,7 @@ public class UserDAO extends DBConnect {
                 return false;
             }
         } catch (SQLException e) {
-           logger.log(Level.SEVERE, "Error user confirm", e);
+            logger.log(Level.SEVERE, "Error user confirm", e);
             return false;
         }
     }

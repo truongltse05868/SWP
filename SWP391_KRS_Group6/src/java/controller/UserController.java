@@ -51,13 +51,19 @@ public class UserController extends HttpServlet {
                         updateUser(request, response);
                         break;
                     case "userList":
-                        getListUser(request, response);
+                        getListUser2(request, response);
                         break;
                     case "changePassAdmin":
                         changePassAdmin(request, response);
                         break;
                     case "editUserProfile":
                         getUserProfle(request, response);
+                        break;
+                    case "searchUsername":
+                        getListUser2(request, response);
+                        break;
+                    case "sortField":
+                        getListUser2(request, response);
                         break;
                     default:
 //                        getUserProfle(request, response);
@@ -287,9 +293,23 @@ public class UserController extends HttpServlet {
             String fullName = request.getParameter("fullname");
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
-            int age = Integer.parseInt(request.getParameter("age"));
-            boolean status = request.getParameter("status") != null;
-            int roleId = Integer.parseInt(request.getParameter("roleId"));
+            String ageParam =  request.getParameter("age");
+            
+            int age;
+            if(ageParam == null || ageParam.trim().isEmpty()){
+                age = 1;
+            }else{
+                age = Integer.parseInt(ageParam);
+            }
+            boolean status = request.getParameter("status") !=  null;
+            String roleIdParam = request.getParameter("roleId");
+            int roleId;
+            if(roleIdParam == null || roleIdParam.trim().isEmpty()){
+                roleId = 3;
+            }else{
+                roleId = Integer.parseInt(roleIdParam);
+            }
+            
 
             // Tạo một đối tượng User
             User user = new User();
@@ -310,28 +330,28 @@ public class UserController extends HttpServlet {
             boolean usernameExists = userDAO.checkUsernameExists(userName);
 
             // Validate các trường
-            if (!validateEmail(email)) {
-                errors.put("emailError", "Email không hợp lệ.");
+            if (email == null || email.trim().isEmpty() || !validateEmail(email)) {
+                errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
             }
 
-            if (!validatePassword(password)) {
+            if (password == null || password.trim().isEmpty() || !validatePassword(password)) {
                 errors.put("passError", "Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số.");
             }
 
-            if (!validateUsername(userName)) {
+            if (userName == null || userName.trim().isEmpty() || !validateUsername(userName)) {
                 errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
             }
 
-            if (!isValidPhone(phone)) {
-                errors.put("phoneError", "Số điện thoại có 10 chữ số và bắt đầu bằng số 0");
-            }
-            if (!isValidAge(age)) {
-                errors.put("ageError", "Độ tuổi phù hợp như là học sinh sinh viên");
-            }
-            if (!isValidFullName(fullName)) {
-                errors.put("fullnameError", "Độ dài không quá 100");
-            }
-            if (userDAO.checkEmailExists(email) || userDAO.checkUsernameExists(userName)) {
+//            if (!isValidPhone(phone)) {
+//                errors.put("phoneError", "Số điện thoại có 10 chữ số và bắt đầu bằng số 0");
+//            }
+//            if (!isValidAge(age)) {
+//                errors.put("ageError", "Độ tuổi phù hợp như là học sinh sinh viên");
+//            }
+//            if (!isValidFullName(fullName)) {
+//                errors.put("fullnameError", "Độ dài không quá 100");
+//            }
+            if (emailExists || usernameExists) {
                 errors.put("existsError", "Email hoặc Username đã tồn tại.");
             }
 
@@ -372,16 +392,48 @@ public class UserController extends HttpServlet {
 
         } catch (Exception e) {
             // Xử lý ngoại lệ nếu có
-            request.setAttribute("errorMessage", "An error occurred: " + e.getMessage());
+            request.setAttribute("existsError", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
         }
     }
 
-    private boolean isValidFullName(String fullName) {
-        // Kiểm tra xem fullName có rỗng không
-        if (fullName == null || fullName.trim().isEmpty()) {
-            return false;
+    //sort and search
+    private void getListUser2(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            UserDAO userDAO = new UserDAO();
+            SettingDAO roleDAO = new SettingDAO();
+            List<User> users;
+            List<Setting> roles = roleDAO.getAllRole();
+
+            // Lấy tham số tìm kiếm và sắp xếp
+            String searchUsername = request.getParameter("searchUsername");
+            String sortField = request.getParameter("sortField");
+
+            if (searchUsername != null && !searchUsername.isEmpty()) {
+                users = userDAO.searchUsersByUsername(searchUsername);
+            } else if (sortField != null && !sortField.isEmpty()) {
+                users = userDAO.getUsersSortedBy(sortField);
+            } else {
+                users = userDAO.getAllUsers();
+            }
+
+            // Set the list of users as a request attribute
+            request.setAttribute("users", users);
+            request.setAttribute("roles", roles);
+            request.setAttribute("searchUsername", searchUsername);
+            request.setAttribute("sortField", sortField);
+
+            // Forward the request to the JSP page
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list user", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
         }
+    }
+
+    private boolean isValidFullName(String fullName) {
         // Kiểm tra độ dài của fullName (không quá 100 ký tự)
         if (fullName.length() > 100) {
             return false;
@@ -390,27 +442,32 @@ public class UserController extends HttpServlet {
     }
 
     private boolean validateEmail(String email) {
+        if(email == null || email.trim().isEmpty()){
+            return false;
+        }
         String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
         return Pattern.matches(emailRegex, email);
     }
 
     private boolean validatePassword(String password) {
+        if(password == null || password.trim().isEmpty()){
+            return false;
+        }
         // Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$";
         return Pattern.matches(passwordRegex, password);
     }
 
     private boolean validateUsername(String username) {
+        if(username == null || username.trim().isEmpty()){
+            return false;
+        }
         // Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng
         String usernameRegex = "^[a-zA-Z0-9]{3,20}$";
         return Pattern.matches(usernameRegex, username);
     }
 
     private boolean isValidPhone(String phone) {
-        // Kiểm tra xem phone có rỗng không
-        if (phone == null || phone.trim().isEmpty()) {
-            return false;
-        }
         // Kiểm tra định dạng của số điện thoại bằng biểu thức chính quy
         // ở đây bạn có thể thực hiện kiểm tra theo định dạng cụ thể của số điện thoại trong quốc gia của bạn
         // Ví dụ: "^\\d{10}$" cho 10 chữ số, hoặc kiểm tra có chứa ký tự đặc biệt nào khác không
@@ -422,7 +479,7 @@ public class UserController extends HttpServlet {
 
     private boolean isValidAge(int age) {
         // Kiểm tra xem age có nằm trong khoảng từ 1 đến 150 không (giả sử đây là giới hạn hợp lệ cho tuổi)
-        return age >= 1 && age <= 150;
+        return age >= 2 && age <= 150;
     }
 
     @Override
