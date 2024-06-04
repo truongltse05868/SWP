@@ -335,7 +335,7 @@
                                         <li class="add-menu-left">
                                             <h5 class="menu-adv-title">Our Courses</h5>
                                             <ul>
-                                                <li><a href="courses.html">Courses </a></li>
+                                                <li><a href="SubjectController">Courses </a></li>
                                                 <li><a href="courses-details.html">Courses Details</a></li>
                                                 <li><a href="profile.html">Instructor Profile</a></li>
                                                 <li><a href="event.html">Upcoming Event</a></li>

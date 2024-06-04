@@ -49,6 +49,10 @@
         <servlet-name>ClassController</servlet-name>
         <servlet-class>controller.ClassController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>SubjectController</servlet-name>
+        <servlet-class>controller.SubjectController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserController</servlet-name>
         <url-pattern>/userController</url-pattern>
@@ -96,5 +100,9 @@
     <servlet-mapping>
         <servlet-name>Dashboard</servlet-name>
         <url-pattern>/Dashboard</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>SubjectController</servlet-name>
+        <url-pattern>/SubjectController</url-pattern>
     </servlet-mapping>
 </web-app>
