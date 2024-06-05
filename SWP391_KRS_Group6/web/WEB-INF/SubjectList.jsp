@@ -160,7 +160,11 @@
                                                     <div class="cours-bx">
                                                         <div class="action-box">
                                                             <img src="assets/images/courses/pic1.jpg" alt="">
-                                                            <a href="#" class="btn">Read More</a>
+                                                            <form method="post" action="SubjectController" >
+                                                                <input type="hidden" name="service" value="updateSubject">
+                                                                <input type="hidden" name="pid" value="${subjectList.subject_id}">
+                                                                <button type="submit" name="submit" class="btn">Update</button>
+                                                            </form>
                                                         </div>
                                                         <div class="info-bx text-center">
                                                             <h3><a href="#"> ${subjectList.subject_name}</a></h3>
@@ -208,8 +212,8 @@
 
                                         </div>
                                     </c:if>
-                                    <c:if test="${empty classes}">
-                                        <p>No Classes found.</p>
+                                    <c:if test="${empty subjectList}">
+                                        <p>No subject found.</p>
                                     </c:if>
                                     <div class="col-lg-12 m-b20">
                                         <div class="pagination-bx rounded-sm gray clearfix">

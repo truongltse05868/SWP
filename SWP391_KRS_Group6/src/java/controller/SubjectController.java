@@ -59,8 +59,12 @@ public class SubjectController extends HttpServlet {
                     case "ListAllSubject":
                         getAllSubject(request, response);
                         break;
+                    case "updateSubject":
+                         String submit = request.getParameter("submit");
+                        int pid = Integer.parseInt(request.getParameter("pid"));
+                        UpdateSubject(request, response, pid, submit);
+                        break;
                     default:
-
                         break;
                 }
             } else {
@@ -82,6 +86,14 @@ public class SubjectController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while processing your request.");
         }
 
+    }
+     void dispath(HttpServletRequest request,
+            HttpServletResponse response, String page)
+            throws ServletException, IOException {
+        RequestDispatcher dispath
+                = request.getRequestDispatcher(page);
+        //display
+        dispath.forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -129,6 +141,46 @@ public class SubjectController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list subject.");
         }
     }
+    private void UpdateSubject(HttpServletRequest request, HttpServletResponse response,int pid, String submit)
+            throws ServletException, IOException {
+    try {
+        SubjectDAO dao = new SubjectDAO();
+        if (submit == null) {
+            Subject subject = dao.getSubjectById(pid);
+            request.setAttribute("subject", subject);
+            dispath(request, response, "WEB-INF/UpdateSubject.jsp");
+        } else {
+            String subjectId = request.getParameter("subject_id");
+            String Code = request.getParameter("subject_code");
+            String Name = request.getParameter("name");
+            String description = request.getParameter("description");
+            String statusParam = request.getParameter("status");
+            boolean status = (statusParam != null && statusParam.equals("on"));
+
+            // convert
+            int subjectIdInt = Integer.parseInt(subjectId);
+
+            //
+            Subject subject = new Subject(subjectIdInt, Code, Name, description, status);
+            dao.updateSubject(subject);
+            
+            // Redirect to a success page or display a success message
+            String successMessage = "Subject updated successfully.";
+            request.setAttribute("successMessage", successMessage);
+            dispath(request, response, "success.jsp"); // Replace "success.jsp" with your success page
+            
+            // If you want to send a redirect to another page after success, uncomment the following line
+            // response.sendRedirect("SubjectController");
+        }
+    } catch (NumberFormatException e) {
+        logger.log(Level.SEVERE, "Invalid subject ID format", e);
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid subject ID format");
+    } catch (Exception e) {
+        logger.log(Level.SEVERE, "Error updating subject", e);
+        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating the subject.");
+    }
+}
+
 
     /**
      * Returns a short description of the servlet.
