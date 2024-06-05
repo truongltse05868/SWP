@@ -160,7 +160,7 @@ public class ForgotPasswordController extends HttpServlet {
                     if (currentTime <= user.getOtp_expiry().getTime()) {
                         boolean isUpdated = userDAO.updatePassOTP(repass, email, otp);
                         if (isUpdated) {
-                            request.setAttribute("message", "Cập nhật mật khẩu thành công");
+                            request.setAttribute("successMessage", "Cập nhật mật khẩu thành công");
                             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                         } else {
                             request.setAttribute("message", "Cập nhật mật khẩu không thành công");
