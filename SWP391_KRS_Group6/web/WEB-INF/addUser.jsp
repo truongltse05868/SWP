@@ -352,18 +352,19 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Gender</label>
                                             <div class="col-sm-4">
-                                                <div class="form-check">
+                                                <div class="form-check form-check-inline">
                                                     <input type="radio" class="form-check-input" name="gender" id="male" value="Male" <c:if test="${gender == 'Male'}">checked</c:if>>
                                                         <label class="form-check-label" for="male">Male</label>
-
-
+                                                    </div>
+                                                    <div class="form-check form-check-inline me-3">
                                                         <input type="radio" class="form-check-input" name="gender" id="female" value="Female" <c:if test="${gender == 'Female'}">checked</c:if>>
                                                         <label class="form-check-label" for="female">Female</label>
-
-
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
                                                         <input type="radio" class="form-check-input" name="gender" id="other" value="Other" <c:if test="${gender == 'Other'}">checked</c:if>>
                                                         <label class="form-check-label" for="other">Other</label>
                                                     </div>
+
                                                 </div>
 
                                             </div>
@@ -371,7 +372,7 @@
 
                                             <div class="form-group row">
                                                 <label class="col-sm-2 col-form-label">Age</label>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-2">
                                                     <input class="form-control" name="age" type="text" value="${age}">
                                                 <span class="error" style="font-size: smaller;">${errors['ageError']}</span>
                                             </div>
