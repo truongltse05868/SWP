@@ -91,9 +91,9 @@
 
 
         <!-- header start -->
-        
-                <jsp:include page="DashboardNav.jsp"/>
-               
+
+        <jsp:include page="DashboardNav.jsp"/>
+
         <!-- Left sidebar menu end -->
 
         <!--Main container start -->
@@ -157,12 +157,18 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Gender</label>
                                             <div class="col-sm-4">
-                                                <select class="form-control" name="gender">
-                                                    <option value="Male" <c:if test="${user.gender == 'Male'}">selected</c:if>>Male</option>
-                                                    <option value="Female" <c:if test="${user.gender == 'Female'}">selected</c:if>>Female</option>
-                                                    <option value="Other" <c:if test="${user.gender == 'Other'}">selected</c:if>>Other</option>
-
-                                                    </select>
+                                                <div class="form-check form-check-inline">
+                                                    <input type="radio" class="form-check-input" name="gender" id="male" value="Male" <c:if test="${user.gender == 'Male'}">checked</c:if>>
+                                                        <label class="form-check-label" for="male">Male</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline me-3">
+                                                        <input type="radio" class="form-check-input" name="gender" id="female" value="Female" <c:if test="${user.gender == 'Female'}">checked</c:if>>
+                                                        <label class="form-check-label" for="female">Female</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" class="form-check-input" name="gender" id="other" value="Other" <c:if test="${user.gender == 'Other'}">checked</c:if>>
+                                                        <label class="form-check-label" for="other">Other</label>
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -249,33 +255,33 @@
                                     </div>
                                 </form>
 
-<!--                                <script>
-                                    document.querySelectorAll('.toggle-password').forEach(button => {
-                                        button.addEventListener('click', () => {
-                                            const input = button.closest('.input-group').querySelector('input');
-                                            const icon = button.querySelector('i');
-                                            if (input.type === 'password') {
-                                                input.type = 'text';
-                                                icon.classList.remove('fa-eye');
-                                                icon.classList.add('fa-eye-slash');
-                                            } else {
-                                                input.type = 'password';
-                                                icon.classList.remove('fa-eye-slash');
-                                                icon.classList.add('fa-eye');
-                                            }
-                                        });
-                                    });
-
-                                    document.querySelector('form').addEventListener('submit', function (e) {
-                                        const newPassword = document.querySelector('input[name="newPassword"]').value;
-                                        const reNewPassword = document.querySelector('input[name="reNewPassword"]').value;
-
-                                        if (newPassword !== reNewPassword) {
-                                            e.preventDefault();
-                                            alert('New passwords do not match.');
-                                        }
-                                    });
-                                </script>-->
+                                <!--                                <script>
+                                                                    document.querySelectorAll('.toggle-password').forEach(button => {
+                                                                        button.addEventListener('click', () => {
+                                                                            const input = button.closest('.input-group').querySelector('input');
+                                                                            const icon = button.querySelector('i');
+                                                                            if (input.type === 'password') {
+                                                                                input.type = 'text';
+                                                                                icon.classList.remove('fa-eye');
+                                                                                icon.classList.add('fa-eye-slash');
+                                                                            } else {
+                                                                                input.type = 'password';
+                                                                                icon.classList.remove('fa-eye-slash');
+                                                                                icon.classList.add('fa-eye');
+                                                                            }
+                                                                        });
+                                                                    });
+                                
+                                                                    document.querySelector('form').addEventListener('submit', function (e) {
+                                                                        const newPassword = document.querySelector('input[name="newPassword"]').value;
+                                                                        const reNewPassword = document.querySelector('input[name="reNewPassword"]').value;
+                                
+                                                                        if (newPassword !== reNewPassword) {
+                                                                            e.preventDefault();
+                                                                            alert('New passwords do not match.');
+                                                                        }
+                                                                    });
+                                                                </script>-->
 
                             </div>
                         </div>

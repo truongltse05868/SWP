@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -464,7 +465,37 @@
                                                                 <input class="form-control" type="text" value="${user.full_name}">
                                                             </div>
                                                         </div>
-
+                                                        <div class="form-group row">
+                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Gender</label>
+                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
+                                                                <div class="form-check form-check-inline">
+                                                                    <input type="radio" class="form-check-input" name="gender" id="male" value="Male" <c:if test="${user.gender == 'Male'}">checked</c:if>>
+                                                                        <label class="form-check-label" for="male">Male</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline me-3">
+                                                                        <input type="radio" class="form-check-input" name="gender" id="female" value="Female" <c:if test="${user.gender == 'Female'}">checked</c:if>>
+                                                                        <label class="form-check-label" for="female">Female</label>
+                                                                    </div>
+                                                                    <div class="form-check form-check-inline">
+                                                                        <input type="radio" class="form-check-input" name="gender" id="other" value="Other" <c:if test="${user.gender == 'Other'}">checked</c:if>>
+                                                                        <label class="form-check-label" for="other">Other</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group row">
+                                                                <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Age</label>
+                                                                <div class="col-12 col-sm-9 col-md-9 col-lg-7">
+                                                                    <input class="form-control" type="text" value="${user.age}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Role</label>
+                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
+                                                                <c:forEach var="role" items="${roles}">
+                                                                    <label value="${role.settingId}" <c:if test="${role.settingId == user.role_id}">selected</c:if>>${role.settingName}</label>
+                                                                </c:forEach>
+                                                            </div>
+                                                        </div>
                                                         <div class="seperator"></div>
                                                     </div>
                                                     <div class="">
@@ -580,7 +611,7 @@
                         targetTabLink.classList.add('active');
                         document.querySelector(`.tab-pane#${tab}`).classList.add('active', 'show');
                     }
-                } 
+                }
 //                else {
 //                    // If no tab parameter, activate the first tab
 //                    document.querySelector('.nav-link').classList.add('active');
