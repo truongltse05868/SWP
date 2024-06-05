@@ -48,6 +48,10 @@ public class User {
         this.role_id = role_id;
         this.otp = otp;
     }
+    public User(int user_id, String password){
+        this.user_id = user_id;
+        this.password = password;
+    }
 
     public Timestamp getOtp_expiry() {
         return otp_expiry;

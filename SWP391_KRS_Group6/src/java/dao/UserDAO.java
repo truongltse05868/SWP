@@ -352,12 +352,43 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
+    public boolean changePassword(User user, String currentPassword){
+        String query = "UPDATE user SET password = ? WHERE user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, currentPassword);
+            ps.setInt(2, user.getUser_id());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating password", e);
+            return false;
+        }
+    }
+    public boolean checkCurrentPassword(User user, String currentPass){
+        String query = "Select * from user WHERE user_id = ? and status = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, user.getUser_id());
+            ps.setBoolean(2, user.isStatus());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    String pass = rs.getString("password");
+                    if(pass.equals(currentPass)){
+                        return true;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+            return false;
+        }
+        return false;
+    }
 
     public boolean loginAccount(String account, String password) {
         String query = "SELECT * FROM user WHERE `user_name` = ? and status = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
-            ps.setBoolean(2, true);
+            ps.setBoolean(2, true); // chỉ lấy accout active
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String checkAccount = rs.getString("user_name");
