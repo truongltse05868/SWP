@@ -80,23 +80,25 @@ public class SettingController extends HttpServlet {
             if (service.equals("insertSetting")) {
                 String submit = request.getParameter("submit");
                 if (submit == null) { // request view form
-                    Vector<Setting> vector = dao.getAllSettingsSortedBy("1", "ASC");
-                    request.setAttribute("data", vector);
-                    dispath(request, response, "/admin/InsertSetting.jsp");
+                    Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "ASC");
+                    request.setAttribute("setting", setting);
+                    dispath(request, response, "WEB-INF/InsertSetting.jsp");
                 } else { // submit <> null --> request insert
-                    String settingId = request.getParameter("setting_id");
                     String settingName = request.getParameter("setting_name");
                     String type = request.getParameter("type");
                     String description = request.getParameter("description");
-                    Boolean status = Boolean.parseBoolean(request.getParameter("status"));
+                    String statusParam = request.getParameter("status");
+                    boolean status = (statusParam != null && statusParam.equals("on"));
 
                     // convert
-                    int settingIdInt = Integer.parseInt(settingId);
+                    Setting setting = new Setting();
+                    setting.setSettingName(settingName);
+                    setting.setType(type);
+                    setting.setDescription(description);
+                    setting.setStatus(status);
 
-                    Setting setting = new Setting(settingIdInt, settingName, type, description, status);
                     dao.addSetting(setting);
-                    String st = "";
-                    //send message
+
                     response.sendRedirect("SettingController");
                 }
             }
