@@ -466,6 +466,12 @@
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
+                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Email</label>
+                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
+                                                                <input class="form-control" type="text" value="${user.email}">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Gender</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
                                                                 <div class="form-check form-check-inline">
@@ -491,9 +497,19 @@
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Role</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <c:forEach var="role" items="${roles}">
-                                                                    <label value="${role.settingId}" <c:if test="${role.settingId == user.role_id}">selected</c:if>>${role.settingName}</label>
-                                                                </c:forEach>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty roles}">
+                                                                        <c:forEach var="role" items="${roles}">
+                                                                            <c:if test="${role.settingId == user.role_id}">
+                                                                                <span>${role.settingName}</span>
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span>No role found</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+
                                                             </div>
                                                         </div>
                                                         <div class="seperator"></div>
