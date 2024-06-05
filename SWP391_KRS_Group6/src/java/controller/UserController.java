@@ -255,8 +255,8 @@ public class UserController extends HttpServlet {
                         message = "New password does not meet requirements.";
                         errors.put("errorsSamePass", message);
                     } else {
-                        user.setPassword(newPassword);
-                        boolean isUpdated = userDAO.changePassword(user, currentPassword);
+//                        user.setPassword(newPassword);
+                        boolean isUpdated = userDAO.changePassword(user, newPassword);
                         message = isUpdated ? "Password updated successfully." : "Password update failed.";
                         errors.put("errorsUpdate", message);
                     }
