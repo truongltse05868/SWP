@@ -466,69 +466,6 @@
                                                         </div>
 
                                                         <div class="seperator"></div>
-
-<!--                                                        <div class="form-group row">
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-10 ml-auto">
-                                                                <h3>2. Address</h3>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Address</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="5-S2-20 Dummy City, UK">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">City</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="US">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">State</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="California">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Postcode</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="000702">
-                                                            </div>
-                                                        </div>-->
-<!--
-                                                        <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-
-                                                        <div class="form-group row">
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-10 ml-auto">
-                                                                <h3 class="m-form__section">3. Social Links</h3>
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Linkedin</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="www.linkedin.com">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Facebook</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="www.facebook.com">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Twitter</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="www.twitter.com">
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group row">
-                                                            <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Instagram</label>
-                                                            <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="www.instagram.com">
-                                                            </div>
-                                                        </div>-->
                                                     </div>
                                                     <div class="">
                                                         <div class="">
@@ -548,7 +485,9 @@
                                                 <div class="profile-head">
                                                     <h3>Change Password</h3>
                                                 </div>
-                                                <form class="edit-profile">
+                                                <form class="edit-profile" action="${pageContext.request.contextPath}/userController" method="post">
+                                                    <input type="hidden" name="userid" value="${user.user_id}">
+                                                    <input type="hidden" name="action" value="userChangePass">
                                                     <div class="">
                                                         <div class="form-group row">
                                                             <div class="col-12 col-sm-8 col-md-8 col-lg-9 ml-auto">
@@ -558,19 +497,22 @@
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">Current Password</label>
                                                             <div class="col-12 col-sm-8 col-md-8 col-lg-7">
-                                                                <input class="form-control" type="password" value="">
+                                                                <input class="form-control" type="password" name="currentPassword" value="">
+                                                                <span class="error" style="font-size: smaller;">${errors['errosOldPass']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">New Password</label>
                                                             <div class="col-12 col-sm-8 col-md-8 col-lg-7">
-                                                                <input class="form-control" type="password" value="">
+                                                                <input class="form-control" type="password" name="newPassword" value="">
+                                                                <span class="error" style="font-size: smaller;">${errors['errorsSamePass']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">Re Type New Password</label>
                                                             <div class="col-12 col-sm-8 col-md-8 col-lg-7">
-                                                                <input class="form-control" type="password" value="">
+                                                                <input class="form-control" type="password" name="renewPassword" value="">
+                                                                <span class="error" style="font-size: smaller;">${errors['errorsSamePass']}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -578,8 +520,11 @@
                                                         <div class="col-12 col-sm-4 col-md-4 col-lg-3">
                                                         </div>
                                                         <div class="col-12 col-sm-8 col-md-8 col-lg-7">
-                                                            <button type="reset" class="btn">Save changes</button>
+                                                            <button type="submit" class="btn">Changes Password</button>
                                                             <button type="reset" class="btn-secondry">Cancel</button>
+                                                        </div>
+                                                        <div>
+                                                            <span class="error" style="font-size: smaller;">${errors['errorsUpdate']}</span>
                                                         </div>
                                                     </div>
 
@@ -616,6 +561,33 @@
         <script src="assets/js/functions.js"></script>
         <script src="assets/js/contact.js"></script>
         <script src='assets/vendors/switcher/switcher.js'></script>
+        <script>
+            // Function to get URL parameter by name
+            function getParameterByName(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const tab = "${tab}"; // Lấy giá trị của 'tab' từ request attribute
+                if (tab) {
+                    // Remove 'active' and 'show' classes from all tab links and tab panes
+                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active', 'show'));
+                    // Find the tab link corresponding to the parameter and click it
+                    const targetTabLink = document.querySelector(`.nav-link[href='#${tab}']`);
+                    if (targetTabLink) {
+                        targetTabLink.classList.add('active');
+                        document.querySelector(`.tab-pane#${tab}`).classList.add('active', 'show');
+                    }
+                } 
+//                else {
+//                    // If no tab parameter, activate the first tab
+//                    document.querySelector('.nav-link').classList.add('active');
+//                    document.querySelector('.tab-pane').classList.add('show', 'active');
+//                }
+            });
+        </script>
     </body>
 
 </html>

@@ -65,6 +65,12 @@ public class UserController extends HttpServlet {
                     case "sortField":
                         getListUser2(request, response);
                         break;
+                    case "profileUserPage":
+                        getProfileUser(request, response);
+                        break;
+                    case "userChangePass":
+                        changePassUser(request, response);
+                        break;
                     default:
 //                        getUserProfle(request, response);
                         break;
@@ -74,6 +80,9 @@ public class UserController extends HttpServlet {
                 switch (action) {
                     case "profileUserPage":
                         getProfileUser(request, response);
+                        break;
+                    case "userChangePass":
+                        changePassUser(request, response);
                         break;
                 }
             }
@@ -224,6 +233,66 @@ public class UserController extends HttpServlet {
         }
     }
 
+    private void changePassUser(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            SettingDAO settingDAO = new SettingDAO();
+            List<Setting> roles = settingDAO.getAllRole();
+            Map<String, String> errors = new HashMap<>();
+            int userId = Integer.parseInt(request.getParameter("userid"));
+            String currentPassword = request.getParameter("currentPassword");
+            String newPassword = request.getParameter("newPassword");
+            String reNewPassword = request.getParameter("renewPassword");
+            String message = "";
+
+            UserDAO userDAO = new UserDAO();
+            User user = userDAO.getUserById(userId);
+
+            if (user != null) {
+                boolean isCurrentPass = userDAO.checkCurrentPassword(user, currentPassword);
+                if (isCurrentPass) {
+                    if (!newPassword.equals(reNewPassword) || !validatePassword(newPassword) || !validatePassword(reNewPassword)) {
+                        message = "New password does not meet requirements.";
+                        errors.put("errorsSamePass", message);
+                    } else {
+                        user.setPassword(newPassword);
+                        boolean isUpdated = userDAO.changePassword(user, currentPassword);
+                        message = isUpdated ? "Password updated successfully." : "Password update failed.";
+                        errors.put("errorsUpdate", message);
+                    }
+                } else {
+                    message = "Mật khẩu cũ không đúng";
+                    errors.put("errosOldPass", message);
+                }
+
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
+                return;
+            }
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                request.setAttribute("user", user);
+                request.setAttribute("roles", roles);
+                request.setAttribute("tab", "change-password");
+                request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+                return;
+            }
+//            request.setAttribute("successMessage", message);
+            request.setAttribute("errors", errors);
+            request.setAttribute("user", user);
+            request.setAttribute("roles", roles);
+            request.setAttribute("tab", "change-password");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ProfileUser.jsp?tab=change-password");
+            dispatcher.forward(request, response);
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid user ID format", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
+        }
+    }
+
     private void changePassAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -293,23 +362,22 @@ public class UserController extends HttpServlet {
             String fullName = request.getParameter("fullname");
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
-            String ageParam =  request.getParameter("age");
-            
+            String ageParam = request.getParameter("age");
+
             int age;
-            if(ageParam == null || ageParam.trim().isEmpty()){
+            if (ageParam == null || ageParam.trim().isEmpty()) {
                 age = 1;
-            }else{
+            } else {
                 age = Integer.parseInt(ageParam);
             }
-            boolean status = request.getParameter("status") !=  null;
+            boolean status = request.getParameter("status") != null;
             String roleIdParam = request.getParameter("roleId");
             int roleId;
-            if(roleIdParam == null || roleIdParam.trim().isEmpty()){
+            if (roleIdParam == null || roleIdParam.trim().isEmpty()) {
                 roleId = 3;
-            }else{
+            } else {
                 roleId = Integer.parseInt(roleIdParam);
             }
-            
 
             // Tạo một đối tượng User
             User user = new User();
@@ -442,7 +510,7 @@ public class UserController extends HttpServlet {
     }
 
     private boolean validateEmail(String email) {
-        if(email == null || email.trim().isEmpty()){
+        if (email == null || email.trim().isEmpty()) {
             return false;
         }
         String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
@@ -450,7 +518,7 @@ public class UserController extends HttpServlet {
     }
 
     private boolean validatePassword(String password) {
-        if(password == null || password.trim().isEmpty()){
+        if (password == null || password.trim().isEmpty()) {
             return false;
         }
         // Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số
@@ -459,7 +527,7 @@ public class UserController extends HttpServlet {
     }
 
     private boolean validateUsername(String username) {
-        if(username == null || username.trim().isEmpty()){
+        if (username == null || username.trim().isEmpty()) {
             return false;
         }
         // Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng
