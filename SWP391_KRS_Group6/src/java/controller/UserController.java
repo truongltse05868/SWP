@@ -362,13 +362,24 @@ public class UserController extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("userId"));
         String newEmail = request.getParameter("newEmail");
         String otp = request.getParameter("otp");
+        String fullname = request.getParameter("fullname");
+        String phone = request.getParameter("phone");
+        String gender = request.getParameter("gender");
+        String ageParam = request.getParameter("age");
+
+        int age;
+        if (ageParam == null || ageParam.trim().isEmpty()) {
+            age = 1;
+        } else {
+            age = Integer.parseInt(ageParam);
+        }
         Map<String, String> errors = new HashMap<>();
         UserDAO userDAO = new UserDAO();
         SettingDAO settingDAO = new SettingDAO();
         List<Setting> roles = settingDAO.getAllRole();
-        
+
         if (userDAO.validateOtp(userId, otp)) {
-            userDAO.updateUserEmail(userId, newEmail);
+            userDAO.updateUserEmail(userId, newEmail, fullname, phone, gender, age);
             User user = userDAO.getUserById(userId);
             errors.put("Success", "Update thành công");
             request.setAttribute("errors", errors);
@@ -493,6 +504,10 @@ public class UserController extends HttpServlet {
                     // Redirect to an OTP confirmation page
                     request.getSession().setAttribute("userId", userId);
                     request.getSession().setAttribute("newEmail", newEmail);
+                    request.getSession().setAttribute("fullname", fullName);
+                    request.getSession().setAttribute("phone", phone);
+                    request.getSession().setAttribute("gender", gender);
+                    request.getSession().setAttribute("age", age);
 //                    response.sendRedirect("WEB-INF/confirmEmailChange.jsp");
                     request.getRequestDispatcher("WEB-INF/confirmEmailChange.jsp").forward(request, response);
                 }

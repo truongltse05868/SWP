@@ -76,6 +76,10 @@
                                 <input type="hidden" name="action" value="confirmEmailChange">
                                 <input type="hidden" name="userId" value="${sessionScope.userId}">
                                 <input type="hidden" name="newEmail" value="${sessionScope.newEmail}">
+                                <input type="hidden" name="fullname" value="${sessionScope.fullname}">
+                                <input type="hidden" name="phone" value="${sessionScope.phone}">
+                                <input type="hidden" name="gender" value="${sessionScope.gender}">
+                                <input type="hidden" name="age" value="${sessionScope.age}">
                                 <div class="row placeani">
                                     <div class="col-lg-12">
                                         <div class="form-group">
