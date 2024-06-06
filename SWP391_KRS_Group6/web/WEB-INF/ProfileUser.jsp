@@ -475,6 +475,7 @@
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
                                                                 <input class="form-control" type="text" name="email" value="${user.email}">
                                                                 <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
+                                                                <span class="error" style="font-size: smaller;">${errors['emailDup']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">

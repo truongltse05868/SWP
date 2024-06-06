@@ -362,14 +362,24 @@ public class UserController extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("userId"));
         String newEmail = request.getParameter("newEmail");
         String otp = request.getParameter("otp");
-
+        Map<String, String> errors = new HashMap<>();
         UserDAO userDAO = new UserDAO();
-
+        SettingDAO settingDAO = new SettingDAO();
+        List<Setting> roles = settingDAO.getAllRole();
+        
         if (userDAO.validateOtp(userId, otp)) {
             userDAO.updateUserEmail(userId, newEmail);
-            response.sendRedirect("WEB-INF/ProfileUser.jsp?emailChangeSuccess=true");
+            User user = userDAO.getUserById(userId);
+            errors.put("Success", "Update thành công");
+            request.setAttribute("errors", errors);
+            request.setAttribute("user", user);
+            request.setAttribute("roles", roles);
+            request.setAttribute("tab", "edit-profile");
+            request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
         } else {
-            response.sendRedirect("WEB-INF/confirmEmailChange.jsp?error=invalidOrExpiredOtp");
+            errors.put("Errors", "Hết hạn OTP");
+            request.setAttribute("errors", errors);
+            request.getRequestDispatcher("WEB-INF/confirmEmailChange.jsp").forward(request, response);
         }
     }
 
@@ -418,6 +428,8 @@ public class UserController extends HttpServlet {
         try {
             // Danh sách các thông báo lỗi
             Map<String, String> errors = new HashMap<>();
+            SettingDAO settingDAO = new SettingDAO();
+            List<Setting> roles = settingDAO.getAllRole();
             int userId = Integer.parseInt(request.getParameter("userId"));
             String phone = request.getParameter("phone");
             String fullName = request.getParameter("fullname");
@@ -439,9 +451,8 @@ public class UserController extends HttpServlet {
 
             User user = new User(userId, currentUser.getUser_name(), currentUser.getPassword(), newEmail, fullName, phone, gender, age, currentUser.isStatus(), currentUser.getRole_id(), null);
             //
-//            boolean emailExists = userDAO.checkEmailExists(email);
-//            boolean usernameExists = userDAO.checkUsernameExists(userName);
 
+//            boolean usernameExists = userDAO.checkUsernameExists(userName);
             // Validate các trường
             if (newEmail == null || newEmail.trim().isEmpty() || !validateEmail(newEmail)) {
                 errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
@@ -454,21 +465,23 @@ public class UserController extends HttpServlet {
             }
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
-                request.setAttribute("user_name", user.getUser_name());
-                request.setAttribute("email", newEmail);
-                request.setAttribute("full_name", fullName);
-                request.setAttribute("phone", phone);
-                request.setAttribute("gender", gender);
-                request.setAttribute("age", age);
-                request.setAttribute("roles", user.getRole_id());
+                request.setAttribute("user", user);
+                request.setAttribute("roles", roles);
+                request.setAttribute("tab", "edit-profile");
                 request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
                 return;
             }
-            //
-            boolean updateSuccessful = userDAO.updateUser(user);
 
-            if (updateSuccessful) {
-                if (emailChanged) {
+            if (emailChanged) {
+                boolean emailExists = userDAO.checkEmailExists(newEmail);
+                if (emailExists) {
+                    errors.put("emailDup", "Email đã tồn tại");
+                    request.setAttribute("errors", errors);
+                    request.setAttribute("user", user);
+                    request.setAttribute("roles", roles);
+                    request.setAttribute("tab", "edit-profile");
+                    request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+                } else {
                     // Generate OTP and save it with expiry
                     String otp = generateOTP();
                     Timestamp otpExpiry = new Timestamp(System.currentTimeMillis() + 1 * 60 * 1000); // 1 minutes expiry
@@ -480,25 +493,28 @@ public class UserController extends HttpServlet {
                     // Redirect to an OTP confirmation page
                     request.getSession().setAttribute("userId", userId);
                     request.getSession().setAttribute("newEmail", newEmail);
-                    response.sendRedirect("confirmEmailChange.jsp");
-                } else {
-//                    response.sendRedirect("WEB-INF/ProfileUser.jsp?updateSuccess=true");
-                    errors.put("Success", "Update thành công");
-                    request.setAttribute("errors", errors);
-                    request.setAttribute("username", user.getUser_name());
-                    request.setAttribute("email", user.getEmail());
-                    request.setAttribute("fullname", fullName);
-                    request.setAttribute("phone", phone);
-                    request.setAttribute("gender", gender);
-                    request.setAttribute("age", age);
-                    request.setAttribute("user", user);
-//                    request.setAttribute("role", age);
-                    request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
-
+//                    response.sendRedirect("WEB-INF/confirmEmailChange.jsp");
+                    request.getRequestDispatcher("WEB-INF/confirmEmailChange.jsp").forward(request, response);
                 }
             } else {
-                response.sendRedirect("WEB-INF/ProfileUser.jsp?updateSuccess=false");
+                boolean updateSuccessful = userDAO.updateUser(user);
+                if (updateSuccessful) {
+                    errors.put("Success", "Update thành công");
+                    request.setAttribute("errors", errors);
+                    request.setAttribute("user", user);
+                    request.setAttribute("roles", roles);
+                    request.setAttribute("tab", "edit-profile");
+                    request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+                } else {
+                    errors.put("errors", "Update không thành công");
+                    request.setAttribute("errors", errors);
+                    request.setAttribute("user", user);
+                    request.setAttribute("roles", roles);
+                    request.setAttribute("tab", "edit-profile");
+                    request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+                }
             }
+
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid user ID format", e);
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
@@ -752,13 +768,14 @@ public class UserController extends HttpServlet {
     }
 
     private boolean isValidPhone(String phone) {
-        // Kiểm tra định dạng của số điện thoại bằng biểu thức chính quy
-        // ở đây bạn có thể thực hiện kiểm tra theo định dạng cụ thể của số điện thoại trong quốc gia của bạn
-        // Ví dụ: "^\\d{10}$" cho 10 chữ số, hoặc kiểm tra có chứa ký tự đặc biệt nào khác không
-        if (!phone.matches("^0\\d{9}$")) {
-            return false;
+        // Check if the phone number is empty or null
+        if (phone == null || phone.isEmpty()) {
+            return true;
         }
-        return true;
+        // Validate the phone number format
+        // Example: "^0\\d{9}$" for a 10-digit number starting with 0
+
+        return phone.matches("^0\\d{9}$");
     }
 
     private boolean isValidAge(int age) {
