@@ -4,6 +4,13 @@ import dao.SettingDAO;
 import dao.UserDAO;
 import entity.Setting;
 import entity.User;
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -13,9 +20,12 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 //@WebServlet(name = "UserController", urlPatterns = {"/UserController"})
@@ -62,7 +72,7 @@ public class UserController extends HttpServlet {
                     case "searchUsername":
                         getListUser2(request, response);
                         break;
-                    case "sortField":
+                    case "sort":
                         getListUser2(request, response);
                         break;
                     case "profileUserPage":
@@ -70,6 +80,12 @@ public class UserController extends HttpServlet {
                         break;
                     case "userChangePass":
                         changePassUser(request, response);
+                        break;
+                    case "userChangeInfo":
+                        updateUserInfo(request, response);
+                        break;
+                    case "confirmEmailChange":
+                        confirmEmailChange(request, response);
                         break;
                     default:
 //                        getUserProfle(request, response);
@@ -83,6 +99,12 @@ public class UserController extends HttpServlet {
                         break;
                     case "userChangePass":
                         changePassUser(request, response);
+                        break;
+                    case "userChangeInfo":
+                        updateUserInfo(request, response);
+                        break;
+                    case "confirmEmailChange":
+                        confirmEmailChange(request, response);
                         break;
                 }
             }
@@ -334,6 +356,158 @@ public class UserController extends HttpServlet {
         }
     }
 
+    //user update info by user
+    private void confirmEmailChange(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        String newEmail = request.getParameter("newEmail");
+        String otp = request.getParameter("otp");
+
+        UserDAO userDAO = new UserDAO();
+
+        if (userDAO.validateOtp(userId, otp)) {
+            userDAO.updateUserEmail(userId, newEmail);
+            response.sendRedirect("WEB-INF/ProfileUser.jsp?emailChangeSuccess=true");
+        } else {
+            response.sendRedirect("WEB-INF/confirmEmailChange.jsp?error=invalidOrExpiredOtp");
+        }
+    }
+
+    private String generateOTP() {
+        // Tạo mã OTP ngẫu nhiên
+        return UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+    }
+
+    private boolean sendOtpToEmail(String email, String otp) {
+        String host = "live.smtp.mailtrap.io";
+        final String user = "api";
+        final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, password);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+//            mailtrap@krsg6.com
+            message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            message.setSubject("KRS_G6 Change Email");
+            message.setText("Your OTP code is: " + otp);
+            Transport.send(message);
+            System.out.println("OTP email sent successfully...");
+            return true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    private void updateUserInfo(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            // Danh sách các thông báo lỗi
+            Map<String, String> errors = new HashMap<>();
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            String phone = request.getParameter("phone");
+            String fullName = request.getParameter("fullname");
+            String newEmail = request.getParameter("email");
+            String gender = request.getParameter("gender");
+            String ageParam = request.getParameter("age");
+
+            int age;
+            if (ageParam == null || ageParam.trim().isEmpty()) {
+                age = 1;
+            } else {
+                age = Integer.parseInt(ageParam);
+            }
+
+            UserDAO userDAO = new UserDAO();
+            User currentUser = userDAO.getUserById(userId);
+
+            boolean emailChanged = !newEmail.equals(currentUser.getEmail());
+
+            User user = new User(userId, currentUser.getUser_name(), currentUser.getPassword(), newEmail, fullName, phone, gender, age, currentUser.isStatus(), currentUser.getRole_id(), null);
+            //
+//            boolean emailExists = userDAO.checkEmailExists(email);
+//            boolean usernameExists = userDAO.checkUsernameExists(userName);
+
+            // Validate các trường
+            if (newEmail == null || newEmail.trim().isEmpty() || !validateEmail(newEmail)) {
+                errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
+            }
+            if (!isValidPhone(phone)) {
+                errors.put("phoneError", "Số điện thoại có 10 chữ số và bắt đầu bằng số 0");
+            }
+            if (!isValidFullName(fullName)) {
+                errors.put("fullnameError", "Độ dài không quá 100");
+            }
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                request.setAttribute("user_name", user.getUser_name());
+                request.setAttribute("email", newEmail);
+                request.setAttribute("full_name", fullName);
+                request.setAttribute("phone", phone);
+                request.setAttribute("gender", gender);
+                request.setAttribute("age", age);
+                request.setAttribute("roles", user.getRole_id());
+                request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+                return;
+            }
+            //
+            boolean updateSuccessful = userDAO.updateUser(user);
+
+            if (updateSuccessful) {
+                if (emailChanged) {
+                    // Generate OTP and save it with expiry
+                    String otp = generateOTP();
+                    Timestamp otpExpiry = new Timestamp(System.currentTimeMillis() + 1 * 60 * 1000); // 1 minutes expiry
+                    userDAO.saveOtpForEmailChange(userId, otp, otpExpiry);
+
+                    // Send OTP to the new email
+                    sendOtpToEmail(newEmail, otp);
+
+                    // Redirect to an OTP confirmation page
+                    request.getSession().setAttribute("userId", userId);
+                    request.getSession().setAttribute("newEmail", newEmail);
+                    response.sendRedirect("confirmEmailChange.jsp");
+                } else {
+//                    response.sendRedirect("WEB-INF/ProfileUser.jsp?updateSuccess=true");
+                    errors.put("Success", "Update thành công");
+                    request.setAttribute("errors", errors);
+                    request.setAttribute("username", user.getUser_name());
+                    request.setAttribute("email", user.getEmail());
+                    request.setAttribute("fullname", fullName);
+                    request.setAttribute("phone", phone);
+                    request.setAttribute("gender", gender);
+                    request.setAttribute("age", age);
+                    request.setAttribute("user", user);
+//                    request.setAttribute("role", age);
+                    request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+
+                }
+            } else {
+                response.sendRedirect("WEB-INF/ProfileUser.jsp?updateSuccess=false");
+            }
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid user ID format", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid user ID format");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating user.");
+        }
+    }
+
     private boolean loginAccount(String username, String password)
             throws ServletException, IOException {
         try {
@@ -474,15 +648,21 @@ public class UserController extends HttpServlet {
             List<User> users;
             List<Setting> roles = roleDAO.getAllRole();
 
-            // Lấy tham số tìm kiếm và sắp xếp
+            // Get search and sort parameters
             String searchUsername = request.getParameter("searchUsername");
             String sortField = request.getParameter("sortField");
 
-            if (searchUsername != null && !searchUsername.isEmpty()) {
+            if (searchUsername != null && !searchUsername.isEmpty() && sortField != null && !sortField.isEmpty()) {
+                // Sort and search
+                users = userDAO.getUsersSortedSearchBy(sortField, searchUsername);
+            } else if (searchUsername != null && !searchUsername.isEmpty()) {
+                // Search only
                 users = userDAO.searchUsersByUsername(searchUsername);
             } else if (sortField != null && !sortField.isEmpty()) {
+                // Sort only
                 users = userDAO.getUsersSortedBy(sortField);
             } else {
+                // Default: get all users
                 users = userDAO.getAllUsers();
             }
 
@@ -496,11 +676,47 @@ public class UserController extends HttpServlet {
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error get list user", e);
+            logger.log(Level.SEVERE, "Error getting user list", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
         }
     }
 
+//    private void getListUser2(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        try {
+//            UserDAO userDAO = new UserDAO();
+//            SettingDAO roleDAO = new SettingDAO();
+//            List<User> users;
+//            List<Setting> roles = roleDAO.getAllRole();
+//
+//            // Lấy tham số tìm kiếm và sắp xếp
+//            String searchUsername = request.getParameter("searchUsername");
+//            String sortField = request.getParameter("sortField");
+//
+//            if (searchUsername != null && !searchUsername.isEmpty()) {
+//                users = userDAO.searchUsersByUsername(searchUsername);
+//            } else if (sortField != null && !sortField.isEmpty()) {
+//                users = userDAO.getUsersSortedBy(sortField);
+//            } else if(sortField != null && !sortField.isEmpty() && searchUsername != null && !searchUsername.isEmpty()){
+//                users = userDAO.getUsersSortedSearchBy(sortField, searchUsername);
+//            }else {
+//                users = userDAO.getAllUsers();
+//            }
+//
+//            // Set the list of users as a request attribute
+//            request.setAttribute("users", users);
+//            request.setAttribute("roles", roles);
+//            request.setAttribute("searchUsername", searchUsername);
+//            request.setAttribute("sortField", sortField);
+//
+//            // Forward the request to the JSP page
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
+//            dispatcher.forward(request, response);
+//        } catch (Exception e) {
+//            logger.log(Level.SEVERE, "Error get list user", e);
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
+//        }
+//    }
     private boolean isValidFullName(String fullName) {
         // Kiểm tra độ dài của fullName (không quá 100 ký tự)
         if (fullName.length() > 100) {

@@ -110,6 +110,34 @@ public class UserDAO extends DBConnect {
         return users;
     }
 
+    public List<User> getUsersSortedSearchBy(String field, String search) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user where user_name like ? ORDER BY " + field;
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, "%" + search + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getInt("age"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                // Populate user object
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error sorting users by " + field, e);
+        }
+        return users;
+    }
+
     public List<User> checkLogin(String account, String password) {
 
         List<User> users = new ArrayList<>();
@@ -199,8 +227,52 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-//update otp by email
+//update otp by userId
 
+    public void saveOtpForEmailChange(int userId, String otp, Timestamp expiry) {
+        String query = "UPDATE user SET otp = ?, otp_expiry = ? WHERE user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, otp);
+            ps.setTimestamp(2, expiry);
+            ps.setInt(3, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error saving OTP for email change", e);
+        }
+    }
+
+    public boolean validateOtp(int userId, String otp) {
+        String query = "SELECT otp, otp_expiry FROM user WHERE user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String savedOtp = rs.getString("otp");
+                Timestamp otpExpiry = rs.getTimestamp("otp_expiry");
+                Timestamp now = new Timestamp(System.currentTimeMillis());
+
+                if (otp.equals(savedOtp) && now.before(otpExpiry)) {
+                    return true;
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error validating OTP", e);
+        }
+        return false;
+    }
+
+    public void updateUserEmail(int userId, String newEmail) {
+        String query = "UPDATE user SET email = ?, otp = NULL WHERE user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, newEmail);
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating user email", e);
+        }
+    }
+
+//update otp by email
     public boolean saveOtpToDatabase(String email, String otp) {
         String query = "UPDATE user SET otp = ?, otp_expiry = ? WHERE email = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -352,7 +424,8 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
-    public boolean changePassword(User user, String currentPassword){
+
+    public boolean changePassword(User user, String currentPassword) {
         String query = "UPDATE user SET password = ? WHERE user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, currentPassword);
@@ -364,7 +437,8 @@ public class UserDAO extends DBConnect {
             return false;
         }
     }
-    public boolean checkCurrentPassword(User user, String currentPass){
+
+    public boolean checkCurrentPassword(User user, String currentPass) {
         String query = "Select * from user WHERE user_id = ? and status = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, user.getUser_id());
@@ -372,7 +446,7 @@ public class UserDAO extends DBConnect {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String pass = rs.getString("password");
-                    if(pass.equals(currentPass)){
+                    if (pass.equals(currentPass)) {
                         return true;
                     }
                 }

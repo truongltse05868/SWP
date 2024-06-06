@@ -440,7 +440,9 @@
                                                 <div class="profile-head">
                                                     <h3>Edit Profile</h3>
                                                 </div>
-                                                <form class="edit-profile">
+                                                <form class="edit-profile" action="${pageContext.request.contextPath}/userController" method="post">
+                                                    <input type="hidden" name="userId" value="${user.user_id}">
+                                                    <input type="hidden" name="action" value="userChangeInfo">
                                                     <div class="">
                                                         <div class="form-group row">
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-10 ml-auto">
@@ -450,25 +452,29 @@
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">User Name</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="${user.user_name}">
+                                                                <input class="form-control" type="text" readonly="" name="username" value="${user.user_name}">
+                                                                
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Phone No.</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="${user.phone}">
+                                                                <input class="form-control" type="text" name="phone" value="${user.phone}">
+                                                                <span class="error" style="font-size: smaller;">${errors['phoneError']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Full Name</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="${user.full_name}">
+                                                                <input class="form-control" type="text" name="fullname" value="${user.full_name}">
+                                                                <span class="error" style="font-size: smaller;">${errors['fullnameError']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Email</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" value="${user.email}">
+                                                                <input class="form-control" type="text" name="email" value="${user.email}">
+                                                                <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -491,7 +497,8 @@
                                                             <div class="form-group row">
                                                                 <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Age</label>
                                                                 <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                    <input class="form-control" type="text" value="${user.age}">
+                                                                    <input class="form-control" type="text" name="age" value="${user.age}">
+                                                                <span class="error" style="font-size: smaller;">${errors['ageError']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -520,9 +527,11 @@
                                                                 <div class="col-12 col-sm-3 col-md-3 col-lg-2">
                                                                 </div>
                                                                 <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                    <button type="reset" class="btn">Save changes</button>
-                                                                    <button type="reset" class="btn-secondry">Cancel</button>
+                                                                    <button type="submit" class="btn">Save changes</button>
+                                                                    <!--<button type="reset" class="btn-secondry">Cancel</button>-->
                                                                 </div>
+                                                                <div><span class="error" style="font-size: smaller;">${errors['Success']}</span></div>
+                                                                <div><span class="error" style="font-size: smaller;">${errors['Errors']}</span></div>
                                                             </div>
                                                         </div>
                                                     </div>

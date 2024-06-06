@@ -75,13 +75,44 @@
                 document.body.appendChild(form);
                 form.submit();
             }
+            function sendPostRequestSort(sortField, searchUsername) {
+                const form = document.createElement("form");
+                form.method = "POST";
+                form.action = "userController";
+
+                // Create hidden input for action
+                const actionInput = document.createElement("input");
+                actionInput.type = "hidden";
+                actionInput.name = "action";
+                actionInput.value = "sort";
+                form.appendChild(actionInput);
+
+                // Create hidden input for sortField
+                const sortFieldInput = document.createElement("input");
+                sortFieldInput.type = "hidden";
+                sortFieldInput.name = "sortField";
+                sortFieldInput.value = sortField;
+                form.appendChild(sortFieldInput);
+
+                // Create hidden input for searchUsername if it exists
+                if (searchUsername) {
+                    const searchUsernameInput = document.createElement("input");
+                    searchUsernameInput.type = "hidden";
+                    searchUsernameInput.name = "searchUsername";
+                    searchUsernameInput.value = searchUsername;
+                    form.appendChild(searchUsernameInput);
+                }
+
+                document.body.appendChild(form);
+                form.submit();
+            }
         </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
-        
-                <jsp:include page="DashboardNav.jsp"/>
-                
+
+        <jsp:include page="DashboardNav.jsp"/>
+
 
         <!--Main container start -->
         <main class="ttr-wrapper">
@@ -112,10 +143,10 @@
                                 <c:if test="${not empty users}">
                                     <table >
                                         <tr>
-                                            <th><a href="userController?action=sortField&sortField=user_name">Username</a></th>
-                                            <th><a href="userController?action=sortField&sortField=full_name">Full Name</a></th>
-                                            <th><a href="userController?action=sortField&sortField=email">Email</a></th>
-                                            <th><a href="userController?action=sortField&sortField=phone">Phone</a></th>
+                                            <th><a href="SortByUserName" onclick="sendPostRequestSort('user_name', '${searchUsername}');return false;">Username</a></th>
+                                            <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
+                                            <th><a href="SortByEmail" onclick="sendPostRequestSort('email', '${searchUsername}');return false;">Email</a></th>
+                                            <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
                                             <th>Gender</th>
                                             <th>Age</th>
                                             <th><a href="?sortField=status">Status</a></th>
