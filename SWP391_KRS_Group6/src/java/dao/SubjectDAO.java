@@ -63,7 +63,7 @@ public class SubjectDAO extends DBConnect {
             ps.setInt(5, subject.getSubject_id());
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
-            Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SubjectDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return false;
     }
@@ -83,7 +83,7 @@ public class SubjectDAO extends DBConnect {
                 );
             }
         } catch (SQLException ex) {
-            Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(SubjectDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
     }

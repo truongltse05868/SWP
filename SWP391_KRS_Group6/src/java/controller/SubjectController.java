@@ -145,14 +145,10 @@ public class SubjectController extends HttpServlet {
             throws ServletException, IOException {
     try {
         SubjectDAO dao = new SubjectDAO();
-        if (submit == null) {
-            Subject subject = dao.getSubjectById(pid);
-            request.setAttribute("subject", subject);
-            dispath(request, response, "WEB-INF/UpdateSubject.jsp");
-        } else {
+        if(submit != null) {
             String subjectId = request.getParameter("subject_id");
             String Code = request.getParameter("subject_code");
-            String Name = request.getParameter("name");
+            String Name = request.getParameter("subject_name");
             String description = request.getParameter("description");
             String statusParam = request.getParameter("status");
             boolean status = (statusParam != null && statusParam.equals("on"));
@@ -167,10 +163,14 @@ public class SubjectController extends HttpServlet {
             // Redirect to a success page or display a success message
             String successMessage = "Subject updated successfully.";
             request.setAttribute("successMessage", successMessage);
-            dispath(request, response, "success.jsp"); // Replace "success.jsp" with your success page
+            response.sendRedirect("SubjectController"); // Replace "success.jsp" with your success page
             
             // If you want to send a redirect to another page after success, uncomment the following line
             // response.sendRedirect("SubjectController");
+        }else{
+            Subject subject = dao.getSubjectById(pid);
+            request.setAttribute("subject", subject);
+            dispath(request, response, "WEB-INF/UpdateSubject.jsp");
         }
     } catch (NumberFormatException e) {
         logger.log(Level.SEVERE, "Invalid subject ID format", e);

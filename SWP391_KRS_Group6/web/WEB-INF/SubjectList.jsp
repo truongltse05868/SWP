@@ -163,7 +163,7 @@
                                                             <form method="post" action="SubjectController" >
                                                                 <input type="hidden" name="service" value="updateSubject">
                                                                 <input type="hidden" name="pid" value="${subjectList.subject_id}">
-                                                                <button type="submit" name="submit" class="btn">Update</button>
+                                                                <button type="submit" class="btn">Update</button>
                                                             </form>
                                                         </div>
                                                         <div class="info-bx text-center">
@@ -176,28 +176,21 @@
                                                             <div >
                                                                 <p><a>Description: ${subjectList.description}</a></p>
                                                             </div>
-                                                            <div >
-                                                                <c:choose>
-                                                                    <c:when test="${subject.status}">
-                                                                        <span class="badge badge-success">Active</span>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span class="badge badge-secondary">Inactive</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </div>
+
                                                         </div>
 
                                                         <div class="cours-more-info">
                                                             <div class="review">
-                                                                <span>3 Review</span>
-                                                                <ul class="cours-star">
-                                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                                    <li><i class="fa fa-star"></i></li>
-                                                                    <li><i class="fa fa-star"></i></li>
-                                                                </ul>
+                                                                <div >
+                                                                    <c:choose>
+                                                                        <c:when test="${subject.status}">
+                                                                            <span class="badge badge-success">Active</span>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <span class="badge badge-secondary">Inactive</span>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </div>
                                                             </div>
                                                             <div class="price">
                                                                 <del>$190</del>

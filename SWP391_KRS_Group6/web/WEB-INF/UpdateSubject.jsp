@@ -4,7 +4,6 @@
     Author     : simon
 --%>
 <%@page import="dao.SubjectDAO" %>
-<%@page import="java.util.Vector" %>
 <%@page import="entity.Subject" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -89,8 +88,9 @@
                             Subject s = (Subject) request.getAttribute("subject");
                             %>
                             <div class="widget-inner">
-                                <form class="edit-profile m-b30" action="SubjectController" method="post">
+                                <form class="edit-profile m-b30" action="SubjectController">
                                     <input type="hidden" name="service" value="updateSubject">
+                                    <input type="hidden" name="pid" value="<%=s.getSubject_id()%>">
                                     
 
                                     <div class="">
@@ -114,7 +114,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Name:</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"   name="name" type="text" value="<%=s.getSubject_name()%>">
+                                                <input class="form-control"   name="subject_name" type="text" value="<%=s.getSubject_name()%>">
                                             </div>
                                         </div>
 
