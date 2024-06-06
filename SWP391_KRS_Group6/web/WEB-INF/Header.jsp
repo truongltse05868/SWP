@@ -79,45 +79,45 @@
     <header class="header rs-nav header-transparent">
         <div class="top-bar">
             <div class="container">
-                <div class="row d-flex justify-content-between">
-                    <div class="topbar-left">
-                        <ul>
-                            <li><a href="faq-1.html"><i class="fa fa-question-circle"></i>Ask a Question</a></li>
-                            <li><a href="javascript:;"><i class="fa fa-envelope-o"></i>Support@website.com</a></li>
-                        </ul>
-                    </div>
+                <!--                <div class="row d-flex justify-content-between">
+                                    <div class="topbar-left">
+                                        <ul>
+                                            <li><a href="faq-1.html"><i class="fa fa-question-circle"></i>Ask a Question</a></li>
+                                            <li><a href="javascript:;"><i class="fa fa-envelope-o"></i>Support@website.com</a></li>
+                                        </ul>
+                                    </div>
+                
+                                    <div class="topbar-right">
+                                        <ul>
+                                            <li>
+                                                <select class="header-lang-bx">
+                                                    <option data-icon="flag flag-uk">English UK</option>
+                                                    <option data-icon="flag flag-us">English US</option>
+                                                </select>
+                                            </li>
+                <c:if test="${sessionScope['account'].getRole_id() == null}">
+                    <li><a id="loginLink" href="Login" >Login</a></li>
+                    <li><a id="registerLink" href="RegisterController">Register</a></li>
+                    <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
+                            return false;">ForgotPassword</a></li>
+                </c:if>
+                <c:if test="${sessionScope['account'].getRole_id() != null}">
+                <li> 
+                    <label><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
+                            return false;">Hello, ${sessionScope.account.full_name} </a></label>
+                </li>
+                <li><a id="logoutLink" href="Logout" >Logout</a></li>
+                </c:if>
+        </ul>
+    </div>
 
-                    <div class="topbar-right">
-                        <ul>
-                            <li>
-                                <select class="header-lang-bx">
-                                    <option data-icon="flag flag-uk">English UK</option>
-                                    <option data-icon="flag flag-us">English US</option>
-                                </select>
-                            </li>
-                            <c:if test="${sessionScope['account'].getRole_id() == null}">
-                                <li><a id="loginLink" href="Login" >Login</a></li>
-                                <li><a id="registerLink" href="RegisterController">Register</a></li>
-                                <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
-                                        return false;">ForgotPassword</a></li>
-                                </c:if>
-                                <c:if test="${sessionScope['account'].getRole_id() != null}">
-                                <li> 
-                                    <label><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
-                                            return false;">Hello, ${sessionScope.account.full_name} </a></label>
-                                </li>
-                                <li><a id="logoutLink" href="Logout" >Logout</a></li>
-                                </c:if>
-                        </ul>
-                    </div>
-
-                    <form id="hiddenForm" method="post" style="display:none;">
-                        <input type="hidden" name="action" value="Login">
-                    </form>
-                    <form id="logout" method="post" style="display:none;">
-                        <input type="hidden" name="action" value="Logout">
-                    </form>
-                </div>
+    <form id="hiddenForm" method="post" style="display:none;">
+        <input type="hidden" name="action" value="Login">
+    </form>
+    <form id="logout" method="post" style="display:none;">
+        <input type="hidden" name="action" value="Logout">
+    </form>
+</div>-->
                 <!-- Navigation Menu ==== -->
                 <div class="menu-links navbar-collapse collapse justify-content-start" id="menuDropdown">
                     <div class="menu-logo">
@@ -237,6 +237,7 @@
 
 
                     </ul>
+
                     <div class="nav-social-link">
                         <a href="javascript:;"><i class="fa fa-facebook"></i></a>
                         <a href="javascript:;"><i class="fa fa-google-plus"></i></a>
@@ -263,13 +264,41 @@
                     <!-- Author Nav ==== -->
                     <div class="secondary-menu">
                         <div class="secondary-inner">
-                            <ul>
-                                <li><a href="javascript:;" class="btn-link"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="javascript:;" class="btn-link"><i class="fa fa-google-plus"></i></a></li>
-                                <li><a href="javascript:;" class="btn-link"><i class="fa fa-linkedin"></i></a></li>
-                                <!-- Search Button ==== -->
-                                <li class="search-btn"><button id="quik-search-btn" type="button" class="btn-link"><i class="fa fa-search"></i></button></li>
-                            </ul>
+                            <div class="row d-flex justify-content-between">
+
+                                <div class="topbar-right">
+                                    <ul>
+                                        <c:if test="${sessionScope['account'].getRole_id() == null}">
+                                            <li><a id="loginLink" href="Login" >Login</a></li>
+                                            <li><a id="registerLink" href="RegisterController">Register</a></li>
+                                            <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
+                                                    return false;">ForgotPassword</a></li>
+                                            </c:if>
+                                            <c:if test="${sessionScope['account'].getRole_id() != null}">
+                                            <li> 
+                                                <label><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
+                                                        return false;">Hello, ${sessionScope.account.full_name} </a></label>
+                                            </li>
+                                            <li><a id="logoutLink" href="Logout" >Logout</a></li>
+                                            </c:if>
+                                    </ul>
+                                </div>
+
+                                <form id="hiddenForm" method="post" style="display:none;">
+                                    <input type="hidden" name="action" value="Login">
+                                </form>
+                                <form id="logout" method="post" style="display:none;">
+                                    <input type="hidden" name="action" value="Logout">
+                                </form>
+                                <ul>
+                                    <li><a href="javascript:;" class="btn-link"><i class="fa fa-facebook"></i></a></li>
+                                    <li><a href="javascript:;" class="btn-link"><i class="fa fa-google-plus"></i></a></li>
+                                    <li><a href="javascript:;" class="btn-link"><i class="fa fa-linkedin"></i></a></li>
+                                    <!-- Search Button ==== -->
+                                    <li class="search-btn"><button id="quik-search-btn" type="button" class="btn-link"><i class="fa fa-search"></i></button></li>
+                                </ul>
+                            </div>
+
                         </div>
                     </div>
                     <!-- Search Box ==== -->
