@@ -77,9 +77,9 @@ public class Login extends HttpServlet {
             String pass = request.getParameter("password");
             UserDAO udao = new UserDAO();
             User user = udao.checkRoleLogin(username, pass);
-            String mess = "Email or password wrong!";
+            String mess = "Username or password wrong! please try again";
 
-            if (user != null) {
+            if (user != null && user.isStatus()) {
                 session.setAttribute("account", user);
                 if (user.getRole_id() == 1) { //  role_id = 1 là admin
                     response.sendRedirect("Home"); // Chuyển hướng tới trang admin

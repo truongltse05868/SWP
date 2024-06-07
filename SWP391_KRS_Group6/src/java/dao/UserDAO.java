@@ -533,7 +533,7 @@ public class UserDAO extends DBConnect {
 
     public User checkRoleLogin(String account, String password) {
         User user = null;
-        String query = "SELECT * FROM user WHERE `user_name` = ? and `password` = ? and status = 1";
+        String query = "SELECT * FROM user WHERE `user_name` = ? and `password` = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, account);
             ps.setString(2, password);
