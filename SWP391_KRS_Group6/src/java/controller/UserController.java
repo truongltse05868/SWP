@@ -274,12 +274,12 @@ public class UserController extends HttpServlet {
                 boolean isCurrentPass = userDAO.checkCurrentPassword(user, currentPassword);
                 if (isCurrentPass) {
                     if (!newPassword.equals(reNewPassword) || !validatePassword(newPassword) || !validatePassword(reNewPassword)) {
-                        message = "New password does not meet requirements.";
+                        message = "Mật khẩu không khớp và phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số";
                         errors.put("errorsSamePass", message);
                     } else {
 //                        user.setPassword(newPassword);
                         boolean isUpdated = userDAO.changePassword(user, newPassword);
-                        message = isUpdated ? "Password updated successfully." : "Password update failed.";
+                        message = isUpdated ? "Cập nhật mật khẩu thành công" : "Cập nhật mật khẩu thất bại";
                         errors.put("errorsUpdate", message);
                     }
                 } else {
