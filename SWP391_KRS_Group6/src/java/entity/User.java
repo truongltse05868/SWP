@@ -14,13 +14,13 @@ public class User {
     private String full_name;
     private String phone;
     private String gender;
-    private int age;
+//    private int age;
     private boolean status;
     private int role_id;
     private String otp;
     private Timestamp otp_expiry;
 
-    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, int age, boolean status, int role_id, String otp, Timestamp otp_expiry) {
+    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, boolean status, int role_id, String otp, Timestamp otp_expiry) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.password = password;
@@ -28,14 +28,14 @@ public class User {
         this.full_name = full_name;
         this.phone = phone;
         this.gender = gender;
-        this.age = age;
+//        this.age = age;
         this.status = status;
         this.role_id = role_id;
         this.otp = otp;
         this.otp_expiry = otp_expiry;
     }
 
-    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, int age, boolean status, int role_id, String otp) {
+    public User(int user_id, String user_name, String password, String email, String full_name, String phone, String gender, boolean status, int role_id, String otp) {
         this.user_id = user_id;
         this.user_name = user_name;
         this.password = password;
@@ -43,7 +43,7 @@ public class User {
         this.full_name = full_name;
         this.phone = phone;
         this.gender = gender;
-        this.age = age;
+//        this.age = age;
         this.status = status;
         this.role_id = role_id;
         this.otp = otp;
@@ -125,13 +125,13 @@ public class User {
         this.gender = gender;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
+//    public int getAge() {
+//        return age;
+//    }
+//
+//    public void setAge(int age) {
+//        this.age = age;
+//    }
 
     public boolean isStatus() {
         return status;
@@ -151,7 +151,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "user_id=" + user_id + ", user_name=" + user_name + ", password=" + password + ", email=" + email + ", full_name=" + full_name + ", phone=" + phone + ", gender=" + gender + ", age=" + age + ", status=" + status + ", role_id=" + role_id + '}';
+        return "User{" + "user_id=" + user_id + ", user_name=" + user_name + ", password=" + password + ", email=" + email + ", full_name=" + full_name + ", phone=" + phone + ", gender=" + gender + ", status=" + status + ", role_id=" + role_id + '}';
     }
 
     public User() {

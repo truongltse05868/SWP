@@ -495,12 +495,6 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="form-group row">
-                                                                <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Age</label>
-                                                                <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                    <input class="form-control" type="text" name="age" value="${user.age}">
-                                                                <span class="error" style="font-size: smaller;">${errors['ageError']}</span>
-                                                            </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Role</label>

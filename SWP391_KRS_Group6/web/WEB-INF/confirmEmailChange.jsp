@@ -79,7 +79,6 @@
                                 <input type="hidden" name="fullname" value="${sessionScope.fullname}">
                                 <input type="hidden" name="phone" value="${sessionScope.phone}">
                                 <input type="hidden" name="gender" value="${sessionScope.gender}">
-                                <input type="hidden" name="age" value="${sessionScope.age}">
                                 <div class="row placeani">
                                     <div class="col-lg-12">
                                         <div class="form-group">

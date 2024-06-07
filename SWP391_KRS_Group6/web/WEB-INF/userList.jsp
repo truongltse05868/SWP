@@ -144,25 +144,22 @@
                                     <table >
                                         <tr>
                                             <th><a href="SortByUserName" onclick="sendPostRequestSort('user_name', '${searchUsername}');return false;">Username</a></th>
-                                            <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
                                             <th><a href="SortByEmail" onclick="sendPostRequestSort('email', '${searchUsername}');return false;">Email</a></th>
+                                            <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
                                             <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
                                             <th>Gender</th>
-                                            <th>Age</th>
                                             <th><a href="?sortField=status">Status</a></th>
                                             <th>Role</th>
                                             <th>Update</th>
                                         </tr>
                                         <c:forEach var="user" items="${users}">
                                             <tr>
-
                                                 <td>${user.user_name}</td>
                                                 <td>${user.email}</td>
                                                 <td>${user.full_name}</td>
                                                 <td>${user.phone}</td>
                                                 <td>${user.gender}</td>
-                                                <td>${user.age}</td>
-
+                                                
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${user.status}">

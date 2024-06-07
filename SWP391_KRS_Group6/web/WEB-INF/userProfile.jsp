@@ -125,32 +125,26 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">User Name</label>
-                                            <div class="col-sm-7">
+                                            <label class="col-sm-2 col-form-label">User Name *</label>
+                                            <div class="col-sm-4">
                                                 <input class="form-control" name="userName" type="text" value="${user.user_name}">
                                             </div>
                                         </div>
-                                        <!--                                        <div class="form-group row">
-                                                                                    <label class="col-sm-2 col-form-label">Password</label>
-                                                                                    <div class="col-sm-7">
-                                                                                        <input class="form-control" name="password" type="password" value="${user.password}">
-                                                                                    </div>
-                                                                                </div>-->
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Email</label>
-                                            <div class="col-sm-7">
+                                            <div class="col-sm-4">
                                                 <input class="form-control" name="email" type="email" value="${user.email}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Full Name</label>
-                                            <div class="col-sm-7">
+                                            <div class="col-sm-4">
                                                 <input class="form-control" name="fullName" type="text" value="${user.full_name}">
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Phone</label>
-                                            <div class="col-sm-7">
+                                            <div class="col-sm-4">
                                                 <input class="form-control" name="phone" type="tel" value="${user.phone}">
                                             </div>
                                         </div>
@@ -171,15 +165,10 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Age</label>
-                                                <div class="col-sm-7">
-                                                    <input class="form-control" name="age" type="number" value="${user.age}">
-                                            </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
-                                            <div class="col-sm-7">
+                                            <div class="col-sm-1">
                                                 <input class="form-control"  name="status" type="checkbox" ${user.status ? 'checked' : ''}>
                                             </div>
                                         </div>
@@ -212,7 +201,7 @@
                                         </div>
                                     </div>
                                 </form>
-                                <form class="edit-profile" action="${pageContext.request.contextPath}/userController" method="post">
+<!--                                <form class="edit-profile" action="${pageContext.request.contextPath}/userController" method="post">
                                     <input type="hidden" name="action" value="changePassAdmin"> 
                                     <input type="hidden" name="id" value="${user.user_id}">
                                     <div class="">
@@ -253,36 +242,7 @@
                                             <button type="button" onclick="sendPostRequest('userList'); return false;" class="btn btn-secondary">Back</button>
                                         </div>
                                     </div>
-                                </form>
-
-                                <!--                                <script>
-                                                                    document.querySelectorAll('.toggle-password').forEach(button => {
-                                                                        button.addEventListener('click', () => {
-                                                                            const input = button.closest('.input-group').querySelector('input');
-                                                                            const icon = button.querySelector('i');
-                                                                            if (input.type === 'password') {
-                                                                                input.type = 'text';
-                                                                                icon.classList.remove('fa-eye');
-                                                                                icon.classList.add('fa-eye-slash');
-                                                                            } else {
-                                                                                input.type = 'password';
-                                                                                icon.classList.remove('fa-eye-slash');
-                                                                                icon.classList.add('fa-eye');
-                                                                            }
-                                                                        });
-                                                                    });
-                                
-                                                                    document.querySelector('form').addEventListener('submit', function (e) {
-                                                                        const newPassword = document.querySelector('input[name="newPassword"]').value;
-                                                                        const reNewPassword = document.querySelector('input[name="reNewPassword"]').value;
-                                
-                                                                        if (newPassword !== reNewPassword) {
-                                                                            e.preventDefault();
-                                                                            alert('New passwords do not match.');
-                                                                        }
-                                                                    });
-                                                                </script>-->
-
+                                </form>-->
                             </div>
                         </div>
                     </div>

@@ -316,7 +316,7 @@
                                             <label class="col-sm-2 col-form-label">User Name</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="userName" type="text" value="${user_name}">
-                                                <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['existsErrorUserName']}</span>
                                                 <span class="error" style="font-size: smaller;">${errors['usernameError']}</span>
                                             </div>
                                         </div>
@@ -331,7 +331,7 @@
                                             <label class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="email" type="email" value="${email}">
-                                                <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['existsErrorEmail']}</span>
                                                 <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
                                             </div>
                                         </div>
@@ -367,14 +367,6 @@
 
                                                 </div>
 
-                                            </div>
-
-
-                                            <div class="form-group row">
-                                                <label class="col-sm-2 col-form-label">Age</label>
-                                                <div class="col-sm-2">
-                                                    <input class="form-control" name="age" type="text" value="${age}">
-                                                <span class="error" style="font-size: smaller;">${errors['ageError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">

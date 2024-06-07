@@ -210,7 +210,7 @@ public class UserController extends HttpServlet {
             String fullName = request.getParameter("fullName");
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
-            int age = Integer.parseInt(request.getParameter("age"));
+//            int age = Integer.parseInt(request.getParameter("age"));
             String statusParam = request.getParameter("status");
             boolean status = (statusParam != null && statusParam.equals("on"));
             int roleId = Integer.parseInt(request.getParameter("roleId"));
@@ -226,7 +226,7 @@ public class UserController extends HttpServlet {
                 user.setFull_name(fullName);
                 user.setPhone(phone);
                 user.setGender(gender);
-                user.setAge(age);
+//                user.setAge(age);
                 user.setStatus(status);
                 user.setRole_id(roleId);
                 boolean isUpdated = userDAO.updateUser(user);
@@ -446,21 +446,21 @@ public class UserController extends HttpServlet {
             String fullName = request.getParameter("fullname");
             String newEmail = request.getParameter("email");
             String gender = request.getParameter("gender");
-            String ageParam = request.getParameter("age");
-
-            int age;
-            if (ageParam == null || ageParam.trim().isEmpty()) {
-                age = 1;
-            } else {
-                age = Integer.parseInt(ageParam);
-            }
+//            String ageParam = request.getParameter("age");
+//
+//            int age;
+//            if (ageParam == null || ageParam.trim().isEmpty()) {
+//                age = 1;
+//            } else {
+//                age = Integer.parseInt(ageParam);
+//            }
 
             UserDAO userDAO = new UserDAO();
             User currentUser = userDAO.getUserById(userId);
 
             boolean emailChanged = !newEmail.equals(currentUser.getEmail());
 
-            User user = new User(userId, currentUser.getUser_name(), currentUser.getPassword(), newEmail, fullName, phone, gender, age, currentUser.isStatus(), currentUser.getRole_id(), null);
+            User user = new User(userId, currentUser.getUser_name(), currentUser.getPassword(), newEmail, fullName, phone, gender, currentUser.isStatus(), currentUser.getRole_id(), null);
             //
 
 //            boolean usernameExists = userDAO.checkUsernameExists(userName);
@@ -507,7 +507,7 @@ public class UserController extends HttpServlet {
                     request.getSession().setAttribute("fullname", fullName);
                     request.getSession().setAttribute("phone", phone);
                     request.getSession().setAttribute("gender", gender);
-                    request.getSession().setAttribute("age", age);
+//                    request.getSession().setAttribute("age", age);
 //                    response.sendRedirect("WEB-INF/confirmEmailChange.jsp");
                     request.getRequestDispatcher("WEB-INF/confirmEmailChange.jsp").forward(request, response);
                 }
@@ -566,15 +566,7 @@ public class UserController extends HttpServlet {
             String email = request.getParameter("email");
             String fullName = request.getParameter("fullname");
             String phone = request.getParameter("phone");
-            String gender = request.getParameter("gender");
-            String ageParam = request.getParameter("age");
-
-            int age;
-            if (ageParam == null || ageParam.trim().isEmpty()) {
-                age = 1;
-            } else {
-                age = Integer.parseInt(ageParam);
-            }
+            String genderParam = request.getParameter("gender");
             boolean status = request.getParameter("status") != null;
             String roleIdParam = request.getParameter("roleId");
             int roleId;
@@ -583,7 +575,13 @@ public class UserController extends HttpServlet {
             } else {
                 roleId = Integer.parseInt(roleIdParam);
             }
-
+            String gender = "";
+            if(genderParam == null || genderParam.isEmpty()){
+                gender = "Other";
+            }
+            if(status == false){
+                status = true;
+            }
             // Tạo một đối tượng User
             User user = new User();
             user.setUser_name(userName);
@@ -592,7 +590,6 @@ public class UserController extends HttpServlet {
             user.setFull_name(fullName);
             user.setPhone(phone);
             user.setGender(gender);
-            user.setAge(age);
             user.setStatus(status);
             user.setRole_id(roleId);
 
@@ -614,18 +611,11 @@ public class UserController extends HttpServlet {
             if (userName == null || userName.trim().isEmpty() || !validateUsername(userName)) {
                 errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
             }
-
-//            if (!isValidPhone(phone)) {
-//                errors.put("phoneError", "Số điện thoại có 10 chữ số và bắt đầu bằng số 0");
-//            }
-//            if (!isValidAge(age)) {
-//                errors.put("ageError", "Độ tuổi phù hợp như là học sinh sinh viên");
-//            }
-//            if (!isValidFullName(fullName)) {
-//                errors.put("fullnameError", "Độ dài không quá 100");
-//            }
-            if (emailExists || usernameExists) {
-                errors.put("existsError", "Email hoặc Username đã tồn tại.");
+            if (emailExists) {
+                errors.put("existsErrorEmail", "Email đã tồn tại.");
+            }
+            if (usernameExists) {
+                errors.put("existsErrorUserName", "Username đã tồn tại.");
             }
 
             if (!errors.isEmpty()) {
@@ -637,7 +627,6 @@ public class UserController extends HttpServlet {
                 request.setAttribute("full_name", fullName);
                 request.setAttribute("phone", phone);
                 request.setAttribute("gender", gender);
-                request.setAttribute("age", age);
                 request.setAttribute("status", status);
                 request.setAttribute("roleId", roleId);
                 request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
@@ -647,22 +636,32 @@ public class UserController extends HttpServlet {
             // Thêm người dùng vào cơ sở dữ liệu
             boolean isSuccess = userDAO.addUser(user);
             String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
-            request.setAttribute("successMessage", message);
+            if (isSuccess) {
+                // Redirect to userList with success message
+//                response.sendRedirect(request.getContextPath() + "/userList?successMessage=" + URLEncoder.encode(message, "UTF-8"));
+                request.setAttribute("successMessage", message);
+                List<User> users = userDAO.getAllUsers();
+                request.setAttribute("users", users);
+                request.setAttribute("roles", roles);
+                request.getRequestDispatcher("WEB-INF/userList.jsp").forward(request, response);
+            } else {
+                // Handle failure (optional)
+                request.setAttribute("successMessage", "Cập nhật không thành công.");
+                request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
+            }
 
-            // Chuyển hướng về trang addUser.jsp với thông báo kết quả
-            request.setAttribute("roles", roles);
-            request.setAttribute("user_name", userName);
-            request.setAttribute("password", password);
-            request.setAttribute("email", email);
-            request.setAttribute("full_name", fullName);
-            request.setAttribute("phone", phone);
-            request.setAttribute("gender", gender);
-            request.setAttribute("age", age);
-            request.setAttribute("status", status);
-            request.setAttribute("roleId", roleId);
-            //
-            request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
-
+//            // Chuyển hướng về trang addUser.jsp với thông báo kết quả
+//            request.setAttribute("roles", roles);
+//            request.setAttribute("user_name", userName);
+//            request.setAttribute("password", password);
+//            request.setAttribute("email", email);
+//            request.setAttribute("full_name", fullName);
+//            request.setAttribute("phone", phone);
+//            request.setAttribute("gender", gender);
+////            request.setAttribute("age", age);
+//            request.setAttribute("status", status);
+//            request.setAttribute("roleId", roleId)
+//            getListUser2(request, response);
         } catch (Exception e) {
             // Xử lý ngoại lệ nếu có
             request.setAttribute("existsError", "An error occurred: " + e.getMessage());
@@ -793,11 +792,10 @@ public class UserController extends HttpServlet {
         return phone.matches("^0\\d{9}$");
     }
 
-    private boolean isValidAge(int age) {
-        // Kiểm tra xem age có nằm trong khoảng từ 1 đến 150 không (giả sử đây là giới hạn hợp lệ cho tuổi)
-        return age >= 2 && age <= 150;
-    }
-
+//    private boolean isValidAge(int age) {
+//        // Kiểm tra xem age có nằm trong khoảng từ 1 đến 150 không (giả sử đây là giới hạn hợp lệ cho tuổi)
+//        return age >= 2 && age <= 150;
+//    }
     @Override
     public String getServletInfo() {
         return "Short description";

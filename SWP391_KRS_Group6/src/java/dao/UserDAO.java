@@ -41,7 +41,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-                        rs.getInt("age"),
+//                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -69,7 +69,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-                        rs.getInt("age"),
+//                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -96,7 +96,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-                        rs.getInt("age"),
+//                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -124,7 +124,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-                        rs.getInt("age"),
+//                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -155,7 +155,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-                            rs.getInt("age"),
+//                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp")
@@ -215,7 +215,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-                        rs.getInt("age"),
+//                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -314,7 +314,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-                            rs.getInt("age"),
+//                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp")
@@ -393,7 +393,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-                            rs.getInt("age"),
+//                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp"),
@@ -409,7 +409,7 @@ public class UserDAO extends DBConnect {
 
     public boolean updateUser(User user) {
         String query = "UPDATE user SET user_name = ?, password = ?, email = ?, "
-                + "full_name = ?, phone = ?, gender = ?, age = ?, status = ?, role_id = ? WHERE user_id = ?";
+                + "full_name = ?, phone = ?, gender = ?, status = ?, role_id = ? WHERE user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, user.getUser_name());
             ps.setString(2, user.getPassword());
@@ -417,10 +417,10 @@ public class UserDAO extends DBConnect {
             ps.setString(4, user.getFull_name());
             ps.setString(5, user.getPhone());
             ps.setString(6, user.getGender());
-            ps.setInt(7, user.getAge());
-            ps.setBoolean(8, user.isStatus());
-            ps.setInt(9, user.getRole_id());
-            ps.setInt(10, user.getUser_id());
+//            ps.setInt(7, user.getAge());
+            ps.setBoolean(7, user.isStatus());
+            ps.setInt(8, user.getRole_id());
+            ps.setInt(9, user.getUser_id());
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
         } catch (SQLException e) {
@@ -483,8 +483,8 @@ public class UserDAO extends DBConnect {
     }
 
     public boolean addUser(User user) {
-        String query = "INSERT INTO user (user_name, password, email, full_name, phone, gender, age, status, role_id) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO user (user_name, password, email, full_name, phone, gender, status, role_id) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, user.getUser_name());
             ps.setString(2, user.getPassword());
@@ -492,9 +492,9 @@ public class UserDAO extends DBConnect {
             ps.setString(4, user.getFull_name());
             ps.setString(5, user.getPhone());
             ps.setString(6, user.getGender());
-            ps.setInt(7, user.getAge());
-            ps.setBoolean(8, user.isStatus());
-            ps.setInt(9, user.getRole_id());
+//            ps.setInt(7, user.getAge());
+            ps.setBoolean(7, user.isStatus());
+            ps.setInt(8, user.getRole_id());
 
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected > 0) {
@@ -547,7 +547,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-                            rs.getInt("age"),
+//                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp")
