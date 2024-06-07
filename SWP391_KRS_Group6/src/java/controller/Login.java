@@ -87,7 +87,7 @@ public class Login extends HttpServlet {
                     response.sendRedirect("Home"); // Chuyển hướng tới trang người dùng thông thường
                 }
             } else {
-                request.setAttribute("mess", mess);
+                request.setAttribute("errorMessage", mess);
                 request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
