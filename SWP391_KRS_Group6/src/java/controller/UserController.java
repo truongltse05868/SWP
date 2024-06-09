@@ -566,7 +566,7 @@ public class UserController extends HttpServlet {
             String email = request.getParameter("email");
             String fullName = request.getParameter("fullname");
             String phone = request.getParameter("phone");
-            String genderParam = request.getParameter("gender");
+            String gender = request.getParameter("gender");
             boolean status = request.getParameter("status") != null;
             String roleIdParam = request.getParameter("roleId");
             int roleId;
@@ -575,11 +575,11 @@ public class UserController extends HttpServlet {
             } else {
                 roleId = Integer.parseInt(roleIdParam);
             }
-            String gender = "";
-            if(genderParam == null || genderParam.isEmpty()){
+//            String gender = "";
+            if (gender == null || gender.isEmpty()) {
                 gender = "Other";
             }
-            if(status == false){
+            if (status == false) {
                 status = true;
             }
             // Tạo một đối tượng User
@@ -646,6 +646,15 @@ public class UserController extends HttpServlet {
                 request.getRequestDispatcher("WEB-INF/userList.jsp").forward(request, response);
             } else {
                 // Handle failure (optional)
+                request.setAttribute("roles", roles);
+                request.setAttribute("user_name", userName);
+                request.setAttribute("password", password);
+                request.setAttribute("email", email);
+                request.setAttribute("full_name", fullName);
+                request.setAttribute("phone", phone);
+                request.setAttribute("gender", gender);
+                request.setAttribute("status", status);
+                request.setAttribute("roleId", roleId);
                 request.setAttribute("successMessage", "Cập nhật không thành công.");
                 request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
             }
