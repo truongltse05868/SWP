@@ -33,7 +33,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
 
         <!-- PAGE TITLE HERE ============================================= -->
-        <title>EduChamp : Add Class </title>
+        <title>EduChamp : Update Class </title>
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,7 +62,7 @@
                 // Tạo form ẩn
                 var form = document.createElement("form");
                 form.setAttribute("method", "post");
-                form.setAttribute("action", "userController");
+                form.setAttribute("action", "ClassController");
 
                 // Tạo input ẩn cho action
                 var hiddenField = document.createElement("input");
@@ -285,10 +285,10 @@
         <main class="ttr-wrapper">
             <div class="container-fluid">
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">Add Class</h4>
+                    <h4 class="breadcrumb-title">Update Class</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>Add Class</li>
+                        <li>Update Class</li>
                     </ul>
                 </div>	
                 <div class="row">
@@ -296,11 +296,12 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>Add Class</h4>
+                                <h4>Update Class</h4>
                             </div>
                             <div class="widget-inner">
                                 <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/ClassController" method="post">
-                                    <input type="hidden" name="action" value="addClass"> 
+                                    <input type="hidden" name="action" value="updateClass"> 
+                                    <input type="hidden" name="classId" value="${classes.class_id}"> 
                                     <div class="">
                                         <div class="form-group row">
                                             <div class="col-sm-10  ml-auto">
@@ -310,7 +311,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Class Name</label>
                                             <div class="col-sm-3">
-                                                <input class="form-control" name="className" type="text" value="${class_name}">
+                                                <input class="form-control" name="className" type="text" value="${classes.class_name}">
                                                 <span class="error" style="font-size: smaller;">${errors['blankClassName']}</span>
                                                 
                                             </div>
@@ -319,7 +320,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
                                             <div class="col-sm-1">
-                                                <input class="form-control"  name="status" type="checkbox" ${status ? 'checked' : ''}>
+                                                <input class="form-control"  name="status" type="checkbox" ${classes.status ? 'checked' : ''}>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -328,13 +329,13 @@
                                             <div class="col-sm-2">
                                                 <select class="form-control" name="subjectId">
                                                     <c:forEach var="subject" items="${subject}">
-                                                        <option value="${subject.subject_id}"<c:if test="${role.subject_id == subject_id}">selected</c:if>>${subject.subject_name}</option>
+                                                        <option value="${subject.subject_id}"<c:if test="${subject.subject_id == classes.subject_id}">selected</c:if>>${subject.subject_name}</option>
                                                     </c:forEach>
                                                 </select>
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add Class</button>
+                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Update Class</button>
                                         </div>
                                             <div> <span>${errorsMessage}</span></div>
                                     </div>
