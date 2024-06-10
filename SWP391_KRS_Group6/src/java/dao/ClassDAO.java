@@ -103,6 +103,42 @@ public class ClassDAO extends DBConnect {
         }
     }
 
+    public boolean updateClass(Class newClass) {
+         String query = "UPDATE class SET subject_id = ?,  status = ?, class_name = ? WHERE class_id = ?";
+         try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, newClass.getSubject_id());
+            ps.setBoolean(2, newClass.isStatus());
+            ps.setString(3, newClass.getClass_name());
+            ps.setInt(4, newClass.getClass_id());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+            return false;
+        }
+    }
+
+    public Class getClassById(int classId) {
+        Class classes = null;
+        String query = "SELECT * FROM class WHERE class_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, classId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    classes = new Class(
+                            rs.getInt("class_id"),
+                            rs.getInt("subject_id"),
+                            rs.getString("class_name"),
+                            rs.getBoolean("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+        }
+        return classes;
+    }
+
     public List<Class> getClassByUserId(int userId) {
 
         List<Class> classList = new ArrayList<>();

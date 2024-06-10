@@ -182,7 +182,7 @@
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">
                                                         <input type="hidden" name="classId" value="${classList.class_id}" />
-                                                        <input type="hidden" name="action" value="editClass">
+                                                        <input type="hidden" name="action" value="updateClassPage">
                                                         <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                                                     </form>
 
@@ -196,6 +196,11 @@
                                 </c:if>
 
 
+                            </div>
+                            <div>
+                                <span>
+                                ${successMessage}
+                                </span>
                             </div>
                         </div>
                     </div>

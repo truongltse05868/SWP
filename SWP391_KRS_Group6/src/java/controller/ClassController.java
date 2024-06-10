@@ -71,6 +71,12 @@ public class ClassController extends HttpServlet {
                     case "addClass":
                         addClassByAdmin(request, response);
                         break;
+                    case "updateClassPage":
+                        updateClassByAdminPage(request, response);
+                        break;
+                    case "updateClass":
+                        updateClassByAdmin(request, response);
+                        break;
                     default:
 
                         break;
@@ -199,7 +205,7 @@ public class ClassController extends HttpServlet {
                 errors.put("blankClassName", "Tên lớp học không được để trống");
             }
             if (!errors.isEmpty()) {
-                
+
                 request.setAttribute("errors", errors);
                 request.setAttribute("class_name", class_name);
                 request.setAttribute("subject", subject);
@@ -233,6 +239,60 @@ public class ClassController extends HttpServlet {
             // Xử lý ngoại lệ nếu có
             request.setAttribute("existsError", "An error occurred: " + e.getMessage());
             request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
+        }
+    }
+
+    //update class
+    private void updateClassByAdminPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            ClassDAO classDAO = new ClassDAO();
+            SubjectDAO subjectDAO = new SubjectDAO();
+            List<Subject> subjectList = subjectDAO.getAllSubjects();
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            Class classes = classDAO.getClassById(classId);
+            request.setAttribute("classes", classes);
+            request.setAttribute("subject", subjectList);
+            request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get Class by class_id", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get class.");
+        }
+    }
+
+    private void updateClassByAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            ClassDAO classDAO = new ClassDAO();
+            SubjectDAO subjectDAO = new SubjectDAO();
+            Class classUpdate = new Class();
+
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+            String className = request.getParameter("className");
+            boolean status = request.getParameter("status") != null;
+
+            classUpdate.setClass_id(classId);
+            classUpdate.setClass_name(className);
+            classUpdate.setSubject_id(subjectId);
+            classUpdate.setStatus(status);
+            boolean isUpdate = classDAO.updateClass(classUpdate);
+            if (isUpdate) {
+                List<Class> classList = classDAO.getAllClass();
+                Map<Integer, Integer> userCountMap = classDAO.getUserCountForClasses();
+                List<Subject> subjectList = subjectDAO.getAllSubjects();
+                request.setAttribute("classes", classList);
+                request.setAttribute("userCountMap", userCountMap);
+                request.setAttribute("subjectList", subjectList);
+                request.setAttribute("successMessage", "Cập nhật lớp thành công");
+                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+            } else {
+                request.setAttribute("successMessage", "Cập nhật lớp không thành công");
+                request.getRequestDispatcher("WEB-INF/UpdateAdmin.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get Class by class_id", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get class.");
         }
     }
 
