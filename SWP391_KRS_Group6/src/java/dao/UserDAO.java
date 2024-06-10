@@ -137,14 +137,14 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-
-    public List<User> checkLogin(String account, String password) {
-
+    
+    public List<User> checkLogin(String identifier, String password) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE `user_name` = ? and `password` = ? and status = 1";
+        String query = "SELECT * FROM user WHERE (user_name = ? OR email = ?) AND password = ? AND status = 1";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, account);
-            ps.setString(2, password);
+            ps.setString(1, identifier);
+            ps.setString(2, identifier);
+            ps.setString(3, password);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     User user = new User(
@@ -155,7 +155,6 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-                            //                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp")

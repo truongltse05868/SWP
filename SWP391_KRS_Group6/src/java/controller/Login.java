@@ -1,56 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controller;
 
 import dao.UserDAO;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Vector;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import entity.User;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/**
- *
- * @author chi
- */
 public class Login extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(Login.class.getName());
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-//    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        response.setContentType("text/html;charset=UTF-8");
-//
-//    }
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -58,14 +23,6 @@ public class Login extends HttpServlet {
         request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -73,18 +30,24 @@ public class Login extends HttpServlet {
 
         try {
             HttpSession session = request.getSession();
-            String username = request.getParameter("username");
-            String pass = request.getParameter("password");
+            String identifier = request.getParameter("identifier"); // Username or Email
+            String password = request.getParameter("password");
             UserDAO udao = new UserDAO();
-            User user = udao.checkRoleLogin(username, pass);
+            List<User> users = udao.checkLogin(identifier, password);
             String mess = "Username or password wrong! please try again";
 
-            if (user != null && user.isStatus()) {
-                session.setAttribute("account", user);
-                if (user.getRole_id() == 1) { //  role_id = 1 là admin
-                    response.sendRedirect("Home"); // Chuyển hướng tới trang admin
+            if (!users.isEmpty()) {
+                User user = users.get(0);
+                if (user.isStatus()) {
+                    session.setAttribute("account", user);
+                    if (user.getRole_id() == 1) { // role_id = 1 is admin
+                        response.sendRedirect("Home"); // Redirect to admin home page
+                    } else {
+                        response.sendRedirect("Home"); // Redirect to regular user home page
+                    }
                 } else {
-                    response.sendRedirect("Home"); // Chuyển hướng tới trang người dùng thông thường
+                    request.setAttribute("errorMessage", mess);
+                    request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                 }
             } else {
                 request.setAttribute("errorMessage", mess);
@@ -97,14 +60,8 @@ public class Login extends HttpServlet {
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

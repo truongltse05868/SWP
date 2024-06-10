@@ -83,53 +83,56 @@
                             <div class="widget-inner">
                                 <form method="post" action="SettingController" style="display:inline;">
                                     <input type="hidden" name="service" value="insertSetting">
-                                    <button type="submit" class=" btn-primary btn-sm btn btn-block">Add</button>
+                                    <button type="submit" class="btn btn-primary btn-sm">Add</button>
                                 </form>
                                 <c:if test="${not empty setting}">
-                                    <table class="my-3">
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Name</th>
-                                            <th>Type</th>
-                                            <th>Description</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                        <c:forEach var="setting" items="${setting}">
+                                    <table class="table table-striped my-3">
+                                        <thead>
                                             <tr>
-                                                <td>${setting.settingId}</td>
-                                                <td>${setting.settingName}</td>
-                                                <td>${setting.type}</td>
-                                                <td>${setting.description}</td>
-                                                <td>
-                                                    <c:choose>
-                                                        <c:when test="${setting.status}">
-                                                            Active
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            Inactive
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                                <td>
-                                                    <form method="post" action="SettingController" style="display:inline;">
-                                                        <input type="hidden" name="service" value="updateSetting">
-                                                        <input type="hidden" name="pid" value="${setting.settingId}">
-                                                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
-                                                    </form>
-
-                                                </td>
+                                                <th>ID</th>
+                                                <th>Name</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
                                             </tr>
-                                        </c:forEach>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach var="setting" items="${setting}">
+                                                <tr>
+                                                    <td>${setting.settingId}</td>
+                                                    <td>${setting.settingName}</td>
+                                                    <td>${setting.type}</td>
+                                                    <td>${setting.description}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${setting.status}">
+                                                                Active
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Inactive
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td>
+                                                        <form method="post" action="SettingController" style="display:inline;">
+                                                            <input type="hidden" name="service" value="updateSetting">
+                                                            <input type="hidden" name="pid" value="${setting.settingId}">
+                                                            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
                                     </table>
                                 </c:if>
                                 <c:if test="${empty setting}">
                                     <p>No settings found.</p>
                                 </c:if>
-                                
                             </div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </main>
