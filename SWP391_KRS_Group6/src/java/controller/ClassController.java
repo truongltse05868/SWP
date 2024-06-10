@@ -145,10 +145,8 @@ public class ClassController extends HttpServlet {
     private void addClassPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SettingDAO settingDAO = new SettingDAO();
             SubjectDAO subjectDAO = new SubjectDAO();
             List<Subject> subjects = subjectDAO.getAllSubjects();
-
             request.setAttribute("subject", subjects);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/AddClass.jsp");
             dispatcher.forward(request, response);
@@ -190,15 +188,26 @@ public class ClassController extends HttpServlet {
             // Danh sách các thông báo lỗi
             Map<String, String> errors = new HashMap<>();
             // Lấy thông tin từ form
-            int subjectId = Integer.parseInt(request.getParameter("subject_id"));
-            String class_name = request.getParameter("class_name");
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+            String class_name = request.getParameter("className");
             boolean status = request.getParameter("status") != null;
             if (status == false) {
                 status = true;
             }
-
             // Validate các trường
-            // Thêm người dùng vào cơ sở dữ liệu
+            if (class_name == null || class_name.isEmpty()) {
+                errors.put("blankClassName", "Tên lớp học không được để trống");
+            }
+            if (!errors.isEmpty()) {
+                
+                request.setAttribute("errors", errors);
+                request.setAttribute("class_name", class_name);
+                request.setAttribute("subject", subject);
+                request.setAttribute("status", status);
+                request.setAttribute("successMessage", "Cập nhật không thành công.");
+                request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
+                return;
+            }
             Class newClass = new Class();
             newClass.setClass_name(class_name);
             newClass.setSubject_id(subjectId);
@@ -206,20 +215,18 @@ public class ClassController extends HttpServlet {
             boolean isSuccess = classDAO.addClass(newClass);
             String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
             if (isSuccess) {
-                // Redirect to userList with success message
-//                response.sendRedirect(request.getContextPath() + "/userList?successMessage=" + URLEncoder.encode(message, "UTF-8"));
                 request.setAttribute("successMessage", message);
                 List<Class> classes = classDAO.getAllClassUser();
                 request.setAttribute("classes", classes);
                 request.setAttribute("subject", subject);
-
-                request.getRequestDispatcher("WEB-INF/ClassList.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
             } else {
                 // Handle failure (optional)
                 request.setAttribute("roles", roles);
-                request.setAttribute("className", class_name);
+                request.setAttribute("class_name", class_name);
                 request.setAttribute("subject", subject);
-                request.setAttribute("successMessage", "Cập nhật không thành công.");
+                request.setAttribute("status", status);
+                request.setAttribute("errorsMessage", "Cập nhật không thành công.");
                 request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
             }
         } catch (Exception e) {

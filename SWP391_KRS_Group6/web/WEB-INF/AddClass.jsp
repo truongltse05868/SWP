@@ -83,11 +83,6 @@
         </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
-        <c:if test="${not empty successMessage}">
-            <script>
-                showAlert('${successMessage}');
-            </script>
-        </c:if>
         <!-- header start -->
         <header class="ttr-header">
             <div class="ttr-header-wrapper">
@@ -309,15 +304,15 @@
                                     <div class="">
                                         <div class="form-group row">
                                             <div class="col-sm-10  ml-auto">
-                                                <h3>User Info</h3>
+                                                <h3>Class Info</h3>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">User Name</label>
-                                            <div class="col-sm-4">
+                                            <label class="col-sm-2 col-form-label">Class Name</label>
+                                            <div class="col-sm-3">
                                                 <input class="form-control" name="className" type="text" value="${class_name}">
-                                                <span class="error" style="font-size: smaller;">${errors['existsErrorClassName']}</span>
-                                                <span class="error" style="font-size: smaller;">${errors['ClassnameError']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['blankClassName']}</span>
+                                                
                                             </div>
                                         </div>
                                         
@@ -338,12 +333,10 @@
                                                 </select>
                                             </div>
                                         </div>
-
-
                                         <div class="col-12">
-                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
-                                            <button type="reset" class="btn">Reset</button>
+                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add Class</button>
                                         </div>
+                                            <div> <span>${errorsMessage}</span></div>
                                     </div>
                                 </form>
                             </div>
