@@ -22,7 +22,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -52,16 +54,22 @@ public class ClassController extends HttpServlet {
                 response.sendRedirect("Home");
                 return;
             }
-            
+
             String action = request.getParameter("action");
-            if(action == null){
+            if (action == null) {
                 action = "ListAllClass";
             }
             if (currentUser.getRole_id() == 1) {
                 // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
                 switch (action) {
-                    case "ListAllClass":
-                        getAllClasses(request, response);
+                    case "classList":
+                        getAllClassesAdmin(request, response);
+                        break;
+                    case "addClassPage":
+                        addClassPage(request, response);
+                        break;
+                    case "addClass":
+                        addClassByAdmin(request, response);
                         break;
                     default:
 
@@ -120,8 +128,8 @@ public class ClassController extends HttpServlet {
     private void getAllClasses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-             ClassDAO classDAO = new ClassDAO();
-             SubjectDAO subjectDAO = new SubjectDAO();
+            ClassDAO classDAO = new ClassDAO();
+            SubjectDAO subjectDAO = new SubjectDAO();
             List<Class> classList = classDAO.getAllClass();
             List<Subject> subjectList = subjectDAO.getAllSubjects();
             request.setAttribute("classes", classList);
@@ -131,6 +139,93 @@ public class ClassController extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list Class", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
+
+    private void addClassPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            SettingDAO settingDAO = new SettingDAO();
+            SubjectDAO subjectDAO = new SubjectDAO();
+            List<Subject> subjects = subjectDAO.getAllSubjects();
+
+            request.setAttribute("subject", subjects);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/AddClass.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get add class page", e);
+        }
+    }
+
+    private void getAllClassesAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            ClassDAO classDAO = new ClassDAO();
+            SubjectDAO subjectDAO = new SubjectDAO();
+
+            List<Class> classList = classDAO.getAllClass();
+            Map<Integer, Integer> userCountMap = classDAO.getUserCountForClasses();
+            List<Subject> subjectList = subjectDAO.getAllSubjects();
+
+            request.setAttribute("classes", classList);
+            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("subjectList", subjectList);
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list Class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
+
+    private void addClassByAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            SettingDAO settingDAO = new SettingDAO();
+            ClassDAO classDAO = new ClassDAO();
+            SubjectDAO subjectDAO = new SubjectDAO();
+            List<Setting> roles = settingDAO.getAllRole();
+            List<Subject> subject = subjectDAO.getAllSubjects();
+            // Danh sách các thông báo lỗi
+            Map<String, String> errors = new HashMap<>();
+            // Lấy thông tin từ form
+            int subjectId = Integer.parseInt(request.getParameter("subject_id"));
+            String class_name = request.getParameter("class_name");
+            boolean status = request.getParameter("status") != null;
+            if (status == false) {
+                status = true;
+            }
+
+            // Validate các trường
+            // Thêm người dùng vào cơ sở dữ liệu
+            Class newClass = new Class();
+            newClass.setClass_name(class_name);
+            newClass.setSubject_id(subjectId);
+            newClass.setStatus(status);
+            boolean isSuccess = classDAO.addClass(newClass);
+            String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
+            if (isSuccess) {
+                // Redirect to userList with success message
+//                response.sendRedirect(request.getContextPath() + "/userList?successMessage=" + URLEncoder.encode(message, "UTF-8"));
+                request.setAttribute("successMessage", message);
+                List<Class> classes = classDAO.getAllClassUser();
+                request.setAttribute("classes", classes);
+                request.setAttribute("subject", subject);
+
+                request.getRequestDispatcher("WEB-INF/ClassList.jsp").forward(request, response);
+            } else {
+                // Handle failure (optional)
+                request.setAttribute("roles", roles);
+                request.setAttribute("className", class_name);
+                request.setAttribute("subject", subject);
+                request.setAttribute("successMessage", "Cập nhật không thành công.");
+                request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ nếu có
+            request.setAttribute("existsError", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
         }
     }
 

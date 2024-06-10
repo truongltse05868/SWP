@@ -24,8 +24,8 @@ public class DBConnect {
 
 //          String pass = "Mysql-suck"; //duc
 //            String pass = "Simon041098@"; //mạc bục
-//            String pass = "Simon@0410"; //máy công ty, máy dell
-            String pass = "Simon0410@"; //PC
+            String pass = "Simon@0410"; //máy công ty, máy dell
+//            String pass = "Simon0410@"; //PC
 
             String url = "jdbc:mysql://127.0.0.1:3306/KRS_SWP?zeroDateTimeBehavior=CONVERT_TO_NULL"; //máy dell
 //            String url = "jdbc:mysql://127.0.0.1:3306/KRS_SWR?zeroDateTimeBehavior=CONVERT_TO_NULL";

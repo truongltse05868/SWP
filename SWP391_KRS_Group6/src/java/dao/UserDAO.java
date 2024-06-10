@@ -41,7 +41,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-//                        rs.getInt("age"),
+                        //                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -69,7 +69,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-//                        rs.getInt("age"),
+                        //                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -96,7 +96,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-//                        rs.getInt("age"),
+                        //                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -124,7 +124,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-//                        rs.getInt("age"),
+                        //                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -155,7 +155,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-//                            rs.getInt("age"),
+                            //                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp")
@@ -215,7 +215,7 @@ public class UserDAO extends DBConnect {
                         rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getString("gender"),
-//                        rs.getInt("age"),
+                        //                        rs.getInt("age"),
                         rs.getBoolean("status"),
                         rs.getInt("role_id"),
                         rs.getString("otp")
@@ -314,7 +314,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-//                            rs.getInt("age"),
+                            //                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp")
@@ -393,7 +393,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-//                            rs.getInt("age"),
+                            //                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp"),
@@ -547,7 +547,7 @@ public class UserDAO extends DBConnect {
                             rs.getString("full_name"),
                             rs.getString("phone"),
                             rs.getString("gender"),
-//                            rs.getInt("age"),
+                            //                            rs.getInt("age"),
                             rs.getBoolean("status"),
                             rs.getInt("role_id"),
                             rs.getString("otp")
@@ -559,5 +559,38 @@ public class UserDAO extends DBConnect {
         }
         return user;
     }
+    // class 
+
+    public List<User> getAllUserInClass(int class_id) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT u.* FROM class_user as cu "
+                + "inner JOIN user as u "
+                + "ON cu.user_id= u.user_id "
+                + "where cu.class_id = ? ;"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, class_id);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
+                    );
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all ", e);
+        }
+        return users;
+    }
+    //end of class
 
 }
