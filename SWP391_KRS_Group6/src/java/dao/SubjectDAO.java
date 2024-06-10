@@ -68,6 +68,20 @@ public class SubjectDAO extends DBConnect {
         return false;
     }
     
+    public boolean addSubject(Subject subject) {
+        String sql = "INSERT INTO subject (subject_code, name, description, status) VALUES (?, ?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, subject.getSubject_code());
+            ps.setString(2, subject.getSubject_name());
+            ps.setString(3, subject.getDescription());
+            ps.setBoolean(4, subject.isStatus());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            Logger.getLogger(SubjectDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+    
     public Subject getSubjectById(int subjectId) {
         String sql = "SELECT * FROM subject WHERE subject_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {

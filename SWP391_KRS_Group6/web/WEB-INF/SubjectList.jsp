@@ -152,11 +152,15 @@
                                                                         </div>-->
                                 </div>
                                 <div class="col-lg-9 col-md-8 col-sm-12">
+                                    <form method="post" action="SubjectController" class="my-3">
+                                        <input type="hidden" name="service" value="insertSubject">
+                                        <button type="submit" class=" btn btn-block btn-primary">Add</button>
+                                    </form>
                                     <c:if test="${not empty subjectList}">
                                         <div class="row">
-
                                             <c:forEach var="subjectList" items="${subjectList}">
-                                                <div class="col-md-6 col-lg-4 col-sm-6 m-b30">
+                                                <div class="col-md-6 col-lg-4 col-sm-6 mb-4"><!--
+                                                    <div class="col-md-6 col-lg-4 col-sm-6 m-b30">
                                                     <div class="cours-bx">
                                                         <div class="action-box">
                                                             <img src="assets/images/courses/pic1.jpg" alt="">
@@ -166,24 +170,36 @@
                                                                 <button type="submit" class="btn">Update</button>
                                                             </form>
                                                         </div>
-                                                        <div class="info-bx text-center">
-                                                            <h3><a href="#"> ${subjectList.subject_name}</a></h3>
+                                                        
+                                                </div>-->
+                                                    <div class="card ">
+                                                        <div class="card-header p-0 ">
+                                                            <img src="assets/images/courses/pic1.jpg" class="card-img-top" alt="">
+                                                            <form method="post" action="SubjectController" >
+                                                                <input type="hidden" name="service" value="updateSubject">
+                                                                <input type="hidden" name="pid" value="${subjectList.subject_id}">
+                                                                <button type="submit" class="btn btn-block btn-primary">Update</button>
+                                                            </form>
                                                         </div>
-                                                        <div class="info-bx text-center">
-                                                            <div >
-                                                                <h6><a> ${subjectList.subject_code}</a></h6>
+                                                        <div class="card-body">
+                                                            
+                                                            <div class="info-bx mt-3 text-center">
+                                                                <h4>${subjectList.subject_code}</h4>
                                                             </div>
-                                                            <div >
-                                                                <p><a>Description: ${subjectList.description}</a></p>
+                                                            <div class="info-bx mt-2">
+                                                                <div class="text-center">
+                                                                    <h6>${subjectList.subject_name}</h6>
+                                                                </div>
+                                                                <div class="mt-2">
+                                                                    <p>Description: ${subjectList.description}</p>
+                                                                </div>
                                                             </div>
-
                                                         </div>
-
-                                                        <div class="cours-more-info">
-                                                            <div class="review">
-                                                                <div >
+                                                        <div class="card-footer text-center">
+                                                            <div class="d-flex justify-content-between">
+                                                                <div>
                                                                     <c:choose>
-                                                                        <c:when test="${subject.status}">
+                                                                        <c:when test="${subjectList.status}">
                                                                             <span class="badge badge-success">Active</span>
                                                                         </c:when>
                                                                         <c:otherwise>
@@ -191,10 +207,10 @@
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                 </div>
-                                                            </div>
-                                                            <div class="price">
-                                                                <del>$190</del>
-                                                                <h5>$120</h5>
+                                                                <div class="price">
+                                                                    <del>$190</del>
+                                                                    <h5 class="d-inline">$120</h5>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

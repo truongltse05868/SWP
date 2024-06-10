@@ -124,11 +124,7 @@
                         <a href="Home"><img src="assets/images/logo.png" alt=""></a>
                     </div>
                     <ul class="nav navbar-nav">	
-                        <li class="active"><a href="javascript:;">Home <i class="fa fa-chevron-down"></i></a>
-                            <ul class="sub-menu">
-                                <li><a href="Home">Home</a></li>
-                                <!--<li><a href="index-2.html">Home 2</a></li>-->
-                            </ul>
+                        <li class="active"><a href="Home">Home</a>
                         </li>
                         <li><a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
                             <ul class="sub-menu">
@@ -312,11 +308,7 @@
                             <a href="Home"><img src="assets/images/logo.png" alt=""></a>
                         </div>
                         <ul class="nav navbar-nav">	
-                            <li class="active"><a href="javascript:;">Home <i class="fa fa-chevron-down"></i></a>
-                                <ul class="sub-menu">
-                                    <li><a href="Home">Home</a></li>
-                                    <!--<li><a href="index-2.html">Home 2</a></li>-->
-                                </ul>
+                            <li class="active"><a href="Home">Home</a>
                             </li>
                             <li><a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
                                 <ul class="sub-menu">

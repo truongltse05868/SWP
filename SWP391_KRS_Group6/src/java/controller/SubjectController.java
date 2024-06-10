@@ -2,7 +2,6 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
  */
-
 package controller;
 
 import dao.ClassDAO;
@@ -26,6 +25,7 @@ import java.util.logging.Logger;
  * @author HuyPC
  */
 public class SubjectController extends HttpServlet {
+
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     /**
@@ -48,21 +48,24 @@ public class SubjectController extends HttpServlet {
                 response.sendRedirect("Home");
                 return;
             }
-            
+
             String action = request.getParameter("service");
-            if(action == null){
+            if (action == null) {
                 action = "ListAllSubject";
             }
             if (currentUser != null) {
                 // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
+                String submit = request.getParameter("submit");
                 switch (action) {
                     case "ListAllSubject":
                         getAllSubject(request, response);
                         break;
                     case "updateSubject":
-                         String submit = request.getParameter("submit");
                         int pid = Integer.parseInt(request.getParameter("pid"));
                         UpdateSubject(request, response, pid, submit);
+                        break;
+                    case "insertSubject":
+                        InsertSubject(request, response, submit);
                         break;
                     default:
                         break;
@@ -87,7 +90,8 @@ public class SubjectController extends HttpServlet {
         }
 
     }
-     void dispath(HttpServletRequest request,
+
+    void dispath(HttpServletRequest request,
             HttpServletResponse response, String page)
             throws ServletException, IOException {
         RequestDispatcher dispath
@@ -128,11 +132,11 @@ public class SubjectController extends HttpServlet {
     private void getAllSubject(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-             
-             SubjectDAO subjectDAO = new SubjectDAO();
-            
+
+            SubjectDAO subjectDAO = new SubjectDAO();
+
             List<Subject> subjectList = subjectDAO.getAllSubjects();
-            
+
             request.setAttribute("subjectList", subjectList);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/SubjectList.jsp");
             dispatcher.forward(request, response);
@@ -141,46 +145,83 @@ public class SubjectController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list subject.");
         }
     }
-    private void UpdateSubject(HttpServletRequest request, HttpServletResponse response,int pid, String submit)
+
+    private void UpdateSubject(HttpServletRequest request, HttpServletResponse response, int pid, String submit)
             throws ServletException, IOException {
-    try {
-        SubjectDAO dao = new SubjectDAO();
-        if(submit != null) {
-            String subjectId = request.getParameter("subject_id");
-            String Code = request.getParameter("subject_code");
-            String Name = request.getParameter("subject_name");
-            String description = request.getParameter("description");
-            String statusParam = request.getParameter("status");
-            boolean status = (statusParam != null && statusParam.equals("on"));
+        try {
+            SubjectDAO dao = new SubjectDAO();
+            if (submit != null) {
+                String subjectId = request.getParameter("subject_id");
+                String Code = request.getParameter("subject_code");
+                String Name = request.getParameter("subject_name");
+                String description = request.getParameter("description");
+                String statusParam = request.getParameter("status");
+                boolean status = (statusParam != null && statusParam.equals("on"));
 
-            // convert
-            int subjectIdInt = Integer.parseInt(subjectId);
+                // convert
+                int subjectIdInt = Integer.parseInt(subjectId);
 
-            //
-            Subject subject = new Subject(subjectIdInt, Code, Name, description, status);
-            dao.updateSubject(subject);
-            
-            // Redirect to a success page or display a success message
-            String successMessage = "Subject updated successfully.";
-            request.setAttribute("successMessage", successMessage);
-            response.sendRedirect("SubjectController"); // Replace "success.jsp" with your success page
-            
-            // If you want to send a redirect to another page after success, uncomment the following line
-            // response.sendRedirect("SubjectController");
-        }else{
-            Subject subject = dao.getSubjectById(pid);
-            request.setAttribute("subject", subject);
-            dispath(request, response, "WEB-INF/UpdateSubject.jsp");
+                //
+                Subject subject = new Subject(subjectIdInt, Code, Name, description, status);
+                dao.updateSubject(subject);
+
+                // Redirect to a success page or display a success message
+                String successMessage = "Subject updated successfully.";
+                request.setAttribute("successMessage", successMessage);
+                response.sendRedirect("SubjectController"); // Replace "success.jsp" with your success page
+
+                // If you want to send a redirect to another page after success, uncomment the following line
+                // response.sendRedirect("SubjectController");
+            } else {
+                Subject subject = dao.getSubjectById(pid);
+                request.setAttribute("subject", subject);
+                dispath(request, response, "WEB-INF/UpdateSubject.jsp");
+            }
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid subject ID format", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid subject ID format");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating subject", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating the subject.");
         }
-    } catch (NumberFormatException e) {
-        logger.log(Level.SEVERE, "Invalid subject ID format", e);
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid subject ID format");
-    } catch (Exception e) {
-        logger.log(Level.SEVERE, "Error updating subject", e);
-        response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating the subject.");
     }
-}
 
+    private void InsertSubject(HttpServletRequest request, HttpServletResponse response, String submit)
+            throws ServletException, IOException {
+        try {
+            SubjectDAO dao = new SubjectDAO();
+            if (submit != null && submit.equals("insertSubject")) {
+                String subjectCode = request.getParameter("subject_code");
+                String name = request.getParameter("name");
+                String description = request.getParameter("description");
+                String statusParam = request.getParameter("status");
+                boolean status = (statusParam != null && statusParam.equals("on"));
+
+                // Create and set Subject object
+                Subject subject = new Subject();
+                subject.setSubject_code(subjectCode);
+                subject.setSubject_name(name);
+                subject.setDescription(description);
+                subject.setStatus(status);
+
+                // Add subject to the database
+                dao.addSubject(subject);
+
+                // Redirect to SubjectController
+                response.sendRedirect("SubjectController");
+            } else {
+                List<Subject> subjects = dao.getAllSubjects();
+                request.setAttribute("subjectList", subjects);
+                request.getRequestDispatcher("WEB-INF/insertSubject.jsp").forward(request, response);
+            }
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid subject ID format", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid subject ID format");
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error inserting subject", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while inserting the subject.");
+        }
+    }
 
     /**
      * Returns a short description of the servlet.

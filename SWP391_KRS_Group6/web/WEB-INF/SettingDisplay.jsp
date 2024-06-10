@@ -81,9 +81,12 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="widget-inner">
-
+                                <form method="post" action="SettingController" style="display:inline;">
+                                    <input type="hidden" name="service" value="insertSetting">
+                                    <button type="submit" class=" btn-primary btn-sm btn btn-block">Add</button>
+                                </form>
                                 <c:if test="${not empty setting}">
-                                    <table>
+                                    <table class="my-3">
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
@@ -123,10 +126,7 @@
                                 <c:if test="${empty setting}">
                                     <p>No settings found.</p>
                                 </c:if>
-                                <form method="post" action="SettingController" style="display:inline;">
-                                    <input type="hidden" name="service" value="insertSetting">
-                                    <button type="submit" class=" btn-primary btn-sm">Add</button>
-                                </form>
+                                
                             </div>
                         </div>
                     </div>
