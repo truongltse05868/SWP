@@ -53,6 +53,10 @@
         <servlet-name>SubjectController</servlet-name>
         <servlet-class>controller.SubjectController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>PostController</servlet-name>
+        <servlet-class>controller.PostController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserController</servlet-name>
         <url-pattern>/userController</url-pattern>
@@ -104,5 +108,9 @@
     <servlet-mapping>
         <servlet-name>SubjectController</servlet-name>
         <url-pattern>/SubjectController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PostController</servlet-name>
+        <url-pattern>/PostController</url-pattern>
     </servlet-mapping>
 </web-app>

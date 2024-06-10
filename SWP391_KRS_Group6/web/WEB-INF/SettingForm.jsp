@@ -63,9 +63,9 @@
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
         <!-- header start -->
-        
-                <jsp:include page="DashboardNav.jsp"/>
-                <!-- sidebar menu end -->
+
+        <jsp:include page="DashboardNav.jsp"/>
+        <!-- sidebar menu end -->
         <!-- Left sidebar menu end -->
 
         <!--Main container start -->
@@ -114,14 +114,18 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Type:</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"   name="type" type="text" value="<%=s.getType()%>">
+                                                <select class="form-control" name="type">
+                                                    <option value="Post Category" <%= "Post Category".equals(s.getType()) ? "selected" : "" %>>Post Category</option>
+                                                    <option value="Subject Category" <%= "Subject Category".equals(s.getType()) ? "selected" : "" %>>Subject Category</option>
+                                                    <option value="Role" <%= "Role".equals(s.getType()) ? "selected" : "" %>>Role</option>
+                                                    <option value="Contact Type" <%= "Contact Type".equals(s.getType()) ? "selected" : "" %>>Contact Type</option>
+                                                </select>
                                             </div>
                                         </div>
-
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Description:</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"  name="description" type="text" value="<%=s.getDescription()%>">
+                                                <textarea class="  form-control"  name="description" type="text" value="<%=s.getDescription()%>"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row">

@@ -107,16 +107,20 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Type:</label>
+                                            <label class="col-sm-2 col-form-label" for="type">Type:</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"   name="type" type="text" value = "" >
+                                                <select class="form-control" id="type" name="type">
+                                                    <option value="Post Category">Post Category</option>
+                                                    <option value="Subject Category">Subject Category</option>
+                                                    <option value="Role">Role</option>
+                                                    <option value="Contact Type">Contact Type</option>
+                                                </select>
                                             </div>
                                         </div>
-
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Description:</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"  name="description" type="text" value = "">
+                                                <textarea class="  form-control"  name="description" type="text" value=""></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row">

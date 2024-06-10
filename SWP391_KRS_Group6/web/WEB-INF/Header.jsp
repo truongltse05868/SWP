@@ -79,45 +79,6 @@
     <header class="header rs-nav header-transparent">
         <div class="top-bar">
             <div class="container-fluid">
-                <!--                <div class="row d-flex justify-content-between">
-                                    <div class="topbar-left">
-                                        <ul>
-                                            <li><a href="faq-1.html"><i class="fa fa-question-circle"></i>Ask a Question</a></li>
-                                            <li><a href="javascript:;"><i class="fa fa-envelope-o"></i>Support@website.com</a></li>
-                                        </ul>
-                                    </div>
-                
-                                    <div class="topbar-right">
-                                        <ul>
-                                            <li>
-                                                <select class="header-lang-bx">
-                                                    <option data-icon="flag flag-uk">English UK</option>
-                                                    <option data-icon="flag flag-us">English US</option>
-                                                </select>
-                                            </li>
-                <c:if test="${sessionScope['account'].getRole_id() == null}">
-                    <li><a id="loginLink" href="Login" >Login</a></li>
-                    <li><a id="registerLink" href="RegisterController">Register</a></li>
-                    <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
-                            return false;">ForgotPassword</a></li>
-                </c:if>
-                <c:if test="${sessionScope['account'].getRole_id() != null}">
-                <li> 
-                    <label><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
-                            return false;">Hello, ${sessionScope.account.full_name} </a></label>
-                </li>
-                <li><a id="logoutLink" href="Logout" >Logout</a></li>
-                </c:if>
-        </ul>
-    </div>
-
-    <form id="hiddenForm" method="post" style="display:none;">
-        <input type="hidden" name="action" value="Login">
-    </form>
-    <form id="logout" method="post" style="display:none;">
-        <input type="hidden" name="action" value="Logout">
-    </form>
-</div>-->
                 <!-- Navigation Menu ==== -->
                 <div class="menu-links navbar-collapse collapse justify-content-start" id="menuDropdown">
                     <div class="menu-logo">
@@ -198,8 +159,8 @@
                         </li>
                         <li><a href="javascript:;">Blog <i class="fa fa-chevron-down"></i></a>
                             <ul class="sub-menu">
-                                <li><a href="blog-classic-grid.html">Blog Classic</a></li>
-                                <li><a href="blog-classic-sidebar.html">Blog Classic Sidebar</a></li>
+                                <li><a href="Blog">Blog Classic</a></li>
+                                <li><a href="Pos">Blog Classic Sidebar</a></li>
                                 <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
                                 <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
                                 <li><a href="blog-details.html">Blog Details</a></li>
@@ -211,6 +172,7 @@
                                     <li><a href="Dashboard">Dashboard</a></li>
 
                                     <li><a href="SettingController">Setting List</a></li>
+                                    <li><a href="PostController">Post List</a></li>
                                     <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
                                     <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
                                         <ul class="sub-menu">
@@ -393,9 +355,8 @@
                                 <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">
                                         <li><a href="Dashboard">Dashboard</a></li>
-                                        <li><a href="admin/add-listing.html">Add Listing</a></li>
-                                        <li><a href="admin/bookmark.html">Bookmark</a></li>
                                         <li><a href="SettingController">Setting List</a></li>
+                                        <li><a href="PostController">Post List</a></li>
                                         <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
                                         <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
                                             <ul class="sub-menu">
