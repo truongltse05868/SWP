@@ -4,8 +4,17 @@
  */
 package service;
 
+import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
+import jakarta.mail.PasswordAuthentication;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 public abstract class BaseService {
@@ -68,4 +77,45 @@ public abstract class BaseService {
 
         return phone.matches("^0\\d{9}$");
     }
+    
+    public String generateOTP() {
+        // Tạo mã OTP ngẫu nhiên
+        return UUID.randomUUID().toString().substring(0, 6).toUpperCase();
+    }
+
+    public boolean sendOtpToEmail(String email, String otp) {
+        String host = "live.smtp.mailtrap.io";
+        final String user = "api";
+        final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, password);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+//            mailtrap@krsg6.com
+            message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            message.setSubject("KRS_G6 Change Email");
+            message.setText("Your OTP code is: " + otp);
+            Transport.send(message);
+            System.out.println("OTP email sent successfully...");
+            return true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
 }

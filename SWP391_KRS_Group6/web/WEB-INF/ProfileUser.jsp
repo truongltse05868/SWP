@@ -453,7 +453,7 @@
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">User Name</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
                                                                 <input class="form-control" type="text" readonly="" name="username" value="${user.user_name}">
-                                                                
+
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
@@ -499,23 +499,21 @@
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">Role</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <c:choose>
-                                                                    <c:when test="${not empty roles}">
-                                                                        <c:forEach var="role" items="${roles}">
-                                                                            <c:if test="${role.settingId == user.role_id}">
-                                                                                <span>${role.settingName}</span>
-                                                                            </c:if>
-                                                                        </c:forEach>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span>No role found</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-
-                                                            </div>
+                                                            <c:choose>
+                                                                <c:when test="${not empty roles}">
+                                                                    <c:forEach var="role" items="${roles}">
+                                                                        <c:if test="${role.settingId == user.role_id}">
+                                                                            <span>${role.settingName}</span>
+                                                                        </c:if>
+                                                                    </c:forEach>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span>No role found</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
                                                         </div>
-                                                        <div class="seperator"></div>
                                                     </div>
+                                                    <div class="seperator"></div>   
                                                     <div class="">
                                                         <div class="">
                                                             <div class="row">
@@ -581,64 +579,67 @@
 
                                                 </form>
                                             </div>
-                                        </div> 
-                                    </div>
+                                        </div>
+
+
+                                    </div> 
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- contact area END -->
             </div>
-            <!-- Content END-->
-            <!-- Footer ==== -->
-            <jsp:include page="Footer.jsp"/>
-            <!-- Footer END ==== -->
-            <button class="back-to-top fa fa-chevron-up" ></button>
+            <!-- contact area END -->
         </div>
-        <!-- External JavaScripts -->
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/vendors/bootstrap/js/popper.min.js"></script>
-        <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
-        <script src="assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
-        <script src="assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
-        <script src="assets/vendors/magnific-popup/magnific-popup.js"></script>
-        <script src="assets/vendors/counter/waypoints-min.js"></script>
-        <script src="assets/vendors/counter/counterup.min.js"></script>
-        <script src="assets/vendors/imagesloaded/imagesloaded.js"></script>
-        <script src="assets/vendors/masonry/masonry.js"></script>
-        <script src="assets/vendors/masonry/filter.js"></script>
-        <script src="assets/vendors/owl-carousel/owl.carousel.js"></script>
-        <script src="assets/js/functions.js"></script>
-        <script src="assets/js/contact.js"></script>
-        <script src='assets/vendors/switcher/switcher.js'></script>
-        <script>
-            // Function to get URL parameter by name
-            function getParameterByName(name) {
-                const urlParams = new URLSearchParams(window.location.search);
-                return urlParams.get(name);
-            }
+        <!-- Content END-->
+        <!-- Footer ==== -->
+        <jsp:include page="Footer.jsp"/>
+        <!-- Footer END ==== -->
+        <button class="back-to-top fa fa-chevron-up" ></button>
+    </div>
+    <!-- External JavaScripts -->
+    <script src="assets/js/jquery.min.js"></script>
+    <script src="assets/vendors/bootstrap/js/popper.min.js"></script>
+    <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
+    <script src="assets/vendors/magnific-popup/magnific-popup.js"></script>
+    <script src="assets/vendors/counter/waypoints-min.js"></script>
+    <script src="assets/vendors/counter/counterup.min.js"></script>
+    <script src="assets/vendors/imagesloaded/imagesloaded.js"></script>
+    <script src="assets/vendors/masonry/masonry.js"></script>
+    <script src="assets/vendors/masonry/filter.js"></script>
+    <script src="assets/vendors/owl-carousel/owl.carousel.js"></script>
+    <script src="assets/js/functions.js"></script>
+    <script src="assets/js/contact.js"></script>
+    <script src='assets/vendors/switcher/switcher.js'></script>
+    <script>
+        // Function to get URL parameter by name
+        function getParameterByName(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name);
+        }
 
-            document.addEventListener("DOMContentLoaded", function () {
-                const tab = "${tab}"; // Lấy giá trị của 'tab' từ request attribute
-                if (tab) {
-                    // Remove 'active' and 'show' classes from all tab links and tab panes
-                    document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
-                    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active', 'show'));
-                    // Find the tab link corresponding to the parameter and click it
-                    const targetTabLink = document.querySelector(`.nav-link[href='#${tab}']`);
-                    if (targetTabLink) {
-                        targetTabLink.classList.add('active');
-                        document.querySelector(`.tab-pane#${tab}`).classList.add('active', 'show');
-                    }
+        document.addEventListener("DOMContentLoaded", function () {
+            const tab = "${tab}"; // Lấy giá trị của 'tab' từ request attribute
+            if (tab) {
+                // Remove 'active' and 'show' classes from all tab links and tab panes
+                document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+                document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active', 'show'));
+                // Find the tab link corresponding to the parameter and click it
+                const targetTabLink = document.querySelector(`.nav-link[href='#${tab}']`);
+                if (targetTabLink) {
+                    targetTabLink.classList.add('active');
+                    document.querySelector(`.tab-pane#${tab}`).classList.add('active', 'show');
                 }
+            }
 //                else {
 //                    // If no tab parameter, activate the first tab
 //                    document.querySelector('.nav-link').classList.add('active');
 //                    document.querySelector('.tab-pane').classList.add('show', 'active');
 //                }
-            });
-        </script>
-    </body>
+        });
+    </script>
+</body>
 
 </html>

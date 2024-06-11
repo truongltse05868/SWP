@@ -260,15 +260,14 @@ public class UserDAO extends DBConnect {
         return false;
     }
 
-    public void updateUserEmail(int userId, String newEmail, String fullname, String phone, String gender, int age) {
-        String query = "UPDATE user SET email = ?, full_name = ?, phone = ?, gender = ?, age = ?, otp = NULL WHERE user_id = ?";
+    public void updateUserEmail(int userId, String newEmail, String fullname, String phone, String gender) {
+        String query = "UPDATE user SET email = ?, full_name = ?, phone = ?, gender = ?, otp = NULL WHERE user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, newEmail);
             ps.setString(2, fullname);
             ps.setString(3, phone);
             ps.setString(4, gender);
-            ps.setInt(5, age);
-            ps.setInt(6, userId);
+            ps.setInt(5, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error updating user email", e);

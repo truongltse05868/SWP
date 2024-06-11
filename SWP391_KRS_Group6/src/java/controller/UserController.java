@@ -1,7 +1,7 @@
 package controller;
 
-import dao.SettingDAO;
-import dao.UserDAO;
+//import dao.SettingDAO;
+//import dao.UserDAO;
 import entity.Setting;
 import entity.User;
 import jakarta.mail.Message;
@@ -26,23 +26,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.regex.Pattern;
 import service.SettingService;
+import service.SubjectService;
 import service.UserService;
 
 //@WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
 
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
-
+    SettingService settingService = new SettingService();
+    UserService userService = new UserService();
+    SubjectService subjectService = new SubjectService();
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession(false);
-            SettingDAO settingDAO = new SettingDAO();
+
+//            SettingDAO settingDAO = new SettingDAO();
+//            SettingService settingService = new SettingService();
             User currentUser = (User) session.getAttribute("account");
-            Setting setting = settingDAO.getSettingById(currentUser.getRole_id());
-            
+            Setting setting = settingService.getSettingById(currentUser.getRole_id());
 
             if (currentUser == null) {
                 // Nếu không có phiên đăng nhập, chuyển hướng đến trang đăng nhập
@@ -137,10 +140,11 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         try {
             int userId = Integer.parseInt(request.getParameter("userId"));
-            UserDAO userDAO = new UserDAO();
-            SettingDAO settingDAO = new SettingDAO();
-            User user = userDAO.getUserById(userId);
-            List<Setting> roles = settingDAO.getAllRole();
+//            UserDAO userDAO = new UserDAO();
+//            SettingDAO settingDAO = new SettingDAO();
+
+            User user = userService.getUserById(userId);
+            List<Setting> roles = settingService.getAllRoles();
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ProfileUser.jsp");
@@ -156,10 +160,10 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         try {
             int userId = Integer.parseInt(request.getParameter("id"));
-            UserDAO userDAO = new UserDAO();
-            SettingDAO settingDAO = new SettingDAO();
-            User user = userDAO.getUserById(userId);
-            List<Setting> roles = settingDAO.getAllRole();
+//            UserDAO userDAO = new UserDAO();
+//            SettingDAO settingDAO = new SettingDAO();
+            User user = userService.getUserById(userId);
+            List<Setting> roles = settingService.getAllRoles();
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserProfile.jsp");
@@ -173,9 +177,9 @@ public class UserController extends HttpServlet {
     private void addUserPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SettingDAO settingDAO = new SettingDAO();
+//            SettingDAO settingDAO = new SettingDAO();
 
-            List<Setting> roles = settingDAO.getAllRole();
+            List<Setting> roles = settingService.getAllRoles();
 
             request.setAttribute("roles", roles);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/AddUser.jsp");
@@ -188,11 +192,11 @@ public class UserController extends HttpServlet {
     private void getListUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            UserDAO userDAO = new UserDAO();
-            SettingDAO roleDAO = new SettingDAO();
+//            UserDAO userDAO = new UserDAO();
+//            SettingDAO roleDAO = new SettingDAO();
 //             List<UserList> users = userDAO.getAllUsersWithRole();
-            List<User> users = userDAO.getAllUsers();
-            List<Setting> roles = roleDAO.getAllRole();
+            List<User> users = userService.getAllUsers();
+            List<Setting> roles = settingService.getAllRoles();
             // Set the list of users as a request attribute
             request.setAttribute("users", users);
             request.setAttribute("roles", roles);
@@ -207,9 +211,6 @@ public class UserController extends HttpServlet {
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            UserService userService = new UserService();
-            SettingService settingService = new SettingService();
-            
             int userId = Integer.parseInt(request.getParameter("id"));
             String userName = request.getParameter("userName");
             String email = request.getParameter("email");
@@ -261,8 +262,6 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         try {
             Map<String, String> errors = new HashMap<>();
-            UserService userService = new UserService();
-            SettingService settingService = new SettingService();
             List<Setting> roles = settingService.getAllRoles();
             int userId = Integer.parseInt(request.getParameter("userid"));
             String currentPassword = request.getParameter("currentPassword");
@@ -318,23 +317,23 @@ public class UserController extends HttpServlet {
     private void changePassAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SettingDAO settingDAO = new SettingDAO();
-            List<Setting> roles = settingDAO.getAllRole();
-            UserService userService = new UserService();
+//            SettingDAO settingDAO = new SettingDAO();
+            List<Setting> roles = settingService.getAllRoles();
+
             int userId = Integer.parseInt(request.getParameter("id"));
             String newPassword = request.getParameter("newPassword");
             String reNewPassword = request.getParameter("reNewPassword");
             String message = "";
 
-            UserDAO userDAO = new UserDAO();
-            User user = userDAO.getUserById(userId);
+
+            User user = userService.getUserById(userId);
 
             if (user != null) {
                 if (!newPassword.equals(reNewPassword) || !userService.validatePassword(newPassword)) {
                     message = "New password does not meet requirements.";
                 } else {
                     user.setPassword(newPassword);
-                    boolean isUpdated = userDAO.updateUser(user);
+                    boolean isUpdated = userService.updateUser(user);
                     message = isUpdated ? "Password updated successfully." : "Password update failed.";
                 }
             } else {
@@ -365,22 +364,13 @@ public class UserController extends HttpServlet {
         String fullname = request.getParameter("fullname");
         String phone = request.getParameter("phone");
         String gender = request.getParameter("gender");
-        String ageParam = request.getParameter("age");
 
-        int age;
-        if (ageParam == null || ageParam.trim().isEmpty()) {
-            age = 1;
-        } else {
-            age = Integer.parseInt(ageParam);
-        }
         Map<String, String> errors = new HashMap<>();
-        UserDAO userDAO = new UserDAO();
-        SettingDAO settingDAO = new SettingDAO();
-        List<Setting> roles = settingDAO.getAllRole();
+        List<Setting> roles = settingService.getAllRoles();
 
-        if (userDAO.validateOtp(userId, otp)) {
-            userDAO.updateUserEmail(userId, newEmail, fullname, phone, gender, age);
-            User user = userDAO.getUserById(userId);
+        if (userService.validateOTP(userId, otp)) {
+            userService.updateUserEmail(userId, newEmail, fullname, phone, gender);
+            User user = userService.getUserById(userId);
             errors.put("Success", "Update thành công");
             request.setAttribute("errors", errors);
             request.setAttribute("user", user);
@@ -394,70 +384,18 @@ public class UserController extends HttpServlet {
         }
     }
 
-    private String generateOTP() {
-        // Tạo mã OTP ngẫu nhiên
-        return UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-    }
-
-    private boolean sendOtpToEmail(String email, String otp) {
-        String host = "live.smtp.mailtrap.io";
-        final String user = "api";
-        final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
-
-        Properties props = new Properties();
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(user, password);
-            }
-        });
-
-        try {
-            MimeMessage message = new MimeMessage(session);
-//            mailtrap@krsg6.com
-            message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            message.setSubject("KRS_G6 Change Email");
-            message.setText("Your OTP code is: " + otp);
-            Transport.send(message);
-            System.out.println("OTP email sent successfully...");
-            return true;
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
-
     private void updateUserInfo(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             // Danh sách các thông báo lỗi
             Map<String, String> errors = new HashMap<>();
-            SettingDAO settingDAO = new SettingDAO();
-            UserService userService = new UserService();
-            List<Setting> roles = settingDAO.getAllRole();
+            List<Setting> roles = settingService.getAllRoles();
             int userId = Integer.parseInt(request.getParameter("userId"));
             String phone = request.getParameter("phone");
             String fullName = request.getParameter("fullname");
             String newEmail = request.getParameter("email");
             String gender = request.getParameter("gender");
-//            String ageParam = request.getParameter("age");
-//
-//            int age;
-//            if (ageParam == null || ageParam.trim().isEmpty()) {
-//                age = 1;
-//            } else {
-//                age = Integer.parseInt(ageParam);
-//            }
-
-            UserDAO userDAO = new UserDAO();
-            User currentUser = userDAO.getUserById(userId);
+            User currentUser = userService.getUserById(userId);
 
             boolean emailChanged = !newEmail.equals(currentUser.getEmail());
 
@@ -485,7 +423,7 @@ public class UserController extends HttpServlet {
             }
 
             if (emailChanged) {
-                boolean emailExists = userDAO.checkEmailExists(newEmail);
+                boolean emailExists = userService.checkEmailExists(newEmail);
                 if (emailExists) {
                     errors.put("emailDup", "Email đã tồn tại");
                     request.setAttribute("errors", errors);
@@ -495,12 +433,12 @@ public class UserController extends HttpServlet {
                     request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
                 } else {
                     // Generate OTP and save it with expiry
-                    String otp = generateOTP();
+                    String otp = userService.generateOTP();
                     Timestamp otpExpiry = new Timestamp(System.currentTimeMillis() + 1 * 60 * 1000); // 1 minutes expiry
-                    userDAO.saveOtpForEmailChange(userId, otp, otpExpiry);
+                    userService.saveOtpForEmailChange(userId, otp, otpExpiry);
 
                     // Send OTP to the new email
-                    sendOtpToEmail(newEmail, otp);
+                    userService.sendOtpToEmail(newEmail, otp);
 
                     // Redirect to an OTP confirmation page
                     request.getSession().setAttribute("userId", userId);
@@ -513,7 +451,7 @@ public class UserController extends HttpServlet {
                     request.getRequestDispatcher("WEB-INF/ConfirmEmailChange.jsp").forward(request, response);
                 }
             } else {
-                boolean updateSuccessful = userDAO.updateUser(user);
+                boolean updateSuccessful = userService.updateUser(user);
                 if (updateSuccessful) {
                     errors.put("Success", "Update thành công");
                     request.setAttribute("errors", errors);
@@ -543,10 +481,7 @@ public class UserController extends HttpServlet {
     private boolean loginAccount(String username, String password)
             throws ServletException, IOException {
         try {
-
-            UserDAO userDAO = new UserDAO();
-            boolean user = userDAO.loginAccount(username, password);
-
+            boolean user = userService.checkLogin(username, password);
             return user != false;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating user", e);
@@ -557,9 +492,7 @@ public class UserController extends HttpServlet {
     private void addUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SettingDAO settingDAO = new SettingDAO();
-            List<Setting> roles = settingDAO.getAllRole();
-            UserService userService = new UserService();
+            List<Setting> roles = settingService.getAllRoles();
             // Danh sách các thông báo lỗi
             Map<String, String> errors = new HashMap<>();
             // Lấy thông tin từ form
@@ -594,12 +527,10 @@ public class UserController extends HttpServlet {
             user.setGender(gender);
             user.setStatus(status);
             user.setRole_id(roleId);
-
-            UserDAO userDAO = new UserDAO();
             //check email and tên account
             // Kiểm tra email và tên người dùng đã tồn tại hay chưa
-            boolean emailExists = userDAO.checkEmailExists(email);
-            boolean usernameExists = userDAO.checkUsernameExists(userName);
+            boolean emailExists = userService.checkEmailExists(email);
+            boolean usernameExists = userService.checkUserNameExists(userName);
 
             // Validate các trường
             if (email == null || email.trim().isEmpty() || !userService.validateEmail(email)) {
@@ -636,13 +567,13 @@ public class UserController extends HttpServlet {
             }
 
             // Thêm người dùng vào cơ sở dữ liệu
-            boolean isSuccess = userDAO.addUser(user);
+            boolean isSuccess = userService.addUser(user);
             String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
             if (isSuccess) {
                 // Redirect to userList with success message
 //                response.sendRedirect(request.getContextPath() + "/userList?successMessage=" + URLEncoder.encode(message, "UTF-8"));
                 request.setAttribute("successMessage", message);
-                List<User> users = userDAO.getAllUsers();
+                List<User> users = userService.getAllUsers();
                 request.setAttribute("users", users);
                 request.setAttribute("roles", roles);
                 request.getRequestDispatcher("WEB-INF/UserList.jsp").forward(request, response);
@@ -672,10 +603,8 @@ public class UserController extends HttpServlet {
     private void getListUser2(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            UserDAO userDAO = new UserDAO();
-            SettingDAO roleDAO = new SettingDAO();
             List<User> users;
-            List<Setting> roles = roleDAO.getAllRole();
+            List<Setting> roles = settingService.getAllRoles();
 
             // Get search and sort parameters
             String searchUsername = request.getParameter("searchUsername");
@@ -683,16 +612,16 @@ public class UserController extends HttpServlet {
 
             if (searchUsername != null && !searchUsername.isEmpty() && sortField != null && !sortField.isEmpty()) {
                 // Sort and search
-                users = userDAO.getUsersSortedSearchBy(sortField, searchUsername);
+                users = userService.getUsersSortedSearchBy(sortField, searchUsername);
             } else if (searchUsername != null && !searchUsername.isEmpty()) {
                 // Search only
-                users = userDAO.searchUsersByUsername(searchUsername);
+                users = userService.searchUsersByUsername(searchUsername);
             } else if (sortField != null && !sortField.isEmpty()) {
                 // Sort only
-                users = userDAO.getUsersSortedBy(sortField);
+                users = userService.getUsersSortedBy(sortField);
             } else {
                 // Default: get all users
-                users = userDAO.getAllUsers();
+                users = userService.getAllUsers();
             }
 
             // Set the list of users as a request attribute
@@ -709,8 +638,6 @@ public class UserController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
         }
     }
-
-
 
 //    private boolean isValidAge(int age) {
 //        // Kiểm tra xem age có nằm trong khoảng từ 1 đến 150 không (giả sử đây là giới hạn hợp lệ cho tuổi)
