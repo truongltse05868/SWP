@@ -37,7 +37,10 @@ public class UserController extends HttpServlet {
             throws ServletException, IOException {
         try {
             HttpSession session = request.getSession(false);
+            SettingDAO settingDAO = new SettingDAO();
             User currentUser = (User) session.getAttribute("account");
+            Setting setting = settingDAO.getSettingById(currentUser.getRole_id());
+            
 
             if (currentUser == null) {
                 // Nếu không có phiên đăng nhập, chuyển hướng đến trang đăng nhập
@@ -46,9 +49,8 @@ public class UserController extends HttpServlet {
             }
 
             String action = request.getParameter("action");
-
 // Kiểm tra quyền truy cập của người dùng
-            if (currentUser.getRole_id() == 1) {
+            if (setting.getSettingName().equals("Admin")) {
                 // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
                 switch (action) {
                     case "addUserPage":

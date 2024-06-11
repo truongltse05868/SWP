@@ -163,7 +163,7 @@ public class UserDAO extends DBConnect {
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Email or password wrong!", e);
+            logger.log(Level.SEVERE, "Username or password wrong!", e);
         }
         return users;
     }
