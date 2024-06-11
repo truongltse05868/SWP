@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  */
 public class ClassDAO extends DBConnect {
 
-    private static final Logger logger = Logger.getLogger(UserDAO.class.getName());
+    private static final Logger logger = Logger.getLogger(ClassDAO.class.getName());
 
     //get all class
     /**
@@ -163,6 +163,19 @@ public class ClassDAO extends DBConnect {
             logger.log(Level.SEVERE, "Email or password wrong!", e);
         }
         return classList;
+    }
+    public boolean isClassNameExists(String className) {
+        String query = "SELECT COUNT(*) FROM class WHERE class_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, className);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }catch (SQLException e) {
+            logger.log(Level.SEVERE, "loi roi!", e);
+        }
+        return false;
     }
 
 }

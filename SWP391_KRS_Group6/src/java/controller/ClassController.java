@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import service.ClassService;
 
 /**
  *
@@ -186,53 +187,48 @@ public class ClassController extends HttpServlet {
     private void addClassByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SettingDAO settingDAO = new SettingDAO();
-            ClassDAO classDAO = new ClassDAO();
-            SubjectDAO subjectDAO = new SubjectDAO();
-            List<Setting> roles = settingDAO.getAllRole();
-            List<Subject> subject = subjectDAO.getAllSubjects();
-            // Danh sách các thông báo lỗi
-            Map<String, String> errors = new HashMap<>();
+            ClassService classService = new ClassService();
+            List<Setting> roles = classService.getAllRoles();
+            List<Subject> subjects = classService.getAllSubjects();
+
             // Lấy thông tin từ form
             int subjectId = Integer.parseInt(request.getParameter("subjectId"));
-            String class_name = request.getParameter("className");
+            String className = request.getParameter("className");
             boolean status = request.getParameter("status") != null;
-            if (status == false) {
-                status = true;
-            }
-            // Validate các trường
-            if (class_name == null || class_name.isEmpty()) {
-                errors.put("blankClassName", "Tên lớp học không được để trống");
-            }
-            if (!errors.isEmpty()) {
 
+            // Validate các trường
+            Map<String, String> errors = classService.validateClassData(className);
+
+            if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
-                request.setAttribute("class_name", class_name);
-                request.setAttribute("subject", subject);
+                request.setAttribute("class_name", className);
+                request.setAttribute("subject", subjects);
                 request.setAttribute("status", status);
                 request.setAttribute("successMessage", "Cập nhật không thành công.");
                 request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
                 return;
             }
+
             Class newClass = new Class();
-            newClass.setClass_name(class_name);
+            newClass.setClass_name(className);
             newClass.setSubject_id(subjectId);
             newClass.setStatus(status);
-            boolean isSuccess = classDAO.addClass(newClass);
-            String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
+
+            boolean isSuccess = classService.addClass(newClass);
+            String message = classService.getSuccessMessage(isSuccess);
+
             if (isSuccess) {
                 request.setAttribute("successMessage", message);
-                List<Class> classes = classDAO.getAllClassUser();
+                List<Class> classes = classService.getAllClasses();
                 request.setAttribute("classes", classes);
-                request.setAttribute("subject", subject);
+                request.setAttribute("subject", subjects);
                 request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
             } else {
-                // Handle failure (optional)
                 request.setAttribute("roles", roles);
-                request.setAttribute("class_name", class_name);
-                request.setAttribute("subject", subject);
+                request.setAttribute("class_name", className);
+                request.setAttribute("subject", subjects);
                 request.setAttribute("status", status);
-                request.setAttribute("errorsMessage", "Cập nhật không thành công.");
+                request.setAttribute("successMessage", message);
                 request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
             }
         } catch (Exception e) {
@@ -246,25 +242,23 @@ public class ClassController extends HttpServlet {
     private void updateClassByAdminPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassDAO classDAO = new ClassDAO();
-            SubjectDAO subjectDAO = new SubjectDAO();
-            List<Subject> subjectList = subjectDAO.getAllSubjects();
+            ClassService classService = new ClassService();
             int classId = Integer.parseInt(request.getParameter("classId"));
-            Class classes = classDAO.getClassById(classId);
+            Class classes = classService.getClassById(classId);
+            List<Subject> subjectList = classService.getAllSubjects();
             request.setAttribute("classes", classes);
             request.setAttribute("subject", subjectList);
             request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error get Class by class_id", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get class.");
+            logger.log(Level.SEVERE, "Error getting class by class_id", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting class.");
         }
     }
 
     private void updateClassByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassDAO classDAO = new ClassDAO();
-            SubjectDAO subjectDAO = new SubjectDAO();
+            ClassService classService = new ClassService();
             Class classUpdate = new Class();
 
             int classId = Integer.parseInt(request.getParameter("classId"));
@@ -276,11 +270,23 @@ public class ClassController extends HttpServlet {
             classUpdate.setClass_name(className);
             classUpdate.setSubject_id(subjectId);
             classUpdate.setStatus(status);
-            boolean isUpdate = classDAO.updateClass(classUpdate);
+
+            Map<String, String> errors = classService.validateClassData(className);
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                List<Subject> subjectList = classService.getAllSubjects();
+                request.setAttribute("classes", classUpdate);
+                request.setAttribute("subject", subjectList);
+                request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
+                return;
+            }
+
+            boolean isUpdate = classService.updateClass(classUpdate);
             if (isUpdate) {
-                List<Class> classList = classDAO.getAllClass();
-                Map<Integer, Integer> userCountMap = classDAO.getUserCountForClasses();
-                List<Subject> subjectList = subjectDAO.getAllSubjects();
+                List<Class> classList = classService.getAllClasses();
+                Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+                List<Subject> subjectList = classService.getAllSubjects();
+
                 request.setAttribute("classes", classList);
                 request.setAttribute("userCountMap", userCountMap);
                 request.setAttribute("subjectList", subjectList);
@@ -291,8 +297,8 @@ public class ClassController extends HttpServlet {
                 request.getRequestDispatcher("WEB-INF/UpdateAdmin.jsp").forward(request, response);
             }
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error get Class by class_id", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get class.");
+            logger.log(Level.SEVERE, "Error updating class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating the class.");
         }
     }
 

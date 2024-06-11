@@ -313,7 +313,7 @@
                                             <div class="col-sm-3">
                                                 <input class="form-control" name="className" type="text" value="${classes.class_name}">
                                                 <span class="error" style="font-size: smaller;">${errors['blankClassName']}</span>
-                                                
+                                                <span class="error" style="font-size: smaller;">${errors['duplicateClassName']}</span>
                                             </div>
                                         </div>
                                         
