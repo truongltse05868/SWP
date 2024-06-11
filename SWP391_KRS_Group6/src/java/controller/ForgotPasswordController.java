@@ -111,7 +111,7 @@ public class ForgotPasswordController extends HttpServlet {
                     // Chuyển hướng đến trang resetPassword.jsp với email
                     request.setAttribute("email", email);
                     request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
-                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/confirmOTP.jsp");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
                     dispatcher.forward(request, response);
                 } else {
                     request.setAttribute("message", "Lỗi hệ thống OTP");
@@ -164,27 +164,27 @@ public class ForgotPasswordController extends HttpServlet {
                             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                         } else {
                             request.setAttribute("message", "Cập nhật mật khẩu không thành công");
-//                            request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
+//                            request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
                         }
                     } else {
                         request.setAttribute("message", "OTP đã hết hạn");
-//                        request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
+//                        request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
                     }
                 } else {
                     request.setAttribute("message", "OTP không đúng");
-//                    request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
+//                    request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
                 }
             } else {
                 request.setAttribute("message", "Mật khẩu không khớp");
-//                request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
+//                request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating user", e);
             request.setAttribute("message", "An error occurred: " + e.getMessage());
-//            request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").forward(request, response);
+//            request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
         }
         // No need to forward if already on the correct page
-        request.getRequestDispatcher("WEB-INF/confirmOTP.jsp").include(request, response);
+        request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").include(request, response);
     }
 
     private boolean checkEmailExists(String email) {

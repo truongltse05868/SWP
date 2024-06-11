@@ -5,17 +5,11 @@
 package service;
 
 import dao.ClassDAO;
-import dao.SettingDAO;
-import dao.SubjectDAO;
-import entity.Setting;
-import entity.Subject;
 import entity.Class;
-import java.lang.System.Logger.Level;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
-import java.sql.SQLException;
 
 public class ClassService extends BaseService {
     private static final Logger logger = Logger.getLogger(ClassDAO.class.getName());
@@ -55,6 +49,9 @@ public class ClassService extends BaseService {
     }
     public Map<Integer, Integer> getUserCountForClasses(){
         return classDAO.getUserCountForClasses();
+    }
+    public List<Class> getAllClass(){
+        return classDAO.getAllClass();
     }
     
 }

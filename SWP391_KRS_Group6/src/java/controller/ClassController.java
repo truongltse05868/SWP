@@ -4,10 +4,6 @@
  */
 package controller;
 
-import dao.ClassDAO;
-import dao.SettingDAO;
-import dao.SubjectDAO;
-import dao.UserDAO;
 import entity.Setting;
 import entity.User;
 import entity.Class;
@@ -137,10 +133,10 @@ public class ClassController extends HttpServlet {
     private void getAllClasses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassDAO classDAO = new ClassDAO();
-            SubjectDAO subjectDAO = new SubjectDAO();
-            List<Class> classList = classDAO.getAllClass();
-            List<Subject> subjectList = subjectDAO.getAllSubjects();
+            ClassService classService = new ClassService();
+            SubjectService subjectService = new SubjectService();
+            List<Class> classList = classService.getAllClass();
+            List<Subject> subjectList = subjectService.getAllSubjects();
             request.setAttribute("classes", classList);
             request.setAttribute("subjectList", subjectList);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassList.jsp");
@@ -154,8 +150,8 @@ public class ClassController extends HttpServlet {
     private void addClassPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SubjectDAO subjectDAO = new SubjectDAO();
-            List<Subject> subjects = subjectDAO.getAllSubjects();
+            SubjectService subjectService =  new SubjectService();
+            List<Subject> subjects = subjectService.getAllSubjects();
             request.setAttribute("subject", subjects);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/AddClass.jsp");
             dispatcher.forward(request, response);
@@ -167,13 +163,11 @@ public class ClassController extends HttpServlet {
     private void getAllClassesAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassDAO classDAO = new ClassDAO();
-            SubjectDAO subjectDAO = new SubjectDAO();
-
-            List<Class> classList = classDAO.getAllClass();
-            Map<Integer, Integer> userCountMap = classDAO.getUserCountForClasses();
-            List<Subject> subjectList = subjectDAO.getAllSubjects();
-
+            ClassService classService = new ClassService();
+            SubjectService  subjectService = new SubjectService();
+            List<Class> classList = classService.getAllClass();
+            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+            List<Subject> subjectList = subjectService.getAllSubjects();
             request.setAttribute("classes", classList);
             request.setAttribute("userCountMap", userCountMap);
             request.setAttribute("subjectList", subjectList);
@@ -265,7 +259,6 @@ public class ClassController extends HttpServlet {
         try {
             ClassService classService = new ClassService();
             SubjectService subjectService = new SubjectService();
-            SettingService settingService =  new SettingService();
             Class classUpdate = new Class();
 
             int classId = Integer.parseInt(request.getParameter("classId"));

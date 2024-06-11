@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 import java.util.regex.Pattern;
+import service.SettingService;
+import service.UserService;
 
 //@WebServlet(name = "UserController", urlPatterns = {"/UserController"})
 public class UserController extends HttpServlet {
@@ -160,7 +162,7 @@ public class UserController extends HttpServlet {
             List<Setting> roles = settingDAO.getAllRole();
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserProfile.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list user", e);
@@ -176,7 +178,7 @@ public class UserController extends HttpServlet {
             List<Setting> roles = settingDAO.getAllRole();
 
             request.setAttribute("roles", roles);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/addUser.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/AddUser.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get add user page", e);
@@ -195,7 +197,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("users", users);
             request.setAttribute("roles", roles);
             // Forward the request to the JSP page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list user", e);
@@ -205,44 +207,42 @@ public class UserController extends HttpServlet {
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            UserService userService = new UserService();
+            SettingService settingService = new SettingService();
+            
             int userId = Integer.parseInt(request.getParameter("id"));
             String userName = request.getParameter("userName");
-//            String password = request.getParameter("password");
             String email = request.getParameter("email");
             String fullName = request.getParameter("fullName");
             String phone = request.getParameter("phone");
             String gender = request.getParameter("gender");
-//            int age = Integer.parseInt(request.getParameter("age"));
             String statusParam = request.getParameter("status");
             boolean status = (statusParam != null && statusParam.equals("on"));
             int roleId = Integer.parseInt(request.getParameter("roleId"));
 
-            UserDAO userDAO = new UserDAO();
-            User user = userDAO.getUserById(userId);
+            User user = userService.getUserById(userId);
 
             if (user != null) {
 
                 user.setUser_name(userName);
-//                user.setPassword(password);
                 user.setEmail(email);
                 user.setFull_name(fullName);
                 user.setPhone(phone);
                 user.setGender(gender);
-//                user.setAge(age);
                 user.setStatus(status);
                 user.setRole_id(roleId);
-                boolean isUpdated = userDAO.updateUser(user);
+                boolean isUpdated = userService.updateUser(user);
 
                 String message = isUpdated ? "Lưu thành công." : "Cập nhật không thành công.";
                 request.setAttribute("successMessage", message);
 //                response.sendRedirect(request.getContextPath() + "/userController?id=" + userId);
                 // save xong lấy các thông tin vừa lưu để đẩy về jsp(vẫn giữ nguyên data của page không có mất hết data khi call jsp)
                 // call cách khác thì truyền id vào không bảo mật tí nào
-                SettingDAO settingDAO = new SettingDAO();
-                List<Setting> roles = settingDAO.getAllRole();
-                request.setAttribute("user", user);
+                List<Setting> roles = settingService.getAllRoles();
+                List<User> users = userService.getAllUsers();
+                request.setAttribute("users", users);
                 request.setAttribute("roles", roles);
-                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserList.jsp");
                 dispatcher.forward(request, response);
 
             } else {
@@ -260,27 +260,26 @@ public class UserController extends HttpServlet {
     private void changePassUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SettingDAO settingDAO = new SettingDAO();
-            List<Setting> roles = settingDAO.getAllRole();
             Map<String, String> errors = new HashMap<>();
+            UserService userService = new UserService();
+            SettingService settingService = new SettingService();
+            List<Setting> roles = settingService.getAllRoles();
             int userId = Integer.parseInt(request.getParameter("userid"));
             String currentPassword = request.getParameter("currentPassword");
             String newPassword = request.getParameter("newPassword");
             String reNewPassword = request.getParameter("renewPassword");
-            String message = "";
-
-            UserDAO userDAO = new UserDAO();
-            User user = userDAO.getUserById(userId);
-
+            String message;
+            User user = userService.getUserById(userId);
+//            validatePassword = userService.validatePassword(newPassword);
             if (user != null) {
-                boolean isCurrentPass = userDAO.checkCurrentPassword(user, currentPassword);
+                boolean isCurrentPass = userService.checkCurrentPassword(user, currentPassword);
                 if (isCurrentPass) {
-                    if (!newPassword.equals(reNewPassword) || !validatePassword(newPassword) || !validatePassword(reNewPassword)) {
+                    if (!newPassword.equals(reNewPassword) || !userService.validatePassword(newPassword) || !userService.validatePassword(reNewPassword)) {
                         message = "Mật khẩu không khớp và phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số";
                         errors.put("errorsSamePass", message);
                     } else {
 //                        user.setPassword(newPassword);
-                        boolean isUpdated = userDAO.changePassword(user, newPassword);
+                        boolean isUpdated = userService.changePassword(user, newPassword);
                         message = isUpdated ? "Cập nhật mật khẩu thành công" : "Cập nhật mật khẩu thất bại";
                         errors.put("errorsUpdate", message);
                     }
@@ -301,7 +300,6 @@ public class UserController extends HttpServlet {
                 request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
                 return;
             }
-//            request.setAttribute("successMessage", message);
             request.setAttribute("errors", errors);
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
@@ -322,7 +320,7 @@ public class UserController extends HttpServlet {
         try {
             SettingDAO settingDAO = new SettingDAO();
             List<Setting> roles = settingDAO.getAllRole();
-
+            UserService userService = new UserService();
             int userId = Integer.parseInt(request.getParameter("id"));
             String newPassword = request.getParameter("newPassword");
             String reNewPassword = request.getParameter("reNewPassword");
@@ -332,7 +330,7 @@ public class UserController extends HttpServlet {
             User user = userDAO.getUserById(userId);
 
             if (user != null) {
-                if (!newPassword.equals(reNewPassword) || !validatePassword(newPassword)) {
+                if (!newPassword.equals(reNewPassword) || !userService.validatePassword(newPassword)) {
                     message = "New password does not meet requirements.";
                 } else {
                     user.setPassword(newPassword);
@@ -347,7 +345,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("successMessage", message);
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userProfile.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserProfile.jsp");
             dispatcher.forward(request, response);
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid user ID format", e);
@@ -392,7 +390,7 @@ public class UserController extends HttpServlet {
         } else {
             errors.put("Errors", "Hết hạn OTP");
             request.setAttribute("errors", errors);
-            request.getRequestDispatcher("WEB-INF/confirmEmailChange.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/ConfirmEmailChange.jsp").forward(request, response);
         }
     }
 
@@ -442,6 +440,7 @@ public class UserController extends HttpServlet {
             // Danh sách các thông báo lỗi
             Map<String, String> errors = new HashMap<>();
             SettingDAO settingDAO = new SettingDAO();
+            UserService userService = new UserService();
             List<Setting> roles = settingDAO.getAllRole();
             int userId = Integer.parseInt(request.getParameter("userId"));
             String phone = request.getParameter("phone");
@@ -467,13 +466,13 @@ public class UserController extends HttpServlet {
 
 //            boolean usernameExists = userDAO.checkUsernameExists(userName);
             // Validate các trường
-            if (newEmail == null || newEmail.trim().isEmpty() || !validateEmail(newEmail)) {
+            if (newEmail == null || newEmail.trim().isEmpty() || !userService.validateEmail(newEmail)) {
                 errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
             }
-            if (!isValidPhone(phone)) {
+            if (!userService.isValidPhone(phone)) {
                 errors.put("phoneError", "Số điện thoại có 10 chữ số và bắt đầu bằng số 0");
             }
-            if (!isValidFullName(fullName)) {
+            if (!userService.isValidFullName(fullName)) {
                 errors.put("fullnameError", "Độ dài không quá 100");
             }
             if (!errors.isEmpty()) {
@@ -510,8 +509,8 @@ public class UserController extends HttpServlet {
                     request.getSession().setAttribute("phone", phone);
                     request.getSession().setAttribute("gender", gender);
 //                    request.getSession().setAttribute("age", age);
-//                    response.sendRedirect("WEB-INF/confirmEmailChange.jsp");
-                    request.getRequestDispatcher("WEB-INF/confirmEmailChange.jsp").forward(request, response);
+//                    response.sendRedirect("WEB-INF/ConfirmEmailChange.jsp");
+                    request.getRequestDispatcher("WEB-INF/ConfirmEmailChange.jsp").forward(request, response);
                 }
             } else {
                 boolean updateSuccessful = userDAO.updateUser(user);
@@ -560,6 +559,7 @@ public class UserController extends HttpServlet {
         try {
             SettingDAO settingDAO = new SettingDAO();
             List<Setting> roles = settingDAO.getAllRole();
+            UserService userService = new UserService();
             // Danh sách các thông báo lỗi
             Map<String, String> errors = new HashMap<>();
             // Lấy thông tin từ form
@@ -602,15 +602,15 @@ public class UserController extends HttpServlet {
             boolean usernameExists = userDAO.checkUsernameExists(userName);
 
             // Validate các trường
-            if (email == null || email.trim().isEmpty() || !validateEmail(email)) {
+            if (email == null || email.trim().isEmpty() || !userService.validateEmail(email)) {
                 errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
             }
 
-            if (password == null || password.trim().isEmpty() || !validatePassword(password)) {
+            if (password == null || password.trim().isEmpty() || !userService.validatePassword(password)) {
                 errors.put("passError", "Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số.");
             }
 
-            if (userName == null || userName.trim().isEmpty() || !validateUsername(userName)) {
+            if (userName == null || userName.trim().isEmpty() || !userService.validateUsername(userName)) {
                 errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
             }
             if (emailExists) {
@@ -631,7 +631,7 @@ public class UserController extends HttpServlet {
                 request.setAttribute("gender", gender);
                 request.setAttribute("status", status);
                 request.setAttribute("roleId", roleId);
-                request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/AddUser.jsp").forward(request, response);
                 return;
             }
 
@@ -645,7 +645,7 @@ public class UserController extends HttpServlet {
                 List<User> users = userDAO.getAllUsers();
                 request.setAttribute("users", users);
                 request.setAttribute("roles", roles);
-                request.getRequestDispatcher("WEB-INF/userList.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/UserList.jsp").forward(request, response);
             } else {
                 // Handle failure (optional)
                 request.setAttribute("roles", roles);
@@ -658,25 +658,13 @@ public class UserController extends HttpServlet {
                 request.setAttribute("status", status);
                 request.setAttribute("roleId", roleId);
                 request.setAttribute("successMessage", "Cập nhật không thành công.");
-                request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/AddUser.jsp").forward(request, response);
             }
 
-//            // Chuyển hướng về trang addUser.jsp với thông báo kết quả
-//            request.setAttribute("roles", roles);
-//            request.setAttribute("user_name", userName);
-//            request.setAttribute("password", password);
-//            request.setAttribute("email", email);
-//            request.setAttribute("full_name", fullName);
-//            request.setAttribute("phone", phone);
-//            request.setAttribute("gender", gender);
-////            request.setAttribute("age", age);
-//            request.setAttribute("status", status);
-//            request.setAttribute("roleId", roleId)
-//            getListUser2(request, response);
         } catch (Exception e) {
             // Xử lý ngoại lệ nếu có
             request.setAttribute("existsError", "An error occurred: " + e.getMessage());
-            request.getRequestDispatcher("WEB-INF/addUser.jsp").forward(request, response);
+            request.getRequestDispatcher("WEB-INF/AddUser.jsp").forward(request, response);
         }
     }
 
@@ -714,7 +702,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("sortField", sortField);
 
             // Forward the request to the JSP page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error getting user list", e);
@@ -722,86 +710,7 @@ public class UserController extends HttpServlet {
         }
     }
 
-//    private void getListUser2(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        try {
-//            UserDAO userDAO = new UserDAO();
-//            SettingDAO roleDAO = new SettingDAO();
-//            List<User> users;
-//            List<Setting> roles = roleDAO.getAllRole();
-//
-//            // Lấy tham số tìm kiếm và sắp xếp
-//            String searchUsername = request.getParameter("searchUsername");
-//            String sortField = request.getParameter("sortField");
-//
-//            if (searchUsername != null && !searchUsername.isEmpty()) {
-//                users = userDAO.searchUsersByUsername(searchUsername);
-//            } else if (sortField != null && !sortField.isEmpty()) {
-//                users = userDAO.getUsersSortedBy(sortField);
-//            } else if(sortField != null && !sortField.isEmpty() && searchUsername != null && !searchUsername.isEmpty()){
-//                users = userDAO.getUsersSortedSearchBy(sortField, searchUsername);
-//            }else {
-//                users = userDAO.getAllUsers();
-//            }
-//
-//            // Set the list of users as a request attribute
-//            request.setAttribute("users", users);
-//            request.setAttribute("roles", roles);
-//            request.setAttribute("searchUsername", searchUsername);
-//            request.setAttribute("sortField", sortField);
-//
-//            // Forward the request to the JSP page
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/userList.jsp");
-//            dispatcher.forward(request, response);
-//        } catch (Exception e) {
-//            logger.log(Level.SEVERE, "Error get list user", e);
-//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
-//        }
-//    }
-    private boolean isValidFullName(String fullName) {
-        // Kiểm tra độ dài của fullName (không quá 100 ký tự)
-        if (fullName.length() > 100) {
-            return false;
-        }
-        return true;
-    }
 
-    private boolean validateEmail(String email) {
-        if (email == null || email.trim().isEmpty()) {
-            return false;
-        }
-        String emailRegex = "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$";
-        return Pattern.matches(emailRegex, email);
-    }
-
-    private boolean validatePassword(String password) {
-        if (password == null || password.trim().isEmpty()) {
-            return false;
-        }
-        // Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số
-        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[a-zA-Z\\d]{8,}$";
-        return Pattern.matches(passwordRegex, password);
-    }
-
-    private boolean validateUsername(String username) {
-        if (username == null || username.trim().isEmpty()) {
-            return false;
-        }
-        // Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng
-        String usernameRegex = "^[a-zA-Z0-9]{3,20}$";
-        return Pattern.matches(usernameRegex, username);
-    }
-
-    private boolean isValidPhone(String phone) {
-        // Check if the phone number is empty or null
-        if (phone == null || phone.isEmpty()) {
-            return true;
-        }
-        // Validate the phone number format
-        // Example: "^0\\d{9}$" for a 10-digit number starting with 0
-
-        return phone.matches("^0\\d{9}$");
-    }
 
 //    private boolean isValidAge(int age) {
 //        // Kiểm tra xem age có nằm trong khoảng từ 1 đến 150 không (giả sử đây là giới hạn hợp lệ cho tuổi)

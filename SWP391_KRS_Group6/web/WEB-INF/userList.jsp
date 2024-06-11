@@ -199,7 +199,7 @@
                                 <c:if test="${empty users}">
                                     <p>No users found.</p>
                                 </c:if>
-
+                                    <div><span>${successMessage}</span></div>
 
                             </div>
                         </div>
