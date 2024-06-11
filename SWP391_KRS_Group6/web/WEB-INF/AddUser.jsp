@@ -33,7 +33,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
 
         <!-- PAGE TITLE HERE ============================================= -->
-        <title>EduChamp : Update Class </title>
+        <title>EduChamp : Add User </title>
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,7 +62,7 @@
                 // Tạo form ẩn
                 var form = document.createElement("form");
                 form.setAttribute("method", "post");
-                form.setAttribute("action", "ClassController");
+                form.setAttribute("action", "userController");
 
                 // Tạo input ẩn cho action
                 var hiddenField = document.createElement("input");
@@ -83,6 +83,11 @@
         </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
+        <c:if test="${not empty successMessage}">
+            <script>
+                showAlert('${successMessage}');
+            </script>
+        </c:if>
         <!-- header start -->
         <header class="ttr-header">
             <div class="ttr-header-wrapper">
@@ -285,10 +290,10 @@
         <main class="ttr-wrapper">
             <div class="container-fluid">
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">Update Class</h4>
+                    <h4 class="breadcrumb-title">Add User</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>Update Class</li>
+                        <li>Add User</li>
                     </ul>
                 </div>	
                 <div class="row">
@@ -296,48 +301,97 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="wc-title">
-                                <h4>Update Class</h4>
+                                <h4>Add User</h4>
                             </div>
                             <div class="widget-inner">
-                                <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/ClassController" method="post">
-                                    <input type="hidden" name="action" value="updateClass"> 
-                                    <input type="hidden" name="classId" value="${classes.class_id}"> 
+                                <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/userController" method="post">
+                                    <input type="hidden" name="action" value="addUser"> 
                                     <div class="">
                                         <div class="form-group row">
                                             <div class="col-sm-10  ml-auto">
-                                                <h3>Class Info</h3>
+                                                <h3>User Info</h3>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Class Name</label>
-                                            <div class="col-sm-3">
-                                                <input class="form-control" name="className" type="text" value="${classes.class_name}">
-                                                <span class="error" style="font-size: smaller;">${errors['blankClassName']}</span>
-                                                <span class="error" style="font-size: smaller;">${errors['duplicateClassName']}</span>
+                                            <label class="col-sm-2 col-form-label">User Name</label>
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="userName" type="text" value="${user_name}">
+                                                <span class="error" style="font-size: smaller;">${errors['existsErrorUserName']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['usernameError']}</span>
                                             </div>
                                         </div>
-                                        
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Password</label>
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="password" type="password" value="${password}">
+                                                <span class="error" style="font-size: smaller;">${errors['passError']}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Email</label>
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="email" type="email" value="${email}">
+                                                <span class="error" style="font-size: smaller;">${errors['existsErrorEmail']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Full Name</label>
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="fullname" type="text" value="${full_name}">
+                                                <span class="error" style="font-size: smaller;">${errors['fullnameError']}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Phone</label>
+                                            <div class="col-sm-4">
+                                                <input class="form-control" name="phone" type="tel" value="${phone}">
+                                                <span class="error" style="font-size: smaller;">${errors['phoneError']}</span>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Gender</label>
+                                            <div class="col-sm-4">
+                                                <div class="form-check form-check-inline">
+                                                    <input type="radio" class="form-check-input" name="gender" id="male" value="Male" <c:if test="${gender == 'Male'}">checked</c:if>>
+                                                        <label class="form-check-label" for="male">Male</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline me-3">
+                                                        <input type="radio" class="form-check-input" name="gender" id="female" value="Female" <c:if test="${gender == 'Female'}">checked</c:if>>
+                                                        <label class="form-check-label" for="female">Female</label>
+                                                    </div>
+                                                    <div class="form-check form-check-inline">
+                                                        <input type="radio" class="form-check-input" name="gender" id="other" value="Other" <c:if test="${gender == 'Other'}">checked</c:if>>
+                                                        <label class="form-check-label" for="other">Other</label>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+                                        </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
                                             <div class="col-sm-1">
-                                                <input class="form-control"  name="status" type="checkbox" ${classes.status ? 'checked' : ''}>
+                                                <input class="form-control"  name="status" type="checkbox" ${status ? 'checked' : ''}>
                                             </div>
                                         </div>
                                         <div class="form-group row">
 
-                                            <label class="col-sm-2 col-form-label">Subject</label>
+                                            <label class="col-sm-2 col-form-label">Role</label>
                                             <div class="col-sm-2">
-                                                <select class="form-control" name="subjectId">
-                                                    <c:forEach var="subject" items="${subject}">
-                                                        <option value="${subject.subject_id}"<c:if test="${subject.subject_id == classes.subject_id}">selected</c:if>>${subject.subject_name}</option>
+                                                <select class="form-control" name="roleId">
+                                                    <c:forEach var="role" items="${roles}">
+                                                        <option value="${role.settingId}"<c:if test="${role.settingId == roleId}">selected</c:if>>${role.settingName}</option>
                                                     </c:forEach>
                                                 </select>
                                             </div>
                                         </div>
+
+
                                         <div class="col-12">
-                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Update Class</button>
+                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
+                                            <button type="reset" class="btn">Reset</button>
                                         </div>
-                                            <div> <span>${errorsMessage}</span></div>
                                     </div>
                                 </form>
                             </div>
