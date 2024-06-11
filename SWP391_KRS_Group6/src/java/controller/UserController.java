@@ -50,7 +50,7 @@ public class UserController extends HttpServlet {
 
             String action = request.getParameter("action");
 // Kiểm tra quyền truy cập của người dùng
-            if (setting.getSettingName().equals("Admin")) {
+            if (setting.getSettingName().toLowerCase().equals("admin")) {
                 // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
                 switch (action) {
                     case "addUserPage":
