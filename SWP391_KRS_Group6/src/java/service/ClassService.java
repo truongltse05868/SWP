@@ -20,18 +20,11 @@ import java.sql.SQLException;
 public class ClassService extends BaseService {
     private static final Logger logger = Logger.getLogger(ClassDAO.class.getName());
     private final ClassDAO classDAO;
-    private final SettingDAO settingDAO;
-    private final SubjectDAO subjectDAO;
 
     public ClassService() {
         this.classDAO = new ClassDAO();
-        this.settingDAO = new SettingDAO();
-        this.subjectDAO = new SubjectDAO();
     }
     //validate
-//    public String checkClassNameExsist(String className){
-//        return 
-//    }
     public Map<String, String> validateClassData(String className) {
         Map<String, String> errors = new HashMap<>();
         errors.putAll(validateNotEmpty(className, "blankClassName", "Tên lớp học không được để trống"));
@@ -48,14 +41,6 @@ public class ClassService extends BaseService {
     //chọc vào DAO
     public boolean addClass(Class newClass) {
         return classDAO.addClass(newClass);
-    }
-
-    public List<Setting> getAllRoles() {
-        return settingDAO.getAllRole();
-    }
-
-    public List<Subject> getAllSubjects() {
-        return subjectDAO.getAllSubjects();
     }
 
     public List<Class> getAllClasses() {

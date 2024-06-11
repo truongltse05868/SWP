@@ -26,6 +26,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import service.ClassService;
+import service.SubjectService;
+import service.SettingService;
 
 /**
  *
@@ -188,8 +190,10 @@ public class ClassController extends HttpServlet {
             throws ServletException, IOException {
         try {
             ClassService classService = new ClassService();
-            List<Setting> roles = classService.getAllRoles();
-            List<Subject> subjects = classService.getAllSubjects();
+            SubjectService subjectService = new SubjectService();
+            SettingService settingService = new SettingService();
+            List<Setting> roles = settingService.getAllRoles();
+            List<Subject> subjects = subjectService.getAllSubjects();
 
             // Lấy thông tin từ form
             int subjectId = Integer.parseInt(request.getParameter("subjectId"));
@@ -243,9 +247,10 @@ public class ClassController extends HttpServlet {
             throws ServletException, IOException {
         try {
             ClassService classService = new ClassService();
+            SubjectService subjectService = new SubjectService();
             int classId = Integer.parseInt(request.getParameter("classId"));
             Class classes = classService.getClassById(classId);
-            List<Subject> subjectList = classService.getAllSubjects();
+            List<Subject> subjectList = subjectService.getAllSubjects();
             request.setAttribute("classes", classes);
             request.setAttribute("subject", subjectList);
             request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
@@ -259,6 +264,8 @@ public class ClassController extends HttpServlet {
             throws ServletException, IOException {
         try {
             ClassService classService = new ClassService();
+            SubjectService subjectService = new SubjectService();
+            SettingService settingService =  new SettingService();
             Class classUpdate = new Class();
 
             int classId = Integer.parseInt(request.getParameter("classId"));
@@ -274,7 +281,7 @@ public class ClassController extends HttpServlet {
             Map<String, String> errors = classService.validateClassData(className);
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
-                List<Subject> subjectList = classService.getAllSubjects();
+                List<Subject> subjectList = subjectService.getAllSubjects();
                 request.setAttribute("classes", classUpdate);
                 request.setAttribute("subject", subjectList);
                 request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
@@ -285,7 +292,7 @@ public class ClassController extends HttpServlet {
             if (isUpdate) {
                 List<Class> classList = classService.getAllClasses();
                 Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-                List<Subject> subjectList = classService.getAllSubjects();
+                List<Subject> subjectList = subjectService.getAllSubjects();
 
                 request.setAttribute("classes", classList);
                 request.setAttribute("userCountMap", userCountMap);

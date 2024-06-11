@@ -118,10 +118,10 @@
         <main class="ttr-wrapper">
             <div class="container-fluid">
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">User List</h4>
+                    <h4 class="breadcrumb-title">Class List</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>User List</li>
+                        <li>Class List</li>
                     </ul>
                 </div>
                 <div class="row">
@@ -131,10 +131,10 @@
                             <div class="widget-inner">
                                 <form class="row col-sm-3" method="post" action="userController">
                                     <div class="col">
-                                        <input class="form-control" type="text" name="searchUsername" placeholder="Search by class name" value="${searchUsername}">
+                                        <input class="form-control" type="text" name="searchClassname" placeholder="Search by class name" value="${searchUsername}">
                                     </div>
                                     <div class="col-auto">
-                                        <input type="hidden" name="action" value="searchUsername">
+                                        <input type="hidden" name="action" value="searchClassname">
                                         <button class="btn btn-primary btn-sm" type="submit">Search</button>
                                     </div>
                                 </form>
