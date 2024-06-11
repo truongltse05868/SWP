@@ -292,12 +292,6 @@
                     </a>
                 </li>
                 <li>
-                    <a href="list-view-calendar.html" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
-                        <span class="ttr-label">Calendar</span>
-                    </a>
-                </li>
-                <li>
                     <a href="app-profile.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">Profile</span>
@@ -338,7 +332,7 @@
                 </li>
                 <li>
                     <a href="user.html" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-user"></i></span>
+                        <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
                         <span class="ttr-label">Class</span>
                         <span class="ttr-arrow-icon"><i class="fa fa-angle-right"></i></span>
                     </a>
