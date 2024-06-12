@@ -6,6 +6,8 @@
 package dao;
 
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.Properties;
@@ -15,10 +17,15 @@ import java.util.logging.Logger;
 public class DBConnect {
 
     protected Connection connection;
-
+    public Properties configProp;
+    public String propertiesFilePath = "/SWP391_KRS_Group6/config.properties";
     public DBConnect() {
         try {
-            
+//            configProp = new Properties();
+//            configProp.load(new FileInputStream(propertiesFilePath));
+//            String user = configProp.getProperty("user");
+//            String pass = configProp.getProperty("password");
+//            String url = configProp.getProperty("url");
 //            input your database username, password and url here
             // anh em sửa thành connection của mình nhé. 
             //connection của Truonglt
