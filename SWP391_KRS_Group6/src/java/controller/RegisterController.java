@@ -159,7 +159,7 @@ public class RegisterController extends HttpServlet {
                 String confirmationLink = "http://localhost:8080/SWP391_KRS_Group6/EmailConfirm?email=" + email + "&otp=" + otp;
 
                 // Gửi email xác nhận
-                userService.sendEmailVerifyLink(email, confirmationLink, userName);
+                userService.sendEmailVerifyLink(email, userName, confirmationLink, userName);
 
                 request.setAttribute("successMessage", "Đăng ký thành công. Vui lòng kiểm tra email để xác nhận.");
 //                request.getRequestDispatcher("Login").forward(request, response);

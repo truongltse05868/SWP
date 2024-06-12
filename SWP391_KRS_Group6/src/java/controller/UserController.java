@@ -567,7 +567,7 @@ public class UserController extends HttpServlet {
             String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
             if (isSuccess) {
                 String subjectEmail = "Bạn đã được tạo tài khoản thành công";
-                userService.sendPassToEmail(email, password, subjectEmail);
+                userService.sendPassToEmail(email,userName, password, subjectEmail);
                 request.setAttribute("successMessage", message);
                 List<User> users = userService.getAllUsers();
                 request.setAttribute("users", users);
