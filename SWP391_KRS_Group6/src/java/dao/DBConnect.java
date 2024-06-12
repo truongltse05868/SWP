@@ -5,8 +5,10 @@
  */
 package dao;
 
+
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,5 +38,4 @@ public class DBConnect {
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }
