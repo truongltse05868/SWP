@@ -83,7 +83,6 @@ public class PostDAO extends DBConnect {
             ps.setString(4, post.getContent());
             ps.setBoolean(5, post.isStatus());
             ps.setInt(6, post.getUser_id());
-            ps.setInt(7, post.getPostId());
             return ps.executeUpdate() > 0;
         } catch (SQLException ex) {
             Logger.getLogger(PostDAO.class.getName()).log(Level.SEVERE, null, ex);

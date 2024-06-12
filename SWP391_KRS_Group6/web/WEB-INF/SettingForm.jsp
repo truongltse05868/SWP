@@ -125,7 +125,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Description:</label>
                                             <div class="col-sm-7">
-                                                <textarea class="  form-control"  name="description" type="text" value="<%=s.getDescription()%>"></textarea>
+                                                <textarea class="form-control" name="description"><%= s.getDescription() %></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row">

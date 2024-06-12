@@ -17,8 +17,12 @@ import jakarta.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.util.Vector;
 import dao.SettingDAO;
+import entity.User;
+import service.SettingService;
 
 public class SettingController extends HttpServlet {
+
+    SettingService settingService = new SettingService();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -56,77 +60,88 @@ public class SettingController extends HttpServlet {
 //            }
 //        }
 
-            if (service == null) {
-                service = "listAllSetting";
-            }
-            if (service.equals("listAllSetting")) {
-                //get message
+            User currentUser = (User) session.getAttribute("account");
+            Setting settingSer = settingService.getSettingById(currentUser.getRole_id());
+
+            if (currentUser == null) {
+                // Nếu không có phiên đăng nhập, chuyển hướng đến trang đăng nhập
+                response.sendRedirect("Home");
+            } else {
+// Kiểm tra quyền truy cập của người dùng
+                if (settingSer.getSettingName().toLowerCase().equals("admin")) {
+                    if (service == null) {
+                        service = "listAllSetting";
+                    }
+                    if (service.equals("listAllSetting")) {
+                        //get message
 //                String message = request.getParameter("message");
-                if (message == null) {
-                    message = "";
-                }
-                // Fetch list of users from the database
-                Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "asc");
+                        if (message == null) {
+                            message = "";
+                        }
+                        // Fetch list of users from the database
+                        Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "asc");
 
-                // Set the list of users as a request attribute
-                request.setAttribute("setting", setting);
+                        // Set the list of users as a request attribute
+                        request.setAttribute("setting", setting);
 
-                // Forward the request to the JSP page
-                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/SettingDisplay.jsp");
-                dispatcher.forward(request, response);
+                        // Forward the request to the JSP page
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/SettingDisplay.jsp");
+                        dispatcher.forward(request, response);
 
-            }
+                    }
 
-            if (service.equals("insertSetting")) {
-                String submit = request.getParameter("submit");
-                if (submit == null) { // request view form
-                    Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "ASC");
-                    request.setAttribute("setting", setting);
-                    dispath(request, response, "WEB-INF/InsertSetting.jsp");
-                } else { // submit <> null --> request insert
-                    String settingName = request.getParameter("setting_name");
-                    String type = request.getParameter("type");
-                    String description = request.getParameter("description");
-                    String statusParam = request.getParameter("status");
-                    boolean status = (statusParam != null && statusParam.equals("on"));
+                    if (service.equals("insertSetting")) {
+                        String submit = request.getParameter("submit");
+                        if (submit == null) { // request view form
+                            Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "ASC");
+                            request.setAttribute("setting", setting);
+                            dispath(request, response, "WEB-INF/InsertSetting.jsp");
+                        } else { // submit <> null --> request insert
+                            String settingName = request.getParameter("setting_name");
+                            String type = request.getParameter("type");
+                            String description = request.getParameter("description");
+                            String statusParam = request.getParameter("status");
+                            boolean status = (statusParam != null && statusParam.equals("on"));
 
-                    // convert
-                    Setting setting = new Setting();
-                    setting.setSettingName(settingName);
-                    setting.setType(type);
-                    setting.setDescription(description);
-                    setting.setStatus(status);
+                            // convert
+                            Setting setting = new Setting();
+                            setting.setSettingName(settingName);
+                            setting.setType(type);
+                            setting.setDescription(description);
+                            setting.setStatus(status);
 
-                    dao.addSetting(setting);
+                            dao.addSetting(setting);
 
-                    response.sendRedirect("SettingController");
-                }
-            }
-            if (service.equals("updateSetting")) {
-                String submit = request.getParameter("submit");
-                if (submit == null) {
-                    int pid = Integer.parseInt(request.getParameter("pid"));
-                    Setting setting = dao.getSettingById(pid);
-                    request.setAttribute("setting", setting);
+                            response.sendRedirect("SettingController");
+                        }
+                    }
+                    if (service.equals("updateSetting")) {
+                        String submit = request.getParameter("submit");
+                        if (submit == null) {
+                            int pid = Integer.parseInt(request.getParameter("pid"));
+                            Setting setting = dao.getSettingById(pid);
+                            request.setAttribute("setting", setting);
 
-                    dispath(request, response, "WEB-INF/SettingForm.jsp");
-                } else {
-                    String settingId = request.getParameter("setting_id");
-                    String settingName = request.getParameter("setting_name");
-                    String type = request.getParameter("type");
-                    String description = request.getParameter("description");
-                    String statusParam = request.getParameter("status");
-                    boolean status = (statusParam != null && statusParam.equals("on"));
+                            dispath(request, response, "WEB-INF/SettingForm.jsp");
+                        } else {
+                            String settingId = request.getParameter("setting_id");
+                            String settingName = request.getParameter("setting_name");
+                            String type = request.getParameter("type");
+                            String description = request.getParameter("description");
+                            String statusParam = request.getParameter("status");
+                            boolean status = (statusParam != null && statusParam.equals("on"));
 
-                    // convert
-                    int settingIdInt = Integer.parseInt(settingId);
+                            // convert
+                            int settingIdInt = Integer.parseInt(settingId);
 
-                    //
-                    Setting setting = new Setting(settingIdInt, settingName, type, description, status);
-                    dao.updateSetting(setting);
-                    String st = "";
-                    //send message
-                    response.sendRedirect("SettingController");
+                            //
+                            Setting setting = new Setting(settingIdInt, settingName, type, description, status);
+                            dao.updateSetting(setting);
+                            String st = "";
+                            //send message
+                            response.sendRedirect("SettingController");
+                        }
+                    }
                 }
             }
         }

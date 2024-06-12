@@ -108,7 +108,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Description:</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" name="description" type="text">
+                                                <textarea class="  form-control"  name="description" type="text" value=""></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row">

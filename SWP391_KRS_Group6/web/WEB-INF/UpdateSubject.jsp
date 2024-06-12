@@ -62,9 +62,9 @@
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
         <!-- header start -->
-        
-                <jsp:include page="DashboardNav.jsp"/>
-                <!-- sidebar menu end -->
+
+        <jsp:include page="DashboardNav.jsp"/>
+        <!-- sidebar menu end -->
         <!-- Left sidebar menu end -->
 
         <!--Main container start -->
@@ -88,62 +88,52 @@
                             Subject s = (Subject) request.getAttribute("subject");
                             %>
                             <div class="widget-inner">
-                                <form class="edit-profile m-b30" action="SubjectController">
-                                    <input type="hidden" name="service" value="updateSubject">
-                                    <input type="hidden" name="pid" value="<%=s.getSubject_id()%>">
-                                    
-
+                                <form class="edit-profile m-b30" action="PostController">
+                                    <input type="hidden" name="service" value="insertPost">
                                     <div class="">
                                         <div class="form-group row">
-                                            <div class="col-sm-10  ml-auto">
-                                                <h3>1. Subject Details</h3>
+                                            <div class="col-sm-10 ml-auto">
+                                                <h3>1. Insert Post</h3>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">ID</label>
+                                            <label class="col-sm-2 col-form-label" for="title">Title:</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control" readonly name="subject_id" type="text" value="<%=s.getSubject_id()%>">
+                                                <input id="title" class="form-control" name="title" type="text" placeholder="Enter title here" aria-label="Title">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Subject Code:</label>
+                                            <label class="col-sm-2 col-form-label" for="summary">Summary</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"  name="subject_code" type="text" value="<%=s.getSubject_code()%>">
+                                                <textarea id="summary" style="height: 80px;" class="form-control" name="summary" placeholder="Enter summary here" aria-label="Summary"></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Name:</label>
+                                            <label class="col-sm-2 col-form-label" for="thumbnail_url">Thumbnail Url</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"   name="subject_name" type="text" value="<%=s.getSubject_name()%>">
-                                            </div>
-                                        </div>
-
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Description:</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control"  name="description" type="text" value="<%=s.getDescription()%>">
+                                                <input id="thumbnail_url" class="form-control" name="thumbnail_url" type="text" placeholder="Enter thumbnail URL here" aria-label="Thumbnail Url">
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Status</label>
+                                            <label class="col-sm-2 col-form-label" for="ckeditor">Content</label>
                                             <div class="col-sm-7">
-                                                <input class="form-control"  name="status" type="checkbox" ${s.isStatus() ? 'checked' : ''}>
+                                                <textarea id="ckeditor" class="form-control" name="content" placeholder="Enter content here" aria-label="Content" style="height: 320px;"></textarea>
                                             </div>
                                         </div>
-
-                                        <div class="seperator"></div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label" for="status">Status</label>
+                                            <div class="col-sm-7">
+                                                <input id="status" class="form-control" name="status" type="checkbox" aria-label="Status">
+                                            </div>
+                                        </div>
                                         <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
-
                                     </div>
                                     <div class="">
-                                        <div class="">
-                                            <div class="row">
-                                                <div class="col-sm-2">
-                                                </div>
-                                                <div class="col-sm-7">
-                                                    <button name="submit" type="submit" value="login" class="btn">Save changes</button>
-                                                    <button type="reset" class="btn-secondry">Cancel</button>
-                                                </div>
+                                        <div class="row">
+                                            <div class="col-sm-2"></div>
+                                            <div class="col-sm-7">
+                                                <button name="submit" type="submit" value="insertPost" class="btn" aria-label="Save changes">Save changes</button>
+                                                <button type="reset" class="btn-secondry" aria-label="Cancel">Cancel</button>
                                             </div>
                                         </div>
                                     </div>

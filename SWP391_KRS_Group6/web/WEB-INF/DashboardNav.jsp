@@ -242,13 +242,15 @@
                 <form class="ttr-search-form">
                     <div class="ttr-search-input-wrapper">
                         <input type="text" name="qq" placeholder="search something..." class="ttr-search-input">
-                        <button type="submit" name="search" class="ttr-search-submit"><i class="ti-arrow-right"></i></button>
+                        <button title="Search" type="submit" name="search" class="ttr-search-submit"><i class="ti-arrow-right"></i></button>
                     </div>
                     <span class="ttr-search-close ttr-search-toggle"><i class="ti-close"></i></span>
                 </form>
             </div>
             <!--header search panel end -->
         </div>
+
+        
     </header>
 </div>
 <!-- side menu logo end -->

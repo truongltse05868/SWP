@@ -5,6 +5,7 @@
 package controller;
 
 import dao.PostDAO;
+import dao.UserDAO;
 import entity.Post;
 import entity.User;
 import jakarta.servlet.RequestDispatcher;
@@ -63,7 +64,8 @@ public class PostController extends HttpServlet {
                         UpdatePost(request, response, pid, submit);
                         break;
                     case "insertPost":
-                        InsertPost(request, response, submit);
+                        int Author = currentUser.getUser_id();
+                        InsertPost(request, response, submit, Author);
                         break;
                     default:
                         break;
@@ -130,17 +132,18 @@ public class PostController extends HttpServlet {
     private void getAllPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-
             PostDAO postDAO = new PostDAO();
+            UserDAO userDAO = new UserDAO();
+            List<Post> posts = postDAO.getAllPosts();
+            List<User> user = userDAO.getAllUsers();
 
-            List<Post> postList = postDAO.getAllPosts();
-
-            request.setAttribute("postList", postList);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/PostList.jsp");
+            request.setAttribute("posts", posts);
+            request.setAttribute("user", user);// Changed attribute name to "posts"
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Post/PostList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error get list Post", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list post.");
+            logger.log(Level.SEVERE, "Error getting list of posts", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the list of posts.");
         }
     }
 
@@ -176,7 +179,7 @@ public class PostController extends HttpServlet {
             } else {
                 Post post = dao.getPostById(pid);
                 request.setAttribute("post", post);
-                dispath(request, response, "WEB-INF/UpdatePost.jsp");
+                request.getRequestDispatcher("WEB-INF/Post/UpdatePost.jsp").forward(request, response);
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid post ID format", e);
@@ -187,7 +190,7 @@ public class PostController extends HttpServlet {
         }
     }
 
-    private void InsertPost(HttpServletRequest request, HttpServletResponse response, String submit)
+    private void InsertPost(HttpServletRequest request, HttpServletResponse response, String submit, int user_id)
             throws ServletException, IOException {
         try {
             PostDAO dao = new PostDAO();
@@ -198,8 +201,7 @@ public class PostController extends HttpServlet {
                 String Content = request.getParameter("content");
                 String statusParam = request.getParameter("status");
                 boolean status = (statusParam != null && statusParam.equals("on"));
-                String UserId = request.getParameter("user_id");
-                int userIdInt = Integer.parseInt(UserId);
+                int author = user_id;
 
                 // Create and set Post object
                 Post post = new Post();
@@ -208,7 +210,7 @@ public class PostController extends HttpServlet {
                 post.setThumbnailUrl(Thumbnail);
                 post.setContent(Content);
                 post.setStatus(status);
-                post.setUser_id(userIdInt);
+                post.setUser_id(author);
 
                 // Add post to the database
                 dao.addPost(post);
@@ -218,7 +220,7 @@ public class PostController extends HttpServlet {
             } else {
                 List<Post> posts = dao.getAllPosts();
                 request.setAttribute("postList", posts);
-                request.getRequestDispatcher("WEB-INF/insertPost.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/Post/insertPost.jsp").forward(request, response);
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid post ID format", e);
