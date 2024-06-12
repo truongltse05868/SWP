@@ -77,13 +77,13 @@ public abstract class BaseService {
 
         return phone.matches("^0\\d{9}$");
     }
-    
+
     public String generateOTP() {
         // Tạo mã OTP ngẫu nhiên
         return UUID.randomUUID().toString().substring(0, 6).toUpperCase();
     }
 
-    public boolean sendOtpToEmail(String email, String otp) {
+    public boolean sendOtpToEmail(String email, String otp, String subjectEmail) {
         String host = "live.smtp.mailtrap.io";
         final String user = "api";
         final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
@@ -106,7 +106,7 @@ public abstract class BaseService {
 //            mailtrap@krsg6.com
             message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            message.setSubject("KRS_G6 Change Email");
+            message.setSubject(subjectEmail);
             message.setText("Your OTP code is: " + otp);
             Transport.send(message);
             System.out.println("OTP email sent successfully...");
@@ -118,4 +118,74 @@ public abstract class BaseService {
 
     }
 
+    public boolean sendPassToEmail(String email, String pass, String subjectEmail) {
+        String host = "live.smtp.mailtrap.io";
+        final String user = "api";
+        final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, password);
+            }
+        });
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+//            mailtrap@krsg6.com
+            message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            message.setSubject(subjectEmail);
+            message.setText("Your password: " + pass);
+            Transport.send(message);
+            System.out.println("OTP email sent successfully...");
+            return true;
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+    }
+
+    public void sendEmailVerifyLink(String recipientEmail, String confirmationLink, String email) {
+        String host = "live.smtp.mailtrap.io";
+        final String user = "api";
+        final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
+
+        Properties props = new Properties();
+        props.put("mail.smtp.host", host);
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "587");
+        props.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(props,
+                new jakarta.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(user, password);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipientEmail));
+            message.setSubject("Email Confirmation");
+            message.setText("Dear " + email + ""
+                    + "\n\n Please click the following link to confirm your email address: "
+                    + confirmationLink);
+
+            Transport.send(message);
+            System.out.println("Email sent successfully");
+
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

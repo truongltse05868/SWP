@@ -11,11 +11,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
-import jakarta.mail.*;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
+//import java.util.Properties;
+//import java.util.UUID;
+//import jakarta.mail.*;
+//import jakarta.mail.internet.InternetAddress;
+//import jakarta.mail.internet.MimeMessage;
+//import service.SettingService;
+//import service.SubjectService;
+import service.UserService;
 
 /**
  *
@@ -23,7 +26,9 @@ import jakarta.mail.internet.MimeMessage;
  * @author
  */
 public class ForgotPasswordController extends HttpServlet {
-
+//    SettingService settingService = new SettingService();
+    UserService userService = new UserService();
+//    SubjectService subjectService = new SubjectService();
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -95,18 +100,18 @@ public class ForgotPasswordController extends HttpServlet {
         try {
 
             String email = request.getParameter("email");
-
+            String subjectEmail = "KRS_G6 Reset Password";
             // Kiểm tra email có tồn tại trong database
-            boolean emailExists = checkEmailExists(email);
+            boolean emailExists = userService.checkEmailExists(email);
 
             if (emailExists) {
                 // Tạo mã OTP và lưu vào database
-                String otp = generateOTP();
+                String otp = userService.generateOTP();
 
-                boolean saveSuccess = saveOtpToDatabase(email, otp);
+                boolean saveSuccess = userService.saveOtpToDatabase(email, otp);
                 if (saveSuccess) {
                     // Gửi email OTP
-                    sendOtpEmail(email, otp);
+                    userService.sendOtpToEmail(email, otp, subjectEmail);
 
                     // Chuyển hướng đến trang resetPassword.jsp với email
                     request.setAttribute("email", email);
@@ -152,13 +157,12 @@ public class ForgotPasswordController extends HttpServlet {
             String repass = request.getParameter("reNewPassword");
             if (pass.equals(repass)) {
                 String otp = request.getParameter("otp");
-                UserDAO userDAO = new UserDAO();
-                User user = userDAO.getUserByEmail(email);
+                User user = userService.getUserByEmail(email);
 
                 if (user != null && user.getOtp().equals(otp)) {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime <= user.getOtp_expiry().getTime()) {
-                        boolean isUpdated = userDAO.updatePassOTP(repass, email, otp);
+                        boolean isUpdated = userService.updatePassOTP(repass, email, otp);
                         if (isUpdated) {
                             request.setAttribute("successMessage", "Cập nhật mật khẩu thành công");
                             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
@@ -187,67 +191,21 @@ public class ForgotPasswordController extends HttpServlet {
         request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").include(request, response);
     }
 
-    private boolean checkEmailExists(String email) {
-        // Kiểm tra email trong database
-        // Trả về true nếu tồn tại, false nếu không tồn tại
-        // Implement database check logic here
-        UserDAO users = new UserDAO();
-        List<User> emails = users.getAllUserActive();
-        for (User user : emails) {
-            if (user.getEmail().equals(email)) {
-                return true; // Email tồn tại
-            }
-        }
-        return false; // email không tồn tại
-    }
+//    private boolean checkEmailExists(String email) {
+//        // Kiểm tra email trong database
+//        // Trả về true nếu tồn tại, false nếu không tồn tại
+//        // Implement database check logic here
+//        UserDAO users = new UserDAO();
+//        List<User> emails = users.getAllUserActive();
+//        for (User user : emails) {
+//            if (user.getEmail().equals(email)) {
+//                return true; // Email tồn tại
+//            }
+//        }
+//        return false; // email không tồn tại
+//    }
 
-    private String generateOTP() {
-        // Tạo mã OTP ngẫu nhiên
-        return UUID.randomUUID().toString().substring(0, 6).toUpperCase();
-    }
 
-    private boolean saveOtpToDatabase(String email, String otp) {
-        // Lưu OTP vào database cùng với email
-        // Implement database save logic here
-        UserDAO emails = new UserDAO();
-        boolean isSaveOTP = emails.saveOtpToDatabase(email, otp);
-        return isSaveOTP;
-    }
-
-    private boolean sendOtpEmail(String email, String otp) {
-        String host = "live.smtp.mailtrap.io";
-        final String user = "api";
-        final String password = "f89b8cfba9f3f07f3f9fc42aa068248a"; // thay thế bằng mật khẩu thực tế từ Mailtrap
-
-        Properties props = new Properties();
-        props.put("mail.smtp.host", host);
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.port", "587");
-        props.put("mail.smtp.starttls.enable", "true");
-
-        Session session = Session.getInstance(props, new jakarta.mail.Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(user, password);
-            }
-        });
-
-        try {
-            MimeMessage message = new MimeMessage(session);
-//            mailtrap@krsg6.com
-            message.setFrom(new InternetAddress("mailtrap@krsg6.com"));
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
-            message.setSubject("KRS_G6 Reset Password");
-            message.setText("Your OTP code is: " + otp);
-            Transport.send(message);
-            System.out.println("OTP email sent successfully...");
-            return true;
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
 
     /**
      * Returns a short description of the servlet.

@@ -12,12 +12,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import service.SettingService;
+import service.SubjectService;
+import service.UserService;
 
 /**
  *
  * @author Sunshine
  */
 public class EmailConfirmController extends HttpServlet {
+    SettingService settingService = new SettingService();
+    UserService userService = new UserService();
+    SubjectService subjectService = new SubjectService();
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -60,9 +66,7 @@ public class EmailConfirmController extends HttpServlet {
         String email = request.getParameter("email");
         String otp = request.getParameter("otp");
         // Xác nhận người dùng trong database
-        UserDAO user = new UserDAO();
-
-        boolean confirm = user.confirmUser(email, otp);
+        boolean confirm = userService.confirmUser(email, otp);
         if (confirm) {
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmEmailSuccess.jsp");
             dispatcher.forward(request, response);

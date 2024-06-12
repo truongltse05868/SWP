@@ -129,15 +129,23 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="widget-inner">
-                                <form class="row col-sm-3" method="post" action="userController">
-                                    <div class="col">
-                                        <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
-                                    </div>
-                                    <div class="col-auto">
-                                        <input type="hidden" name="action" value="searchUsername">
-                                        <button class="btn btn-primary btn-sm" type="submit">Search</button>
-                                    </div>
-                                </form>
+                                <div class="row">
+                                    <form class="col-sm-3" method="post" action="userController">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
+                                            </div>
+                                            <div class="col-auto">
+                                                <input type="hidden" name="action" value="searchUsername">
+                                                <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                    <form class="col-sm-7 text-right" action="userController" method="post">
+                                        <input type="hidden" name="action" value="addUserPage">
+                                        <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
+                                    </form>
+                                </div>
                             </div>
                             <div class="widget-inner">
                                 <c:if test="${not empty users}">
@@ -159,7 +167,7 @@
                                                 <td>${user.full_name}</td>
                                                 <td>${user.phone}</td>
                                                 <td>${user.gender}</td>
-                                                
+
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${user.status}">
@@ -199,7 +207,7 @@
                                 <c:if test="${empty users}">
                                     <p>No users found.</p>
                                 </c:if>
-                                    <div><span>${successMessage}</span></div>
+                                <div><span>${successMessage}</span></div>
 
                             </div>
                         </div>

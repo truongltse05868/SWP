@@ -6,6 +6,7 @@ package service;
 
 import dao.UserDAO;
 import entity.User;
+import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.Map;
  * @author Ngs-MT305
  */
 public class UserService extends BaseService {
-
+    private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+<>?";
 //    private static final Logger logger = Logger.getLogger(userDAO.class.getName());
     private final UserDAO userDAO;
 
@@ -67,22 +68,64 @@ public class UserService extends BaseService {
     public boolean checkEmailExists(String email) {
         return userDAO.checkEmailExists(email);
     }
-    public boolean checkUserNameExists(String userName){
+
+    public boolean checkUserNameExists(String userName) {
         return userDAO.checkUsernameExists(userName);
     }
-    public boolean checkLogin(String account, String password){
+
+    public boolean checkLogin(String account, String password) {
         return userDAO.loginAccount(account, password);
     }
-    public boolean addUser(User user){
+
+    public boolean addUser(User user) {
         return userDAO.addUser(user);
     }
-    public List<User> getUsersSortedSearchBy(String field, String search){
+
+    public List<User> getUsersSortedSearchBy(String field, String search) {
         return userDAO.getUsersSortedSearchBy(field, search);
     }
-    public List<User> searchUsersByUsername(String username){
+
+    public List<User> searchUsersByUsername(String username) {
         return userDAO.searchUsersByUsername(username);
     }
-    public List<User> getUsersSortedBy(String field){
+
+    public List<User> getUsersSortedBy(String field) {
         return userDAO.getUsersSortedBy(field);
+    }
+
+    public boolean confirmUser(String email, String otp) {
+        return userDAO.confirmUser(email, otp);
+    }
+
+//    public boolean saveOtpToDatabase(String email, String otp) {
+//        return userDAO.saveOtpToDatabase(email, otp);
+//    }
+    public User getUserByEmail(String email) {
+        return userDAO.getUserByEmail(email);
+    }
+
+    public boolean updatePassOTP(String password, String email, String otp) {
+        return userDAO.updatePassOTP(password, email, otp);
+    }
+
+    public boolean saveOtpToDatabase(String email, String otp) {
+        // Lưu OTP vào database cùng với email
+        // Implement database save logic here
+        boolean isSaveOTP = userDAO.saveOtpToDatabase(email, otp);
+        return isSaveOTP;
+    }
+
+    public boolean addUserRegister(User user) {
+        return userDAO.addUserRegister(user);
+    }
+    
+
+    public String generatePassword() {
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder(8);
+        for (int i = 0; i < 8; i++) {
+            password.append(CHARACTERS.charAt(random.nextInt(CHARACTERS.length())));
+        }
+        return password.toString();
     }
 }

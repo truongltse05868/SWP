@@ -323,7 +323,7 @@ public class UserController extends HttpServlet {
             int userId = Integer.parseInt(request.getParameter("id"));
             String newPassword = request.getParameter("newPassword");
             String reNewPassword = request.getParameter("reNewPassword");
-            String message = "";
+            String message;
 
 
             User user = userService.getUserById(userId);
@@ -436,9 +436,9 @@ public class UserController extends HttpServlet {
                     String otp = userService.generateOTP();
                     Timestamp otpExpiry = new Timestamp(System.currentTimeMillis() + 1 * 60 * 1000); // 1 minutes expiry
                     userService.saveOtpForEmailChange(userId, otp, otpExpiry);
-
+                    String subjectEmail = "KRS_G6 Change Email";
                     // Send OTP to the new email
-                    userService.sendOtpToEmail(newEmail, otp);
+                    userService.sendOtpToEmail(newEmail, otp, subjectEmail);
 
                     // Redirect to an OTP confirmation page
                     request.getSession().setAttribute("userId", userId);
@@ -497,7 +497,7 @@ public class UserController extends HttpServlet {
             Map<String, String> errors = new HashMap<>();
             // Lấy thông tin từ form
             String userName = request.getParameter("userName");
-            String password = request.getParameter("password");
+            String password = userService.generatePassword();
             String email = request.getParameter("email");
             String fullName = request.getParameter("fullname");
             String phone = request.getParameter("phone");
@@ -537,10 +537,6 @@ public class UserController extends HttpServlet {
                 errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
             }
 
-            if (password == null || password.trim().isEmpty() || !userService.validatePassword(password)) {
-                errors.put("passError", "Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số.");
-            }
-
             if (userName == null || userName.trim().isEmpty() || !userService.validateUsername(userName)) {
                 errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
             }
@@ -570,15 +566,14 @@ public class UserController extends HttpServlet {
             boolean isSuccess = userService.addUser(user);
             String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
             if (isSuccess) {
-                // Redirect to userList with success message
-//                response.sendRedirect(request.getContextPath() + "/userList?successMessage=" + URLEncoder.encode(message, "UTF-8"));
+                String subjectEmail = "Bạn đã được tạo tài khoản thành công";
+                userService.sendPassToEmail(email, password, subjectEmail);
                 request.setAttribute("successMessage", message);
                 List<User> users = userService.getAllUsers();
                 request.setAttribute("users", users);
                 request.setAttribute("roles", roles);
                 request.getRequestDispatcher("WEB-INF/UserList.jsp").forward(request, response);
             } else {
-                // Handle failure (optional)
                 request.setAttribute("roles", roles);
                 request.setAttribute("user_name", userName);
                 request.setAttribute("password", password);

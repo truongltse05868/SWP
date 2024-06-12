@@ -321,13 +321,6 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Password</label>
-                                            <div class="col-sm-4">
-                                                <input class="form-control" name="password" type="password" value="${password}">
-                                                <span class="error" style="font-size: smaller;">${errors['passError']}</span>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Email</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="email" type="email" value="${email}">
