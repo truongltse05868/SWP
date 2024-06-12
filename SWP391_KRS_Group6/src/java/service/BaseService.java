@@ -242,7 +242,7 @@ String content = "Dear " + userName + ",\n\n"
 }
 
 public void sendEmailVerifyLink(String recipientEmail,String userName, String confirmationLink, String email) {
-    String content = "Dear " + email + "\n\n Please click the following link to confirm your email address: " + confirmationLink;
+    String content = "Dear " + userName + "\n\n Please click the following link to confirm your email address: " + confirmationLink;
     sendEmail(recipientEmail, "Email Confirmation", content);
 }
 
