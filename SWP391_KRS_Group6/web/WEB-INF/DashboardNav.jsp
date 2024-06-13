@@ -300,9 +300,9 @@
                     </a>
                 </li>
                 <li>
-                    <a href="mailbox.html" class="ttr-material-button">
+                    <a href="PostController" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-email"></i></span>
-                        <span class="ttr-label">Inbox</span>
+                        <span class="ttr-label">Post</span>
                     </a>
                 </li>
                 <li>
@@ -312,25 +312,10 @@
                     </a>
                 </li>
                 <li>
-                    <a href="user.html" class="ttr-material-button">
+                   <a href="UserList" class="ttr-material-button" onclick="sendPostRequest('userList'); return false;">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">User</span>
-                        <span class="ttr-arrow-icon"><i class="fa fa-angle-right"></i></span>
                     </a>
-                    <ul>
-                        <li>
-                            <a href="UserList" class="ttr-material-button" onclick="sendPostRequest('userList'); return false;">
-                                <span class="ttr-label">User List
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="AddUser" class="ttr-material-button" onclick="sendPostRequest('addUserPage'); return false;">
-                                <span class="ttr-label">Add User
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <li>
                     <a href="user.html" class="ttr-material-button">
