@@ -67,6 +67,13 @@ public class PostController extends HttpServlet {
                         int Author = currentUser.getUser_id();
                         InsertPost(request, response, submit, Author);
                         break;
+                    case "BlogList":
+                        getAllBlog(request, response);
+                        break;
+                    case "BlogDetail":
+                        int bid = Integer.parseInt(request.getParameter("pid"));
+                        getBlogDetail(request, response, bid);
+                        break;
                     default:
                         break;
                 }
@@ -144,6 +151,45 @@ public class PostController extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error getting list of posts", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the list of posts.");
+        }
+    }
+
+    private void getAllBlog(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            PostDAO postDAO = new PostDAO();
+            UserDAO userDAO = new UserDAO();
+            List<Post> posts = postDAO.getAllPosts();
+            List<User> user = userDAO.getAllUsers();
+
+            request.setAttribute("posts", posts);
+            request.setAttribute("user", user);// Changed attribute name to "posts"
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Post/BlogDisplay.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error getting list of posts", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the list of posts.");
+        }
+    }
+
+    private void getBlogDetail(HttpServletRequest request, HttpServletResponse response, int pid)
+            throws ServletException, IOException {
+        try {
+            PostDAO dao = new PostDAO();
+            Post post = dao.getPostById(pid);
+            UserDAO userDAO = new UserDAO();
+            List<User> user = userDAO.getAllUsers();
+            request.setAttribute("user", user);
+            request.setAttribute("post", post);
+
+            request.getRequestDispatcher("WEB-INF/Post/BlogDetail.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid post ID format", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid post ID format");
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Error view detail of blog", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while view detail of blog.");
         }
     }
 

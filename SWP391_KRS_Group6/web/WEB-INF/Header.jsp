@@ -49,6 +49,26 @@
             form.submit();
         }
 
+        function sendPostRequestForBlog(action) {
+            // Tạo form ẩn
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", "PostController");
+
+            // Tạo input ẩn cho action
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "service");
+            hiddenField.setAttribute("value", action);
+
+            // Thêm input ẩn vào form
+            form.appendChild(hiddenField);
+
+            // Thêm form vào body và submit
+            document.body.appendChild(form);
+            form.submit();
+        }
+
         function sendPostRequestProfile(action, userId) {
             // Tạo form ẩn
             var form = document.createElement("form");
@@ -159,7 +179,7 @@
                         </li>
                         <li><a href="javascript:;">Blog <i class="fa fa-chevron-down"></i></a>
                             <ul class="sub-menu">
-                                <li><a href="Blog">Blog Classic</a></li>
+                                <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog</a></li>
                                 <li><a href="Pos">Blog Classic Sidebar</a></li>
                                 <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
                                 <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
@@ -343,14 +363,14 @@
                                 </ul>
                             </li>
                             <li><a href="javascript:;">Blog <i class="fa fa-chevron-down"></i></a>
-                                <ul class="sub-menu">
-                                    <li><a href="blog-classic-grid.html">Blog Classic</a></li>
-                                    <li><a href="blog-classic-sidebar.html">Blog Classic Sidebar</a></li>
-                                    <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
-                                    <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
-                                    <li><a href="blog-details.html">Blog Details</a></li>
-                                </ul>
-                            </li>
+                            <ul class="sub-menu">
+                                <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog</a></li>
+                                <li><a href="Pos">Blog Classic Sidebar</a></li>
+                                <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
+                                <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
+                                <li><a href="blog-details.html">Blog Details</a></li>
+                            </ul>
+                        </li>
                             <c:if test="${sessionScope['account'].getRole_id() == 1}">
                                 <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">

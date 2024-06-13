@@ -105,6 +105,26 @@ Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Html.html to edit thi
             document.body.appendChild(form);
             form.submit();
         }
+        
+        function sendPostRequestForBlog(action) {
+            // Tạo form ẩn
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("service", "BlogList");
+
+            // Tạo input ẩn cho action
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "service");
+            hiddenField.setAttribute("value", action);
+
+            // Thêm input ẩn vào form
+            form.appendChild(hiddenField);
+
+            // Thêm form vào body và submit
+            document.body.appendChild(form);
+            form.submit();
+        }
 
         function sendPostRequestProfile(action, userId) {
             // Tạo form ẩn

@@ -1,11 +1,16 @@
 <%-- 
-    Document   : BlogDisplay
-    Created on : Jun 12, 2024, 3:33:16 PM
+    Document   : BlogDetail
+    Created on : Jun 13, 2024, 11:53:24 AM
     Author     : HuyPC
 --%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="dao.PostDAO" %>
+<%@page import="entity.Post" %>
+<%@page import="dao.UserDAO" %>
+<%@page import="entity.User" %>
+<%@page import="java.util.List" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,7 +59,6 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-        
 
     </head>
     <body id="bg">
@@ -62,16 +66,15 @@
             <div id="loading-icon-bx"></div>
 
             <!-- Header Top ==== -->
-            <jsp:include page="/WEB-INF/Header.jsp"/>
-
+            <jsp:include page="../Header.jsp"/>
             <!-- header END ==== -->
             <!-- Content -->
             <div class="page-content bg-white">
                 <!-- inner page banner -->
-                <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner1.jpg);">
+                <div class="page-banner ovbl-dark" style="background-image:url(assets/images/banner/banner2.jpg);">
                     <div class="container">
                         <div class="page-banner-entry">
-                            <h1 class="text-white">Blog</h1>
+                            <h1 class="text-white">Blog Details</h1>
                         </div>
                     </div>
                 </div>
@@ -80,7 +83,7 @@
                     <div class="container">
                         <ul class="list-inline">
                             <li><a href="Home">Home</a></li>
-                            <li>Blog</li>
+                            <li>Blog Details</li>
                         </ul>
                     </div>
                 </div>
@@ -90,66 +93,72 @@
                         <div class="container">
                             <div class="row">
                                 <!-- Left part start -->
-                                <div class="col-md-7 col-lg-8 col-xl-8">
-                                    <c:if test="${not empty posts}">
-                                        <c:forEach var="posts" items="${posts}">
-                                            <div class="recent-news blog-lg m-b40">
-                                                <div class="action-box blog-lg">
-                                                    <img src=${posts.thumbnailUrl} alt="">
-                                                </div>
-                                                <div class="info-bx">
-                                                    <ul class="media-post">
-                                                        <li style="font-size: 1em;"><i class="fa fa-user"> By
-                                                                <c:choose>
-                                                                    <c:when test="${not empty user}">
-                                                                        <c:forEach var="user" items="${user}">
-                                                                            <c:if test="${user.user_id == posts.user_id}">
-                                                                                ${user.full_name}
-                                                                            </c:if>
-                                                                        </c:forEach>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        Post information is unavailable.
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </i></li>
-                                                    </ul>
-                                                    <form method="post" action="PostController">
-                                                        <input type="hidden" name="service" value="BlogDetail">
-                                                        <input type="hidden" name="pid" value="${posts.postId}">
-                                                        <h5 class="post-title"><button type="submit" class="btn-link">${posts.title}</button></h5>
-                                                    </form>
-                                                    <p>${posts.summary}</p>
-                                                    <div class="post-extra">
-                                                        <form method="post" action="PostController">
-                                                            <input type="hidden" name="service" value="BlogDetail">
-                                                            <input type="hidden" name="pid" value="${posts.postId}">
-                                                            <button type="submit" class="btn-link">READ MORE</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                                <hr style="border: 1px solid #333; margin: 20px 0;">
-                                            </c:forEach>
+                                <div class="col-lg-8 col-xl-8">
+                                    <%
+                                       Post s = (Post) request.getAttribute("post");
+                                       List<User> users = (List<User>) request.getAttribute("user");
+                                    %>
+
+                                    <!-- blog start -->
+                                    <div class="recent-news blog-lg">
+                                        <div class="action-box blog-lg">
+                                            <img src='<%=s.getThumbnailUrl()%>' alt="">
                                         </div>
-                                    </c:if>
-                                    <c:if test="${empty posts}">
-                                        <p>No post found.</p>
-                                    </c:if>
-                                    <!-- Pagination start -->
-                                    <div class="pagination-bx rounded-sm gray clearfix">
-                                        <ul class="pagination">
-                                            <li class="previous"><a href="#"><i class="ti-arrow-left"></i> Prev</a></li>
-                                            <li class="active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li class="next"><a href="#">Next <i class="ti-arrow-right"></i></a></li>
-                                        </ul>
+                                        <div class="info-bx">
+                                            <ul class="media-post">
+                                                <li><i class="fa fa-user"> By 
+                                                        <%
+                                                            String authorName = "Unknown Author";
+                                                            if (users != null) {
+                                                                for (User user : users) {
+                                                                    if (user.getUser_id() == s.getUser_id()) {
+                                                                        authorName = user.getFull_name();
+                                                                        break;
+                                                                    }
+                                                                }
+                                                            }
+                                                        %>
+                                                        <%= authorName %>
+                                                    </i></li>
+                                            </ul>
+                                            <h5 class="post-title"><a href="#"><%=s.getTitle()%></a></h5>
+                                            <p><%=s.getSummary()%></p>
+                                            <p><%=s.getContent()%></p>
+
+                                            <div class="ttr-divider bg-gray"><i class="icon-dot c-square"></i></div>
+                                            <h6>SHARE </h6>
+                                            <ul class="list-inline contact-social-bx">
+                                                <li><a href="#" class="btn outline radius-xl"><i class="fa fa-facebook"></i></a></li>
+                                                <li><a href="#" class="btn outline radius-xl"><i class="fa fa-twitter"></i></a></li>
+                                                <li><a href="#" class="btn outline radius-xl"><i class="fa fa-linkedin"></i></a></li>
+                                                <li><a href="#" class="btn outline radius-xl"><i class="fa fa-google-plus"></i></a></li>
+                                            </ul>
+                                            <div class="ttr-divider bg-gray"><i class="icon-dot c-square"></i></div>
+                                        </div>
                                     </div>
-                                    <!-- Pagination END -->
+                                    <!-- blog END -->
                                 </div>
                                 <!-- Left part END -->
                                 <!-- Side bar start -->
-                                
+                                <div class="col-lg-4 col-xl-4">
+                                    <aside  class="side-bar sticky-top">
+                                        <div class="widget">
+                                            <h6 class="widget-title">Search</h6>
+                                            <div class="search-bx style-1">
+                                                <form role="search" method="post">
+                                                    <div class="input-group">
+                                                        <input name="text" class="form-control" placeholder="Enter your keywords..." type="text">
+                                                        <span class="input-group-btn">
+                                                            <button type="submit" class="fa fa-search text-primary"></button>
+                                                        </span> 
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+
+
+                                    </aside>
+                                </div>
                                 <!-- Side bar END -->
                             </div>
                         </div>
@@ -158,7 +167,7 @@
             </div>
             <!-- Content END-->
             <!-- Footer ==== -->
-            <jsp:include page="/WEB-INF/Footer.jsp"/>
+            <jsp:include page="../Footer.jsp"/>
             <!-- Footer END ==== -->
             <!-- scroll top button -->
             <button class="back-to-top fa fa-chevron-up" ></button>
