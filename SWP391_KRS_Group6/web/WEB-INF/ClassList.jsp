@@ -164,7 +164,7 @@
                                                         </div>
                                                         <div class="info-bx text-center">
                                                             <h5><a href="#">Class: ${classList.class_name}</a></h5>
-                                                            
+
                                                             <span>
                                                                 <c:choose>
                                                                     <c:when test="${not empty subjectList}">
@@ -180,6 +180,7 @@
                                                                 </c:choose>
                                                             </span>
                                                         </div>
+                                                        
                                                         <div class="cours-more-info">
                                                             <div class="review">
                                                                 <span>3 Review</span>
@@ -192,8 +193,8 @@
                                                                 </ul>
                                                             </div>
                                                             <div class="price">
-                                                                <del>$190</del>
-                                                                <h5>$120</h5>
+                                                                <!--<del>$190</del>-->
+                                                                <span>Student: <c:out value="${userCountMap[classList.class_id]}" /></span>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -30,7 +30,9 @@ import service.SettingService;
  * @author Ngs-MT305
  */
 public class ClassController extends HttpServlet {
-
+    ClassService classService = new ClassService();
+    SubjectService  subjectService = new SubjectService();
+    SettingService settingService = new SettingService();
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
     /**
@@ -132,12 +134,12 @@ public class ClassController extends HttpServlet {
 
     private void getAllClasses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            ClassService classService = new ClassService();
-            SubjectService subjectService = new SubjectService();
+        try {;
             List<Class> classList = classService.getAllClass();
             List<Subject> subjectList = subjectService.getAllSubjects();
+            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
             request.setAttribute("classes", classList);
+            request.setAttribute("userCountMap", userCountMap);
             request.setAttribute("subjectList", subjectList);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassList.jsp");
             dispatcher.forward(request, response);
@@ -150,7 +152,6 @@ public class ClassController extends HttpServlet {
     private void addClassPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            SubjectService subjectService =  new SubjectService();
             List<Subject> subjects = subjectService.getAllSubjects();
             request.setAttribute("subject", subjects);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/AddClass.jsp");
@@ -163,8 +164,6 @@ public class ClassController extends HttpServlet {
     private void getAllClassesAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassService classService = new ClassService();
-            SubjectService  subjectService = new SubjectService();
             List<Class> classList = classService.getAllClass();
             Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
             List<Subject> subjectList = subjectService.getAllSubjects();
@@ -183,9 +182,7 @@ public class ClassController extends HttpServlet {
     private void addClassByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassService classService = new ClassService();
-            SubjectService subjectService = new SubjectService();
-            SettingService settingService = new SettingService();
+            
             List<Setting> roles = settingService.getAllRoles();
             List<Subject> subjects = subjectService.getAllSubjects();
 
@@ -240,8 +237,6 @@ public class ClassController extends HttpServlet {
     private void updateClassByAdminPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassService classService = new ClassService();
-            SubjectService subjectService = new SubjectService();
             int classId = Integer.parseInt(request.getParameter("classId"));
             Class classes = classService.getClassById(classId);
             List<Subject> subjectList = subjectService.getAllSubjects();
@@ -257,8 +252,6 @@ public class ClassController extends HttpServlet {
     private void updateClassByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            ClassService classService = new ClassService();
-            SubjectService subjectService = new SubjectService();
             Class classUpdate = new Class();
 
             int classId = Integer.parseInt(request.getParameter("classId"));
