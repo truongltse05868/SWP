@@ -12,26 +12,30 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 public class ClassService extends BaseService {
+
     private static final Logger logger = Logger.getLogger(ClassDAO.class.getName());
     private final ClassDAO classDAO;
 
     public ClassService() {
         this.classDAO = new ClassDAO();
     }
+
     //validate
     public Map<String, String> validateClassData(String className) {
         Map<String, String> errors = new HashMap<>();
         errors.putAll(validateNotEmpty(className, "blankClassName", "Tên lớp học không được để trống"));
-        
+
         if (isClassNameExists(className)) {
             errors.put("duplicateClassName", "Tên lớp học đã tồn tại");
         }
 
         return errors;
     }
-     private boolean isClassNameExists(String className) {
-         return classDAO.isClassNameExists(className);
+
+    private boolean isClassNameExists(String className) {
+        return classDAO.isClassNameExists(className);
     }
+
     //chọc vào DAO
     public boolean addClass(Class newClass) {
         return classDAO.addClass(newClass);
@@ -41,17 +45,32 @@ public class ClassService extends BaseService {
         return classDAO.getAllClassUser();
     }
 
-    public Class getClassById(int classId){
+    public Class getClassById(int classId) {
         return classDAO.getClassById(classId);
     }
-    public boolean updateClass(Class newClass){
+
+    public boolean updateClass(Class newClass) {
         return classDAO.updateClass(newClass);
     }
-    public Map<Integer, Integer> getUserCountForClasses(){
+
+    public Map<Integer, Integer> getUserCountForClasses() {
         return classDAO.getUserCountForClasses();
     }
-    public List<Class> getAllClass(){
+
+    public List<Class> getAllClass() {
         return classDAO.getAllClass();
     }
-    
+
+    public List<Class> searchByClassNameAndSort(String field, String search) {
+        return classDAO.getClassSortedSearchBy(field, search);
+    }
+
+    public List<Class> searchClassByClassName(String search) {
+        return classDAO.searchUsersByClassName(search);
+    }
+
+    public List<Class> sortClass(String search) {
+        return classDAO.getClassSortedBy(search);
+    }
+
 }

@@ -30,8 +30,9 @@ import service.SettingService;
  * @author Ngs-MT305
  */
 public class ClassController extends HttpServlet {
+
     ClassService classService = new ClassService();
-    SubjectService  subjectService = new SubjectService();
+    SubjectService subjectService = new SubjectService();
     SettingService settingService = new SettingService();
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
 
@@ -77,6 +78,12 @@ public class ClassController extends HttpServlet {
                         break;
                     case "updateClass":
                         updateClassByAdmin(request, response);
+                        break;
+                    case "searchClass":
+                        searchClassByName(request, response);
+                        break;
+                    case "sort":
+                        searchClassByName(request, response);
                         break;
                     default:
 
@@ -182,7 +189,7 @@ public class ClassController extends HttpServlet {
     private void addClassByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            
+
             List<Setting> roles = settingService.getAllRoles();
             List<Subject> subjects = subjectService.getAllSubjects();
 
@@ -292,6 +299,47 @@ public class ClassController extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating class", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating the class.");
+        }
+    }
+
+    //sort and search class
+    private void searchClassByName(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<Class> classes;
+            List<Subject> subjects = subjectService.getAllSubjects();
+            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+            // Get search and sort parameters
+            String searchClassName = request.getParameter("searchClassname");
+            String sortField = request.getParameter("sortField");
+
+            if (searchClassName != null && !searchClassName.isEmpty() && sortField != null && !sortField.isEmpty()) {
+                // Sort and search
+                classes = classService.searchByClassNameAndSort(sortField, searchClassName);
+            } else if (searchClassName != null && !searchClassName.isEmpty()) {
+                // Search only
+                classes = classService.searchClassByClassName(searchClassName);
+            } else if (sortField != null && !sortField.isEmpty()) {
+                // Sort only
+                classes = classService.sortClass(sortField);
+            } else {
+                // Default: get all users
+                classes = classService.getAllClass();
+            }
+
+            // Set the list of users as a request attribute
+            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("classes", classes);
+            request.setAttribute("subjectList", subjects);
+            request.setAttribute("searchClassname", searchClassName);
+            request.setAttribute("sortField", sortField);
+
+            // Forward the request to the JSP page
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error getting user list", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
         }
     }
 

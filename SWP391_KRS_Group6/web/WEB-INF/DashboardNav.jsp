@@ -250,7 +250,7 @@
             <!--header search panel end -->
         </div>
 
-        
+
     </header>
 </div>
 <!-- side menu logo end -->
@@ -312,12 +312,19 @@
                     </a>
                 </li>
                 <li>
-                   <a href="UserList" class="ttr-material-button" onclick="sendPostRequest('userList'); return false;">
+                    <a href="UserList" class="ttr-material-button" onclick="sendPostRequest('userList'); return false;">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">User</span>
                     </a>
                 </li>
                 <li>
+                    <a href="UserList" class="ttr-material-button" onclick="sendPostRequestClass('classList'); return false;">
+                        <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
+                        <span class="ttr-label">Class
+                        </span>
+                    </a>
+                </li>
+<!--                <li>
                     <a href="user.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
                         <span class="ttr-label">Class</span>
@@ -337,7 +344,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li>-->
                 <li>
                     <a href="../login.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-lock"></i></span>

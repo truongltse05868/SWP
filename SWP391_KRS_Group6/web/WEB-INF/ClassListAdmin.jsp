@@ -78,7 +78,7 @@
             function sendPostRequestSort(sortField, searchUsername) {
                 const form = document.createElement("form");
                 form.method = "POST";
-                form.action = "userController";
+                form.action = "ClassController";
 
                 // Create hidden input for action
                 const actionInput = document.createElement("input");
@@ -98,8 +98,8 @@
                 if (searchUsername) {
                     const searchUsernameInput = document.createElement("input");
                     searchUsernameInput.type = "hidden";
-                    searchUsernameInput.name = "searchUsername";
-                    searchUsernameInput.value = searchUsername;
+                    searchUsernameInput.name = "searchClassname";
+                    searchUsernameInput.value = searchClassname;
                     form.appendChild(searchUsernameInput);
                 }
 
@@ -129,22 +129,28 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="widget-inner">
-                                <form class="row col-sm-3" method="post" action="userController">
-                                    <div class="col">
-                                        <input class="form-control" type="text" name="searchClassname" placeholder="Search by class name" value="${searchUsername}">
-                                    </div>
-                                    <div class="col-auto">
-                                        <input type="hidden" name="action" value="searchClassname">
-                                        <button class="btn btn-primary btn-sm" type="submit">Search</button>
-                                    </div>
-                                </form>
+                                <div class="row">
+                                    <form class="row col-sm-3" method="post" action="ClassController">
+                                        <div class="col">
+                                            <input class="form-control" type="text" name="searchClassname" placeholder="Search by class name" value="${searchClassname}">
+                                        </div>
+                                        <div class="col-auto">
+                                            <input type="hidden" name="action" value="searchClass">
+                                            <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                        </div>
+                                    </form>
+                                    <form class="col-sm-7 text-right" action="ClassController" method="post">
+                                        <input type="hidden" name="action" value="addClassPage">
+                                        <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add Class</button>
+                                    </form>
+                                </div>
                             </div>
                             <div class="widget-inner">
                                 <c:if test="${not empty classes}">
                                     <table >
                                         <tr>
-                                            <th><a href="SortByUserName" onclick="sendPostRequestSort('className', '${searchUsername}');return false;">Class Name</a></th>
-                                            <th><a href="SortByPhone" onclick="sendPostRequestSort('teacher', '${searchUsername}');return false;">Subject</a></th>
+                                            <th><a href="SortByClassName" onclick="sendPostRequestSort('class_name', '${searchClassname}');return false;">Class Name</a></th>
+                                            <th><a href="SortBySubject" >Subject</a></th>
                                             <th><a href="">Status</a></th>
                                             <th>User In Class</th>
                                             <th><a href="">Update</a></th>
@@ -199,7 +205,7 @@
                             </div>
                             <div>
                                 <span>
-                                ${successMessage}
+                                    ${successMessage}
                                 </span>
                             </div>
                         </div>

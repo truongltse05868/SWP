@@ -104,8 +104,8 @@ public class ClassDAO extends DBConnect {
     }
 
     public boolean updateClass(Class newClass) {
-         String query = "UPDATE class SET subject_id = ?,  status = ?, class_name = ? WHERE class_id = ?";
-         try (PreparedStatement ps = connection.prepareStatement(query)) {
+        String query = "UPDATE class SET subject_id = ?,  status = ?, class_name = ? WHERE class_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, newClass.getSubject_id());
             ps.setBoolean(2, newClass.isStatus());
             ps.setString(3, newClass.getClass_name());
@@ -164,6 +164,7 @@ public class ClassDAO extends DBConnect {
         }
         return classList;
     }
+
     public boolean isClassNameExists(String className) {
         String query = "SELECT COUNT(*) FROM class WHERE class_name = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -172,10 +173,75 @@ public class ClassDAO extends DBConnect {
             if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             logger.log(Level.SEVERE, "loi roi!", e);
         }
         return false;
+    }
+
+    public List<Class> getClassSortedSearchBy(String field, String search) {
+        List<Class> classes = new ArrayList<>();
+        String query = "SELECT * FROM class where class_name like ? ORDER BY " + field;
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, "%" + search + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Class classs = new Class(
+                        rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status")
+                );
+                // Populate user object
+                classes.add(classs);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error sorting users by " + field, e);
+        }
+        return classes;
+    }
+    // Method to get users by username
+
+    public List<Class> searchUsersByClassName(String className) {
+        List<Class> classes = new ArrayList<>();
+        String query = "SELECT * FROM class WHERE class_name LIKE ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, "%" + className + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Class classe = new Class(
+                         rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status")
+                );
+                // Populate user object
+                classes.add(classe);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error searching users by username", e);
+        }
+        return classes;
+    }
+        public List<Class> getClassSortedBy(String field) {
+        List<Class> classes = new ArrayList<>();
+        String query = "SELECT * FROM class ORDER BY " + field;
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Class classe = new Class(
+                         rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status")
+                );
+                // Populate user object
+                classes.add(classe);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error sorting users by " + field, e);
+        }
+        return classes;
     }
 
 }
