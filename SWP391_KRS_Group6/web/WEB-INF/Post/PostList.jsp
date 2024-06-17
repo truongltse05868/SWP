@@ -150,10 +150,10 @@
                                         </tbody>
                                     </table>
                                     <div>
-                                        <c:if test="${totalPages > 1}">
-                                            <a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Previous</a>
+                                        <c:if test="${currentPage > 1}">
+                                            <a href="PostController?service=ListAllPost&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Previous</a>
                                         </c:if>
-                                        <a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Next</a>
+                                        <a href="PostController?service=ListAllPost&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Next</a>
                                     </div>
                                 </c:if>
                                 <c:if test="${empty posts}">

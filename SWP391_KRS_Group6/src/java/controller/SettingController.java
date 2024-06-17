@@ -42,7 +42,7 @@ public class SettingController extends HttpServlet {
                 sortOrder = "asc";
             }
             int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
-            int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 10;
+            int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 3;
 
             User currentUser = (User) session.getAttribute("account");
             Setting settingSer = settingService.getSettingById(currentUser.getRole_id());

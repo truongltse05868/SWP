@@ -117,7 +117,7 @@ public class PostController extends HttpServlet {
             UserDAO userDAO = new UserDAO();
 
             int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "10");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "3");
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
             String keyword = request.getParameter("keyword");
@@ -165,7 +165,7 @@ public class PostController extends HttpServlet {
                 posts = postDAO.getAllPostsSortedBy(sortBy, sortOrder, page, pageSize);
             }
             List<User> users = userDAO.getAllUsers();
-      
+
             request.setAttribute("posts", posts);
             request.setAttribute("user", users);
             request.setAttribute("currentPage", page);
@@ -208,21 +208,30 @@ public class PostController extends HttpServlet {
         try {
             PostDAO dao = new PostDAO();
             if (submit != null) {
+                String postId = request.getParameter("post_id");
                 String Title = request.getParameter("title");
                 String Sum = request.getParameter("summary");
                 String Thumbnail = request.getParameter("thumbnail_url");
                 String Content = request.getParameter("content");
                 String statusParam = request.getParameter("status");
                 boolean status = (statusParam != null && statusParam.equals("on"));
+                String UserId = request.getParameter("user_id");
 
-                Post post = new Post(pid, Title, Sum, Thumbnail, Content, status, 0); // Assuming user_id is handled differently or set later
+                // convert
+                int postIdInt = Integer.parseInt(postId);
+                int userIdInt = Integer.parseInt(UserId);
 
+                //
+                Post post = new Post(postIdInt, Title, Sum, Thumbnail, Content, status, userIdInt);
                 dao.updatePost(post);
 
+                // Redirect to a success page or display a success message
                 String successMessage = "Post updated successfully.";
                 request.setAttribute("successMessage", successMessage);
-                response.sendRedirect("PostController");
+                response.sendRedirect("PostController"); // Replace "success.jsp" with your success page
 
+                // If you want to send a redirect to another page after success, uncomment the following line
+                // response.sendRedirect("PostController");
             } else {
                 Post post = dao.getPostById(pid);
                 request.setAttribute("post", post);
