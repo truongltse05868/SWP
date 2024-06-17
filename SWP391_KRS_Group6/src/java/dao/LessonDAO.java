@@ -42,4 +42,48 @@ public class LessonDAO extends DBConnect {
         }
         return lessones;
     }
+
+    public Lesson getLessonById(int lessonId) {
+        Lesson lesson = null;
+        String query = "SELECT * FROM lesson WHERE lesson_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, lessonId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    lesson = new Lesson(
+                            rs.getInt("lesson_id"),
+                            rs.getInt("subject_id"),
+                            rs.getString("title"),
+                            rs.getBoolean("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+        }
+        return lesson;
+    }
+
+    public List<Lesson> getLessonBySubject(int subjectId) {
+        Lesson lesson = null;
+        List<Lesson> lessonList = new ArrayList<>();
+        String query = "SELECT * FROM lesson WHERE subject_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, subjectId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    lesson = new Lesson(
+                            rs.getInt("lesson_id"),
+                            rs.getInt("subject_id"),
+                            rs.getString("title"),
+                            rs.getBoolean("status")
+                    );
+                    lessonList.add(lesson);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+        }
+        return lessonList;
+    }
 }

@@ -57,6 +57,10 @@
         <servlet-name>PostController</servlet-name>
         <servlet-class>controller.PostController</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LessonController</servlet-name>
+        <servlet-class>controller.LessonController</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>UserController</servlet-name>
         <url-pattern>/userController</url-pattern>
@@ -112,5 +116,9 @@
     <servlet-mapping>
         <servlet-name>PostController</servlet-name>
         <url-pattern>/PostController</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LessonController</servlet-name>
+        <url-pattern>/LessonController</url-pattern>
     </servlet-mapping>
 </web-app>

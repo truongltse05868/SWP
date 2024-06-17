@@ -1,15 +1,9 @@
-<%-- 
-    Document   : ClassList
-    Created on : Jun 3, 2024, 10:39:49 AM
-    Author     : Ngs-MT305
---%>
+
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="en">
-
-
     <head>
 
         <!-- META ============================================= -->
@@ -33,7 +27,7 @@
         <link rel="shortcut icon" type="image/x-icon" href="assets/images/favicon.png" />
 
         <!-- PAGE TITLE HERE ============================================= -->
-        <title>KRS: Class List</title>
+        <title>KRS: Lesson List</title>
 
         <!-- MOBILE SPECIFIC ============================================= -->
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -55,41 +49,14 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-        <script>
-            function sendPostRequestLesson(action, subjectId) {
-                // Tạo form ẩn
-                var form = document.createElement("form");
-                form.setAttribute("method", "post");
-                form.setAttribute("action", "LessonController");
 
-                // Tạo input ẩn cho action
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", "action");
-                hiddenField.setAttribute("value", action);
-
-                // Thêm input ẩn vào form
-                form.appendChild(hiddenField);
-                // Create hidden input for searchUsername if it exists
-
-                var hiddenField2 = document.createElement("input");
-                searchUsernameInput.type = "hidden";
-                searchUsernameInput.name = "subjectId";
-                searchUsernameInput.value = subjectId;
-                form.appendChild(hiddenField2);
-
-                // Thêm form vào body và submit
-                document.body.appendChild(form);
-                form.submit();
-            }
-        </script>
     </head>
     <body id="bg">
         <div class="page-wraper">
             <div id="loading-icon-bx"></div>
 
             <!-- Header Top ==== -->
-            <jsp:include page="Header.jsp"/>
+            <jsp:include page="../Header.jsp"/>
             <!-- header END ==== -->
             <!-- Content -->
             <div class="page-content bg-white">
@@ -179,10 +146,10 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-9 col-md-8 col-sm-12">
-                                    <c:if test="${not empty classes}">
+                                    <c:if test="${not empty lessons}">
                                         <div class="row">
 
-                                            <c:forEach var="classList" items="${classes}">
+                                            <c:forEach var="lessonList" items="${lessons}">
                                                 <div class="col-md-6 col-lg-4 col-sm-6 m-b30">
                                                     <div class="cours-bx">
                                                         <div class="action-box">
@@ -190,18 +157,13 @@
                                                             <a href="#" class="btn">Read More</a>
                                                         </div>
                                                         <div class="info-bx text-center">
-<!--                                                            <h5><a href="#" onclick="sendPostRequestLesson('lessonListBySubject', '${classList.subject_id}');
-                                                                    return false;">Class: ${classList.class_name}</a></h5>-->
-                                                            <form method="post" action="LessonController" >
-                                                                <input type="hidden" name="action" value="lessonListBySubject">
-                                                                <input type="hidden" name="subjectId" value="${classList.subject_id}">
-                                                                <button type="submit" class="btn btn-block btn-primary">Class: ${classList.class_name}</button>
-                                                            </form>
+                                                            <h5><a href="#">Lesson: ${lessonList.title}</a></h5>
+
                                                             <span>
                                                                 <c:choose>
                                                                     <c:when test="${not empty subjectList}">
                                                                         <c:forEach var="subjects" items="${subjectList}">
-                                                                            <c:if test="${subjects.subject_id == classList.subject_id}">
+                                                                            <c:if test="${subjects.subject_id == lessonList.subject_id}">
                                                                                 ${subjects.subject_name}
                                                                             </c:if>
                                                                         </c:forEach>
@@ -212,7 +174,7 @@
                                                                 </c:choose>
                                                             </span>
                                                         </div>
-
+                                                        
                                                         <div class="cours-more-info">
                                                             <div class="review">
                                                                 <span>3 Review</span>
@@ -225,8 +187,6 @@
                                                                 </ul>
                                                             </div>
                                                             <div class="price">
-                                                                <!--<del>$190</del>-->
-                                                                <span>Student: <c:out value="${userCountMap[classList.class_id]}" /></span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -237,7 +197,7 @@
 
                                         </div>
                                     </c:if>
-                                    <c:if test="${empty classes}">
+                                    <c:if test="${empty lessons}">
                                         <p>No Classes found.</p>
                                     </c:if>
                                     <div class="col-lg-12 m-b20">
@@ -257,10 +217,11 @@
                     </div>
                 </div>
                 <!-- contact area END -->
+
             </div>
             <!-- Content END-->
             <!-- Footer ==== -->
-            <jsp:include page="Footer.jsp"/>
+            <jsp:include page="../Footer.jsp"/>
             <!-- Footer END ==== -->
             <button class="back-to-top fa fa-chevron-up" ></button>
         </div>
