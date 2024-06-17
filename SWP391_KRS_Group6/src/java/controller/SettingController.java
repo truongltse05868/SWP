@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import entity.Setting;
@@ -14,25 +10,16 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.sql.ResultSet;
 import java.util.Vector;
 import dao.SettingDAO;
 import entity.User;
 import service.SettingService;
 
+@WebServlet(name = "SettingController", urlPatterns = {"/SettingController"})
 public class SettingController extends HttpServlet {
 
     SettingService settingService = new SettingService();
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -42,68 +29,62 @@ public class SettingController extends HttpServlet {
             String service = request.getParameter("service");
             String search = request.getParameter("searchSetting");
             String message = request.getParameter("message");
-//SEARCH
-//        if (search != null) {
-//            Vector<Setting> vector = dao.searchSettingByName(search);
-//            if (vector.isEmpty()) {
-//               if (message == null) {
-//                message = "product not exists";
-//            }
-//            request.setAttribute("message", message);
-//            } else {
-//                vector = dao.getData("select * from products where product_name like '%" + search + "%'");
-//                request.setAttribute("data", vector);
-//                RequestDispatcher dispath
-//                        = request.getRequestDispatcher("/jsp/Menu.jsp");
-//                //display
-//                dispath.forward(request, response);
-//            }
-//        }
+            String sortColumn = request.getParameter("sortColumn");
+            String sortOrder = request.getParameter("sortOrder");
+            String pageParam = request.getParameter("page");
+            String pageSizeParam = request.getParameter("pageSize");
+
+            // Default values
+            if (sortColumn == null) {
+                sortColumn = "setting_id";
+            }
+            if (sortOrder == null) {
+                sortOrder = "asc";
+            }
+            int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
+            int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 10;
 
             User currentUser = (User) session.getAttribute("account");
             Setting settingSer = settingService.getSettingById(currentUser.getRole_id());
 
             if (currentUser == null) {
-                // Nếu không có phiên đăng nhập, chuyển hướng đến trang đăng nhập
                 response.sendRedirect("Home");
             } else {
-// Kiểm tra quyền truy cập của người dùng
                 if (settingSer.getSettingName().toLowerCase().equals("admin")) {
                     if (service == null) {
                         service = "listAllSetting";
                     }
                     if (service.equals("listAllSetting")) {
-                        //get message
-//                String message = request.getParameter("message");
                         if (message == null) {
                             message = "";
                         }
-                        // Fetch list of users from the database
-                        Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "asc");
-
-                        // Set the list of users as a request attribute
-                        request.setAttribute("setting", setting);
-
-                        // Forward the request to the JSP page
+                        Vector<Setting> settings;
+                        if (search != null && !search.isEmpty()) {
+                            settings = dao.searchSettings(search, sortColumn, sortOrder, page, pageSize);
+                        } else {
+                            settings = dao.getAllSettingsSortedBy(sortColumn, sortOrder, page, pageSize);
+                        }
+                        request.setAttribute("settings", settings);
+                        request.setAttribute("currentPage", page);
+                        request.setAttribute("pageSize", pageSize);
+                        request.setAttribute("sortColumn", sortColumn);
+                        request.setAttribute("sortOrder", sortOrder);
                         RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/SettingDisplay.jsp");
                         dispatcher.forward(request, response);
-
                     }
-
                     if (service.equals("insertSetting")) {
                         String submit = request.getParameter("submit");
-                        if (submit == null) { // request view form
-                            Vector<Setting> setting = dao.getAllSettingsSortedBy("1", "ASC");
-                            request.setAttribute("setting", setting);
+                        if (submit == null) {
+                            Vector<Setting> settings = dao.getAllSettingsSortedBy("setting_id", "ASC", page, pageSize);
+                            request.setAttribute("settings", settings);
                             dispath(request, response, "WEB-INF/InsertSetting.jsp");
-                        } else { // submit <> null --> request insert
+                        } else {
                             String settingName = request.getParameter("setting_name");
                             String type = request.getParameter("type");
                             String description = request.getParameter("description");
                             String statusParam = request.getParameter("status");
                             boolean status = (statusParam != null && statusParam.equals("on"));
 
-                            // convert
                             Setting setting = new Setting();
                             setting.setSettingName(settingName);
                             setting.setType(type);
@@ -111,17 +92,25 @@ public class SettingController extends HttpServlet {
                             setting.setStatus(status);
 
                             dao.addSetting(setting);
-
                             response.sendRedirect("SettingController");
                         }
                     }
+                    if (service.equals("toggleStatus")) {
+                        int settingId = Integer.parseInt(request.getParameter("settingId"));
+                        Setting setting = dao.getSettingById(settingId);
+                        if (setting != null) {
+                            setting.setStatus(!setting.getStatus()); // Toggle status
+                            dao.updateSetting(setting);
+                        }
+                        response.sendRedirect("SettingController?service=listAllSetting");
+                    }
+
                     if (service.equals("updateSetting")) {
                         String submit = request.getParameter("submit");
                         if (submit == null) {
                             int pid = Integer.parseInt(request.getParameter("pid"));
                             Setting setting = dao.getSettingById(pid);
                             request.setAttribute("setting", setting);
-
                             dispath(request, response, "WEB-INF/SettingForm.jsp");
                         } else {
                             String settingId = request.getParameter("setting_id");
@@ -131,14 +120,9 @@ public class SettingController extends HttpServlet {
                             String statusParam = request.getParameter("status");
                             boolean status = (statusParam != null && statusParam.equals("on"));
 
-                            // convert
                             int settingIdInt = Integer.parseInt(settingId);
-
-                            //
                             Setting setting = new Setting(settingIdInt, settingName, type, description, status);
                             dao.updateSetting(setting);
-                            String st = "";
-                            //send message
                             response.sendRedirect("SettingController");
                         }
                     }
@@ -147,52 +131,26 @@ public class SettingController extends HttpServlet {
         }
     }
 
-    void dispath(HttpServletRequest request,
-            HttpServletResponse response, String page)
+    void dispath(HttpServletRequest request, HttpServletResponse response, String page)
             throws ServletException, IOException {
-        RequestDispatcher dispath
-                = request.getRequestDispatcher(page);
-        //display
+        RequestDispatcher dispath = request.getRequestDispatcher(page);
         dispath.forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
-
+    }
 }

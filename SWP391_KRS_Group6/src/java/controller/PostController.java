@@ -41,41 +41,47 @@ public class PostController extends HttpServlet {
         try {
             HttpSession session = request.getSession(false);
             User currentUser = (User) session.getAttribute("account");
-
-            if (currentUser == null) {
-                // Nếu không có phiên đăng nhập, chuyển hướng đến trang đăng nhập
-                response.sendRedirect("Home");
-                return;
-            }
-
             String action = request.getParameter("service");
             if (action == null) {
                 action = "ListAllPost";
             }
-            if (currentUser != null) {
-                // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
-                String submit = request.getParameter("submit");
+            String submit = request.getParameter("submit");
+
+            if (currentUser == null) {
                 switch (action) {
-                    case "ListAllPost":
-                        getAllPost(request, response);
-                        break;
-                    case "updatePost":
-                        int pid = Integer.parseInt(request.getParameter("pid"));
-                        UpdatePost(request, response, pid, submit);
-                        break;
-                    case "insertPost":
-                        int Author = currentUser.getUser_id();
-                        InsertPost(request, response, submit, Author);
-                        break;
-                    case "BlogList":
+                    case "BlogList" ->
                         getAllBlog(request, response);
-                        break;
-                    case "BlogDetail":
+                    case "BlogDetail" -> {
                         int bid = Integer.parseInt(request.getParameter("pid"));
                         getBlogDetail(request, response, bid);
-                        break;
-                    default:
-                        break;
+                    }
+                    default ->
+                        response.sendRedirect("Home");
+                }
+                return;
+            }
+
+            if (currentUser != null) {
+                // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
+                switch (action) {
+                    case "ListAllPost" ->
+                        getAllPost(request, response);
+                    case "updatePost" -> {
+                        int pid = Integer.parseInt(request.getParameter("pid"));
+                        UpdatePost(request, response, pid, submit);
+                    }
+                    case "insertPost" -> {
+                        int Author = currentUser.getUser_id();
+                        InsertPost(request, response, submit, Author);
+                    }
+                    case "BlogList" ->
+                        getAllBlog(request, response);
+                    case "BlogDetail" -> {
+                        int bid = Integer.parseInt(request.getParameter("pid"));
+                        getBlogDetail(request, response, bid);
+                    }
+                    default -> {
+                    }
                 }
             } else {
                 // Nếu không phải là quản trị viên, chỉ cho phép truy cập vào trang thông tin cá nhân
@@ -286,5 +292,4 @@ public class PostController extends HttpServlet {
     public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
-
 }

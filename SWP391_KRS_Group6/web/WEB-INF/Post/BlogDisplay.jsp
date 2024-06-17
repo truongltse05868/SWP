@@ -54,7 +54,6 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-        
 
     </head>
     <body id="bg">
@@ -91,6 +90,12 @@
                             <div class="row">
                                 <!-- Left part start -->
                                 <div class="col-md-7 col-lg-8 col-xl-8">
+                                    <c:if test="${sessionScope['account'] != null}">
+                                        <form method="post" action="PostController" class="my-3">
+                                            <input type="hidden" name="service" value="insertPost">
+                                            <button type="submit" class=" btn btn-block btn-primary">New Blog</button>
+                                        </form>
+                                    </c:if>
                                     <c:if test="${not empty posts}">
                                         <c:forEach var="posts" items="${posts}">
                                             <div class="recent-news blog-lg m-b40">
@@ -129,8 +134,9 @@
                                                     </div>
                                                 </div>
                                                 <hr style="border: 1px solid #333; margin: 20px 0;">
-                                            </c:forEach>
-                                        </div>
+
+                                            </div>
+                                        </c:forEach>
                                     </c:if>
                                     <c:if test="${empty posts}">
                                         <p>No post found.</p>
@@ -149,7 +155,23 @@
                                 </div>
                                 <!-- Left part END -->
                                 <!-- Side bar start -->
-                                
+                                <div class="col-md-5 col-lg-4 col-xl-4 sticky-top">
+                                    <aside class="side-bar sticky-top">
+                                        <div class="widget">
+                                            <h6 class="widget-title">Search</h6>
+                                            <div class="search-bx style-1">
+                                                <form role="search" method="post">
+                                                    <div class="input-group">
+                                                        <input name="text" class="form-control" placeholder="Enter your keywords..." type="text">
+                                                        <span class="input-group-btn">
+                                                            <button type="submit" class="fa fa-search text-primary"></button>
+                                                        </span> 
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </aside>
+                                </div>
                                 <!-- Side bar END -->
                             </div>
                         </div>

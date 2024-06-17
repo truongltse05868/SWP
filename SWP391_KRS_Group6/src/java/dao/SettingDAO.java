@@ -86,14 +86,16 @@ public class SettingDAO extends DBConnect {
     }
 
     // Search
-    public Vector<Setting> searchSettings(String keyword) {
+    public Vector<Setting> searchSettings(String keyword, String column, String order, int page, int pageSize) {
         Vector<Setting> settings = new Vector<>();
-        String sql = "SELECT * FROM setting WHERE setting_name LIKE ? OR type LIKE ? OR description LIKE ?";
+        String sql = "SELECT * FROM setting WHERE setting_name LIKE ? OR type LIKE ? OR description LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             String query = "%" + keyword + "%";
             ps.setString(1, query);
             ps.setString(2, query);
             ps.setString(3, query);
+            ps.setInt(4, pageSize);
+            ps.setInt(5, (page - 1) * pageSize);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 settings.add(new Setting(
@@ -110,12 +112,14 @@ public class SettingDAO extends DBConnect {
         return settings;
     }
 
-    // Sort
-    public Vector<Setting> getAllSettingsSortedBy(String column, String order) {
+    // Sort with pagination
+    public Vector<Setting> getAllSettingsSortedBy(String column, String order, int page, int pageSize) {
         Vector<Setting> settings = new Vector<>();
-        String sql = "SELECT * FROM setting ORDER BY " + column + " " + order;
-        try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery(sql);
+        String sql = "SELECT * FROM setting ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 settings.add(new Setting(
                         rs.getInt("setting_id"),

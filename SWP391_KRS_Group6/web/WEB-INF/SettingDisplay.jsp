@@ -77,7 +77,6 @@
                     </ul>
                 </div>
                 <div class="row">
-                    <!-- Your Profile Views Chart -->
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="widget-inner">
@@ -85,34 +84,45 @@
                                     <input type="hidden" name="service" value="insertSetting">
                                     <button type="submit" class="btn btn-primary btn-sm">Add</button>
                                 </form>
-                                <c:if test="${not empty setting}">
+                                <form method="get" action="SettingController" class="form-inline my-3">
+                                    <input type="hidden" name="service" value="listAllSetting">
+                                    <input type="text" name="searchSetting" class="form-control mr-2" placeholder="Search..." value="${param.searchSetting}">
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </form>
+                                <c:if test="${not empty settings}">
                                     <table class="table table-striped my-3">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Name</th>
-                                                <th>Type</th>
-                                                <th>Description</th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_id&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_name&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Name</a></th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=type&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Type</a></th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=description&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Description</a></th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <c:forEach var="setting" items="${setting}">
+                                            <c:forEach var="setting" items="${settings}">
                                                 <tr>
                                                     <td>${setting.settingId}</td>
                                                     <td>${setting.settingName}</td>
                                                     <td>${setting.type}</td>
                                                     <td>${setting.description}</td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${setting.status}">
-                                                                Active
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                Inactive
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <form method="post" action="SettingController" style="display:inline;">
+                                                            <input type="hidden" name="service" value="toggleStatus">
+                                                            <input type="hidden" name="settingId" value="${setting.settingId}">
+                                                            <button type="submit" class="btn btn-link p-0">
+                                                                <c:choose>
+                                                                    <c:when test="${setting.status}">
+                                                                        Active
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        Inactive
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                     <td>
                                                         <form method="post" action="SettingController" style="display:inline;">
@@ -125,17 +135,23 @@
                                             </c:forEach>
                                         </tbody>
                                     </table>
+                                    <div>
+                                        <c:if test="${currentPage > 1}">
+                                            <a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Previous</a>
+                                        </c:if>
+                                        <a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Next</a>
+                                    </div>
                                 </c:if>
-                                <c:if test="${empty setting}">
+                                <c:if test="${empty settings}">
                                     <p>No settings found.</p>
                                 </c:if>
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </main>
+
         <!--Main container end -->
 
         <!-- Footer ==== -->
