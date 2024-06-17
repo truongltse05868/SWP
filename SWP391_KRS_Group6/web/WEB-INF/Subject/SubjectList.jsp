@@ -62,7 +62,7 @@
             <div id="loading-icon-bx"></div>
 
             <!-- Header Top ==== -->
-            <jsp:include page="Header.jsp"/>
+            <jsp:include page="../Header.jsp"/>
             <!-- header END ==== -->
             <!-- Content -->
             <div class="page-content bg-white">
@@ -196,7 +196,7 @@
             </div>
             <!-- Content END-->
             <!-- Footer ==== -->
-            <jsp:include page="Footer.jsp"/>
+            <jsp:include page="../Footer.jsp"/>
             <!-- Footer END ==== -->
             <button class="back-to-top fa fa-chevron-up" ></button>
         </div>

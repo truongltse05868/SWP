@@ -47,7 +47,7 @@ public class PostController extends HttpServlet {
                 }
                 return;
             }
-            if (currentUser != null) {
+            if (currentUser != null && currentUser.getRole_id() == 1) {
                 switch (action) {
                     case "ListAllPost" ->
                         getAllPost(request, response);
@@ -76,9 +76,25 @@ public class PostController extends HttpServlet {
                         getBlogDetail(request, response, bid);
                     }
                     default -> {
+                        response.sendRedirect("Home");
                     }
                 }
-
+            } else {
+                switch (action) {
+                    case "insertPost" -> {
+                        int Author = currentUser.getUser_id();
+                        InsertPost(request, response, submit, Author);
+                    }
+                    case "BlogList" ->
+                        getAllBlog(request, response);
+                    case "BlogDetail" -> {
+                        int bid = Integer.parseInt(request.getParameter("pid"));
+                        getBlogDetail(request, response, bid);
+                    }
+                    default -> {
+                        response.sendRedirect("Home");
+                    }
+                }
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid user ID format", e);
@@ -160,9 +176,9 @@ public class PostController extends HttpServlet {
 
             List<Post> posts;
             if (keyword != null && !keyword.trim().isEmpty()) {
-                posts = postDAO.searchPosts(keyword, sortBy, sortOrder, page, pageSize);
+                posts = postDAO.searchBlog(keyword, sortBy, sortOrder, page, pageSize);
             } else {
-                posts = postDAO.getAllPostsSortedBy(sortBy, sortOrder, page, pageSize);
+                posts = postDAO.getAllBlogsSortedBy(sortBy, sortOrder, page, pageSize);
             }
             List<User> users = userDAO.getAllUsers();
 
@@ -251,19 +267,32 @@ public class PostController extends HttpServlet {
         try {
             PostDAO dao = new PostDAO();
             if (submit != null && submit.equals("insertPost")) {
+                int author = user_id;
                 String Title = request.getParameter("title");
                 String Sum = request.getParameter("summary");
                 String Thumbnail = request.getParameter("thumbnail_url");
                 String Content = request.getParameter("content");
-                String statusParam = request.getParameter("status");
-                boolean status = (statusParam != null && statusParam.equals("on"));
-                int author = user_id;
+
+                boolean status = false; // Default status for non-admin users
+                if (author == 1) {
+                    String statusParam = request.getParameter("status");
+                    status = (statusParam != null && statusParam.equals("on"));
+                }
 
                 Post post = new Post(0, Title, Sum, Thumbnail, Content, status, author);
-
                 dao.addPost(post);
 
-                response.sendRedirect("PostController");
+                String successMessage = (author == 1) ? "Post added successfully." : "Post added successfully! The admin will publish it soon.";
+                request.setAttribute("successMessage", successMessage);
+
+                // Forward to the same JSP to display the message
+                List<Post> posts = dao.getAllPosts();
+                request.setAttribute("postList", posts);
+                if (author == 1) {
+                    request.getRequestDispatcher("WEB-INF/Post/PostList.jsp").forward(request, response);
+                } else {
+                    request.getRequestDispatcher("WEB-INF/Post/BlogDisplay.jsp").forward(request, response);
+                }
             } else {
                 List<Post> posts = dao.getAllPosts();
                 request.setAttribute("postList", posts);

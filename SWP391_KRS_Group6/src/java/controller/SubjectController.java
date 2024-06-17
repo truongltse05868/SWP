@@ -138,7 +138,7 @@ public class SubjectController extends HttpServlet {
             List<Subject> subjectList = subjectDAO.getAllSubjects();
 
             request.setAttribute("subjectList", subjectList);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/SubjectList.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Subject/SubjectList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list Subject", e);
@@ -175,7 +175,7 @@ public class SubjectController extends HttpServlet {
             } else {
                 Subject subject = dao.getSubjectById(pid);
                 request.setAttribute("subject", subject);
-                dispath(request, response, "WEB-INF/UpdateSubject.jsp");
+                dispath(request, response, "WEB-INF/Subject/UpdateSubject.jsp");
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid subject ID format", e);
@@ -212,7 +212,7 @@ public class SubjectController extends HttpServlet {
             } else {
                 List<Subject> subjects = dao.getAllSubjects();
                 request.setAttribute("subjectList", subjects);
-                request.getRequestDispatcher("WEB-INF/insertSubject.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/Subject/insertSubject.jsp").forward(request, response);
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid subject ID format", e);

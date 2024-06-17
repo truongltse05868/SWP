@@ -103,6 +103,59 @@ public class PostDAO extends DBConnect {
     }
 
     // Search posts by keyword in title or summary
+    public List<Post> searchBlog(String keyword, String column, String order, int page, int pageSize) {
+        List<Post> posts = new ArrayList<>();
+        String sql = "SELECT * FROM post WHERE (title LIKE ? OR summary LIKE ?) AND status =1 "
+                + "ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String query = "%" + keyword + "%";
+            ps.setString(1, query);
+            ps.setString(2, query);
+            ps.setInt(3, pageSize);
+            ps.setInt(4, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                posts.add(new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("thumbnail_url"),
+                        rs.getString("content"),
+                        rs.getBoolean("status"),
+                        rs.getInt("user_id")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error searching posts", ex);
+        }
+        return posts;
+    }
+
+    // Get all posts sorted by a specific column with pagination
+    public List<Post> getAllBlogsSortedBy(String column, String order, int page, int pageSize) {
+        List<Post> posts = new ArrayList<>();
+        String sql = "SELECT * FROM post WHERE status =1 ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                posts.add(new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("thumbnail_url"),
+                        rs.getString("content"),
+                        rs.getBoolean("status"),
+                        rs.getInt("user_id")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching sorted posts", ex);
+        }
+        return posts;
+    }
+
     public List<Post> searchPosts(String keyword, String column, String order, int page, int pageSize) {
         List<Post> posts = new ArrayList<>();
         String sql = "SELECT * FROM post WHERE title LIKE ? OR summary LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";

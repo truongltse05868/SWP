@@ -69,7 +69,7 @@ public class SettingController extends HttpServlet {
                         request.setAttribute("pageSize", pageSize);
                         request.setAttribute("sortColumn", sortColumn);
                         request.setAttribute("sortOrder", sortOrder);
-                        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/SettingDisplay.jsp");
+                        RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Setting/SettingDisplay.jsp");
                         dispatcher.forward(request, response);
                     }
                     if (service.equals("insertSetting")) {
@@ -77,7 +77,7 @@ public class SettingController extends HttpServlet {
                         if (submit == null) {
                             Vector<Setting> settings = dao.getAllSettingsSortedBy("setting_id", "ASC", page, pageSize);
                             request.setAttribute("settings", settings);
-                            dispath(request, response, "WEB-INF/InsertSetting.jsp");
+                            dispath(request, response, "WEB-INF/Setting/InsertSetting.jsp");
                         } else {
                             String settingName = request.getParameter("setting_name");
                             String type = request.getParameter("type");
@@ -111,7 +111,7 @@ public class SettingController extends HttpServlet {
                             int pid = Integer.parseInt(request.getParameter("pid"));
                             Setting setting = dao.getSettingById(pid);
                             request.setAttribute("setting", setting);
-                            dispath(request, response, "WEB-INF/SettingForm.jsp");
+                            dispath(request, response, "WEB-INF/Setting/SettingForm.jsp");
                         } else {
                             String settingId = request.getParameter("setting_id");
                             String settingName = request.getParameter("setting_name");

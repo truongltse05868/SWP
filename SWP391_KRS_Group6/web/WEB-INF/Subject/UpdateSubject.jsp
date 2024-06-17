@@ -63,7 +63,7 @@
 
         <!-- header start -->
 
-        <jsp:include page="DashboardNav.jsp"/>
+        <jsp:include page="../DashboardNav.jsp"/>
         <!-- sidebar menu end -->
         <!-- Left sidebar menu end -->
 

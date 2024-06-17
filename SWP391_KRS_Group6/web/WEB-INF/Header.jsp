@@ -244,37 +244,13 @@
                     <div class="mx-5 menu-logo">
                         <a href="Home"><img src="assets/images/logo-white.png" alt=""></a>
                     </div>
-                    <!-- Mobile Nav Button ==== -->
+                                        <!-- Mobile Nav Button ==== -->
                     <button class="navbar-toggler collapsed menuicon justify-content-end" type="button" data-toggle="collapse" data-target="#menuDropdown" aria-controls="menuDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span></span>
                         <span></span>
                         <span></span>
                     </button>
-                    <!-- Author Nav ==== -->
-                    <!--                    <div class="topbar-right">
-                                            <ul>
-                    <c:if test="${sessionScope['account'].getRole_id() == null}">
-                        <li><a id="loginLink" href="Login" >Login</a></li>
-                        <li><a id="registerLink" href="RegisterController">Register</a></li>
-                        <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
-                                return false;">ForgotPassword</a></li>
-                    </c:if>
-                    <c:if test="${sessionScope['account'].getRole_id() != null}">
-                    <li> 
-                        <label><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
-                                return false;">Hello, ${sessionScope.account.full_name} </a></label>
-                    </li>
-                    <li><a id="logoutLink" href="Logout" >Logout</a></li>
-                    </c:if>
-            </ul>
-        </div>
 
-        <form id="hiddenForm" method="post" style="display:none;">
-            <input type="hidden" name="action" value="Login">
-        </form>
-        <form id="logout" method="post" style="display:none;">
-            <input type="hidden" name="action" value="Logout">
-        </form>-->
 
                     <!-- Search Box ==== -->
                     <div class="nav-search-bar">
@@ -363,14 +339,14 @@
                                 </ul>
                             </li>
                             <li><a href="javascript:;">Blog <i class="fa fa-chevron-down"></i></a>
-                            <ul class="sub-menu">
-                                <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog</a></li>
-                                <li><a href="Pos">Blog Classic Sidebar</a></li>
-                                <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
-                                <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
-                                <li><a href="blog-details.html">Blog Details</a></li>
-                            </ul>
-                        </li>
+                                <ul class="sub-menu">
+                                    <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog</a></li>
+                                    <li><a href="Pos">Blog Classic Sidebar</a></li>
+                                    <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
+                                    <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
+                                    <li><a href="blog-details.html">Blog Details</a></li>
+                                </ul>
+                            </li>
                             <c:if test="${sessionScope['account'].getRole_id() == 1}">
                                 <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">

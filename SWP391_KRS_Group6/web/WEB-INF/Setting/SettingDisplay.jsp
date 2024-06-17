@@ -61,7 +61,7 @@
 
         <!-- header start -->
 
-        <jsp:include page="DashboardNav.jsp"/>
+        <jsp:include page="../DashboardNav.jsp"/>
         <!-- sidebar menu end -->
 
         <!-- Left sidebar menu end -->
@@ -135,15 +135,39 @@
                                             </c:forEach>
                                         </tbody>
                                     </table>
-                                    <div>
-                                        <c:if test="${currentPage > 1}">
-                                            <a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Previous</a>
-                                        </c:if>
-                                        <a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Next</a>
+                                    <div class="pagination-bx rounded-sm gray clearfix">
+                                        <ul class="pagination">
+                                            <c:if test="${currentPage > 1}">
+                                                <li class="previous"><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                    <c:if test="${currentPage > 2}">
+                                                    <li><a href="SettingController?service=listAllSetting&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                    </c:if>
+                                                <li><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+                                            </c:if>
+                                            <li class="active"><a href="SettingController?service=listAllSetting&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
+                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
+                                            <li class="next"><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                        </ul>
                                     </div>
                                 </c:if>
                                 <c:if test="${empty settings}">
                                     <p>No settings found.</p>
+                                    <div class="pagination-bx rounded-sm gray clearfix">
+                                        <ul class="pagination">
+                                            <c:if test="${currentPage > 1}">
+                                                <li class="previous"><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                    <c:if test="${currentPage > 2}">
+                                                    <li><a href="SettingController?service=listAllSetting&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                    </c:if>
+                                                <li><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+                                            </c:if>
+                                            <li class="active"><a href="SettingController?service=listAllSetting&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
+                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
+                                            <li class="next"><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </c:if>
                             </div>
                         </div>

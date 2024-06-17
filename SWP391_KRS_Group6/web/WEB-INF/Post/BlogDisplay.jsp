@@ -88,60 +88,87 @@
                     <div class="section-area section-sp1">
                         <div class="container">
                             <div class="row">
+                                <div>
+                                    <c:if test="${not empty successMessage}">
+                                        <p style="color:green;">${successMessage}</p>
+                                    </c:if>
+                                </div>
                                 <!-- Left part start -->
                                 <div class="col-md-7 col-lg-8 col-xl-8">
 
                                     <c:if test="${not empty posts}">
                                         <c:forEach var="posts" items="${posts}">
-                                            <c:if test="${posts.status == true}">
-                                                <div class="recent-news blog-lg m-b40">
-                                                    <div class="action-box blog-lg">
-                                                        <img src=${posts.thumbnailUrl} alt="">
-                                                    </div>
-                                                    <div class="info-bx">
-                                                        <ul class="media-post">
-                                                            <li style="font-size: 1em;"><i class="fa fa-user"> By
-                                                                    <c:choose>
-                                                                        <c:when test="${not empty user}">
-                                                                            <c:forEach var="user" items="${user}">
-                                                                                <c:if test="${user.user_id == posts.user_id}">
-                                                                                    ${user.full_name}
-                                                                                </c:if>
-                                                                            </c:forEach>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            Post information is unavailable.
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </i></li>
-                                                        </ul>
+                                            <div class="recent-news blog-share m-b40">
+                                                <div class="action-box blog-share">
+                                                    <img src=${posts.thumbnailUrl} alt="">
+                                                </div>
+                                                <div class="info-bx">
+                                                    <ul class="media-post">
+                                                        <li style="font-size: 1em;"><i class="fa fa-user"> By
+                                                                <c:choose>
+                                                                    <c:when test="${not empty user}">
+                                                                        <c:forEach var="user" items="${user}">
+                                                                            <c:if test="${user.user_id == posts.user_id}">
+                                                                                ${user.full_name}
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        Post information is unavailable.
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </i></li>
+                                                    </ul>
+                                                    <form method="post" action="PostController">
+                                                        <input type="hidden" name="service" value="BlogDetail">
+                                                        <input type="hidden" name="pid" value="${posts.postId}">
+                                                        <h5 class="post-title"><button type="submit" class="btn-link">${posts.title}</button></h5>
+                                                    </form>
+                                                    <p>${posts.summary}</p>
+                                                    <div class="post-extra">
                                                         <form method="post" action="PostController">
                                                             <input type="hidden" name="service" value="BlogDetail">
                                                             <input type="hidden" name="pid" value="${posts.postId}">
-                                                            <h5 class="post-title"><button type="submit" class="btn-link">${posts.title}</button></h5>
+                                                            <button type="submit" class="btn-link">READ MORE</button>
                                                         </form>
-                                                        <p>${posts.summary}</p>
-                                                        <div class="post-extra">
-                                                            <form method="post" action="PostController">
-                                                                <input type="hidden" name="service" value="BlogDetail">
-                                                                <input type="hidden" name="pid" value="${posts.postId}">
-                                                                <button type="submit" class="btn-link">READ MORE</button>
-                                                            </form>
-                                                        </div>
                                                     </div>
-                                                    <hr style="border: 1px solid #333; margin: 20px 0;">
                                                 </div>
-                                            </c:if>
+                                                <hr style="border: 1px solid #333; margin: 20px 0;">
+                                            </div>
                                         </c:forEach>
-                                        <div>
-                                            <c:if test="${currentPage > 1}">
-                                                <a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Previous</a>
-                                            </c:if>
-                                            <a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Next</a>
+                                        <div class="pagination-bx rounded-sm gray clearfix">
+                                            <ul class="pagination">
+                                                <c:if test="${currentPage > 1}">
+                                                    <li class="previous"><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                        <c:if test="${currentPage > 2}">
+                                                        <li><a href="PostController?service=BlogList&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        </c:if>
+                                                    <li><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+                                                    </c:if>
+                                                <li class="active"><a href="PostController?service=BlogList&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
+                                                <li class="next"><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                            </ul>
                                         </div>
                                     </c:if>
                                     <c:if test="${empty posts}">
                                         <p>No post found.</p>
+                                        <div class="pagination-bx rounded-sm gray clearfix">
+                                            <ul class="pagination">
+                                                <c:if test="${currentPage > 1}">
+                                                    <li class="previous"><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                        <c:if test="${currentPage > 2}">
+                                                        <li><a href="PostController?service=BlogList&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        </c:if>
+                                                    <li><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+                                                    </c:if>
+                                                <li class="active"><a href="PostController?service=BlogList&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
+                                                <li class="next"><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                            </ul>
+                                        </div>
                                     </c:if>
                                     <!-- Pagination start -->
                                     <!-- Pagination END -->
