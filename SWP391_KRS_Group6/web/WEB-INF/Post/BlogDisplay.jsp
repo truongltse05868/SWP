@@ -90,79 +90,80 @@
                             <div class="row">
                                 <!-- Left part start -->
                                 <div class="col-md-7 col-lg-8 col-xl-8">
-                                    <c:if test="${sessionScope['account'] != null}">
-                                        <form method="post" action="PostController" class="my-3">
-                                            <input type="hidden" name="service" value="insertPost">
-                                            <button type="submit" class=" btn btn-block btn-primary">New Blog</button>
-                                        </form>
-                                    </c:if>
+
                                     <c:if test="${not empty posts}">
                                         <c:forEach var="posts" items="${posts}">
-                                            <div class="recent-news blog-lg m-b40">
-                                                <div class="action-box blog-lg">
-                                                    <img src=${posts.thumbnailUrl} alt="">
-                                                </div>
-                                                <div class="info-bx">
-                                                    <ul class="media-post">
-                                                        <li style="font-size: 1em;"><i class="fa fa-user"> By
-                                                                <c:choose>
-                                                                    <c:when test="${not empty user}">
-                                                                        <c:forEach var="user" items="${user}">
-                                                                            <c:if test="${user.user_id == posts.user_id}">
-                                                                                ${user.full_name}
-                                                                            </c:if>
-                                                                        </c:forEach>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        Post information is unavailable.
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </i></li>
-                                                    </ul>
-                                                    <form method="post" action="PostController">
-                                                        <input type="hidden" name="service" value="BlogDetail">
-                                                        <input type="hidden" name="pid" value="${posts.postId}">
-                                                        <h5 class="post-title"><button type="submit" class="btn-link">${posts.title}</button></h5>
-                                                    </form>
-                                                    <p>${posts.summary}</p>
-                                                    <div class="post-extra">
+                                            <c:if test="${posts.status == true}">
+                                                <div class="recent-news blog-lg m-b40">
+                                                    <div class="action-box blog-lg">
+                                                        <img src=${posts.thumbnailUrl} alt="">
+                                                    </div>
+                                                    <div class="info-bx">
+                                                        <ul class="media-post">
+                                                            <li style="font-size: 1em;"><i class="fa fa-user"> By
+                                                                    <c:choose>
+                                                                        <c:when test="${not empty user}">
+                                                                            <c:forEach var="user" items="${user}">
+                                                                                <c:if test="${user.user_id == posts.user_id}">
+                                                                                    ${user.full_name}
+                                                                                </c:if>
+                                                                            </c:forEach>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            Post information is unavailable.
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </i></li>
+                                                        </ul>
                                                         <form method="post" action="PostController">
                                                             <input type="hidden" name="service" value="BlogDetail">
                                                             <input type="hidden" name="pid" value="${posts.postId}">
-                                                            <button type="submit" class="btn-link">READ MORE</button>
+                                                            <h5 class="post-title"><button type="submit" class="btn-link">${posts.title}</button></h5>
                                                         </form>
+                                                        <p>${posts.summary}</p>
+                                                        <div class="post-extra">
+                                                            <form method="post" action="PostController">
+                                                                <input type="hidden" name="service" value="BlogDetail">
+                                                                <input type="hidden" name="pid" value="${posts.postId}">
+                                                                <button type="submit" class="btn-link">READ MORE</button>
+                                                            </form>
+                                                        </div>
                                                     </div>
+                                                    <hr style="border: 1px solid #333; margin: 20px 0;">
                                                 </div>
-                                                <hr style="border: 1px solid #333; margin: 20px 0;">
-
-                                            </div>
+                                            </c:if>
                                         </c:forEach>
+                                        <div>
+                                            <c:if test="${totalPages > 1}">
+                                                <a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Previous</a>
+                                            </c:if>
+                                            <a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Next</a>
+                                        </div>
                                     </c:if>
                                     <c:if test="${empty posts}">
                                         <p>No post found.</p>
                                     </c:if>
                                     <!-- Pagination start -->
-                                    <div class="pagination-bx rounded-sm gray clearfix">
-                                        <ul class="pagination">
-                                            <li class="previous"><a href="#"><i class="ti-arrow-left"></i> Prev</a></li>
-                                            <li class="active"><a href="#">1</a></li>
-                                            <li><a href="#">2</a></li>
-                                            <li><a href="#">3</a></li>
-                                            <li class="next"><a href="#">Next <i class="ti-arrow-right"></i></a></li>
-                                        </ul>
-                                    </div>
                                     <!-- Pagination END -->
                                 </div>
                                 <!-- Left part END -->
                                 <!-- Side bar start -->
                                 <div class="col-md-5 col-lg-4 col-xl-4 sticky-top">
                                     <aside class="side-bar sticky-top">
+                                        <c:if test="${sessionScope['account'] != null}">
+                                            <form method="post" action="PostController" class="my-3">
+                                                <input type="hidden" name="service" value="insertPost">
+                                                <button type="submit" class=" btn btn-block btn-primary">New Blog</button>
+                                            </form>
+                                        </c:if>
                                         <div class="widget">
                                             <h6 class="widget-title">Search</h6>
                                             <div class="search-bx style-1">
-                                                <form role="search" method="post">
+                                                <form role="search" method="get" action="PostController">
+                                                    <input type="hidden" name="service" value="BlogList">
                                                     <div class="input-group">
-                                                        <input name="text" class="form-control" placeholder="Enter your keywords..." type="text">
+                                                        <label for="keyword" class="sr-only">Keyword</label>
+                                                        <input class="form-control" id="keyword" name="keyword" placeholder="Search..." value="${param.keyword}" type="text">
                                                         <span class="input-group-btn">
                                                             <button type="submit" class="fa fa-search text-primary"></button>
                                                         </span> 

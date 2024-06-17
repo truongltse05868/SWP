@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
- */
 package controller;
 
 import dao.PostDAO;
@@ -9,12 +5,12 @@ import dao.UserDAO;
 import entity.Post;
 import entity.User;
 import jakarta.servlet.RequestDispatcher;
-import java.io.IOException;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,17 +21,8 @@ import java.util.logging.Logger;
  */
 public class PostController extends HttpServlet {
 
-    private static final Logger logger = Logger.getLogger(UserController.class.getName());
+    private static final Logger logger = Logger.getLogger(PostController.class.getName());
 
-    /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -60,9 +47,7 @@ public class PostController extends HttpServlet {
                 }
                 return;
             }
-
             if (currentUser != null) {
-                // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
                 switch (action) {
                     case "ListAllPost" ->
                         getAllPost(request, response);
@@ -74,6 +59,16 @@ public class PostController extends HttpServlet {
                         int Author = currentUser.getUser_id();
                         InsertPost(request, response, submit, Author);
                     }
+                    case "toggleStatus" -> {
+                        PostDAO dao = new PostDAO();
+                        int pid = Integer.parseInt(request.getParameter("postId"));
+                        Post post = dao.getPostById(pid);
+                        if (post != null) {
+                            post.setStatus(!post.isStatus()); // Toggle status
+                            dao.updatePost(post);
+                        }
+                        response.sendRedirect("PostController?service=ListAllPost");
+                    }
                     case "BlogList" ->
                         getAllBlog(request, response);
                     case "BlogDetail" -> {
@@ -83,16 +78,7 @@ public class PostController extends HttpServlet {
                     default -> {
                     }
                 }
-            } else {
-                // Nếu không phải là quản trị viên, chỉ cho phép truy cập vào trang thông tin cá nhân
-                switch (action) {
-                    case "ListAllPost":
-                        getAllPost(request, response);
-                        break;
-                    default:
-//                        getUserProfle(request, response);
-                        break;
-                }
+
             }
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, "Invalid user ID format", e);
@@ -104,38 +90,20 @@ public class PostController extends HttpServlet {
 
     }
 
-    void dispath(HttpServletRequest request,
+    void dispatch(HttpServletRequest request,
             HttpServletResponse response, String page)
             throws ServletException, IOException {
-        RequestDispatcher dispath
+        RequestDispatcher dispatch
                 = request.getRequestDispatcher(page);
-        //display
-        dispath.forward(request, response);
+        dispatch.forward(request, response);
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -147,11 +115,29 @@ public class PostController extends HttpServlet {
         try {
             PostDAO postDAO = new PostDAO();
             UserDAO userDAO = new UserDAO();
-            List<Post> posts = postDAO.getAllPosts();
-            List<User> user = userDAO.getAllUsers();
+
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "10");
+            String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
+            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+            String keyword = request.getParameter("keyword");
+
+            List<Post> posts;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                posts = postDAO.searchPosts(keyword, sortBy, sortOrder, page, pageSize);
+            } else {
+                posts = postDAO.getAllPostsSortedBy(sortBy, sortOrder, page, pageSize);
+            }
+            List<User> users = userDAO.getAllUsers();
 
             request.setAttribute("posts", posts);
-            request.setAttribute("user", user);// Changed attribute name to "posts"
+            request.setAttribute("users", users);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("sortBy", sortBy);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("keyword", keyword);
+
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Post/PostList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
@@ -165,11 +151,29 @@ public class PostController extends HttpServlet {
         try {
             PostDAO postDAO = new PostDAO();
             UserDAO userDAO = new UserDAO();
-            List<Post> posts = postDAO.getAllPosts();
-            List<User> user = userDAO.getAllUsers();
 
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "2");
+            String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
+            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+            String keyword = request.getParameter("keyword");
+
+            List<Post> posts;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                posts = postDAO.searchPosts(keyword, sortBy, sortOrder, page, pageSize);
+            } else {
+                posts = postDAO.getAllPostsSortedBy(sortBy, sortOrder, page, pageSize);
+            }
+            List<User> users = userDAO.getAllUsers();
+      
             request.setAttribute("posts", posts);
-            request.setAttribute("user", user);// Changed attribute name to "posts"
+            request.setAttribute("user", users);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("sortBy", sortBy);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("keyword", keyword);
+
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Post/BlogDisplay.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
@@ -204,30 +208,21 @@ public class PostController extends HttpServlet {
         try {
             PostDAO dao = new PostDAO();
             if (submit != null) {
-                String postId = request.getParameter("post_id");
                 String Title = request.getParameter("title");
                 String Sum = request.getParameter("summary");
                 String Thumbnail = request.getParameter("thumbnail_url");
                 String Content = request.getParameter("content");
                 String statusParam = request.getParameter("status");
                 boolean status = (statusParam != null && statusParam.equals("on"));
-                String UserId = request.getParameter("user_id");
 
-                // convert
-                int postIdInt = Integer.parseInt(postId);
-                int userIdInt = Integer.parseInt(UserId);
+                Post post = new Post(pid, Title, Sum, Thumbnail, Content, status, 0); // Assuming user_id is handled differently or set later
 
-                //
-                Post post = new Post(postIdInt, Title, Sum, Thumbnail, Content, status, userIdInt);
                 dao.updatePost(post);
 
-                // Redirect to a success page or display a success message
                 String successMessage = "Post updated successfully.";
                 request.setAttribute("successMessage", successMessage);
-                response.sendRedirect("PostController"); // Replace "success.jsp" with your success page
+                response.sendRedirect("PostController");
 
-                // If you want to send a redirect to another page after success, uncomment the following line
-                // response.sendRedirect("PostController");
             } else {
                 Post post = dao.getPostById(pid);
                 request.setAttribute("post", post);
@@ -255,19 +250,10 @@ public class PostController extends HttpServlet {
                 boolean status = (statusParam != null && statusParam.equals("on"));
                 int author = user_id;
 
-                // Create and set Post object
-                Post post = new Post();
-                post.setTitle(Title);
-                post.setSummary(Sum);
-                post.setThumbnailUrl(Thumbnail);
-                post.setContent(Content);
-                post.setStatus(status);
-                post.setUser_id(author);
+                Post post = new Post(0, Title, Sum, Thumbnail, Content, status, author);
 
-                // Add post to the database
                 dao.addPost(post);
 
-                // Redirect to PostController
                 response.sendRedirect("PostController");
             } else {
                 List<Post> posts = dao.getAllPosts();
@@ -283,13 +269,8 @@ public class PostController extends HttpServlet {
         }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
     public String getServletInfo() {
         return "Short description";
-    }// </editor-fold>
+    }
 }

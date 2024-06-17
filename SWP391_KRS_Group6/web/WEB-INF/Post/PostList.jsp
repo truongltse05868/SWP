@@ -72,26 +72,34 @@
                     </ul>
                 </div>
                 <div class="row">
-                    <!-- Your Profile Views Chart -->
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="widget-inner">
+                                <!-- Add Post Form -->
                                 <form method="post" action="PostController" style="display:inline;">
                                     <input type="hidden" name="service" value="insertPost">
                                     <button type="submit" class="btn btn-primary btn-sm">Add</button>
                                 </form>
+                                <!-- Search and Sort Form -->
+                                <form method="get" action="PostController" class="form-inline my-3">
+                                    <input type="hidden" name="service" value="ListAllPost">
+                                    <div class="form-group mx-sm-3 mb-2">
+                                        <label for="keyword" class="sr-only">Keyword</label>
+                                        <input type="text" class="form-control" id="keyword" name="keyword" placeholder="Search..." value="${param.keyword}">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mb-2">Search</button>
+                                </form>
+                                <!-- Post List Table -->
                                 <c:if test="${not empty posts}">
                                     <table class="table table-striped my-3">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Title</th>
+                                                <th><a href="PostController?service=ListAllPost&sortBy=post_id&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
+                                                <th><a href="PostController?service=ListAllPost&sortBy=title&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Title</a></th>
                                                 <th>Thumbnail Url</th>
-                                                <th>Status</th>
+                                                <th>Publish</th>
                                                 <th>Author</th>
                                                 <th>Action</th>
-
-
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -101,26 +109,32 @@
                                                     <td>${post.title}</td>
                                                     <td>${post.thumbnailUrl}</td>
                                                     <td>
-                                                        <c:choose>
-                                                            <c:when test="${post.status}">
-                                                                Active
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                Inactive
-                                                            </c:otherwise>
-                                                        </c:choose>
+                                                        <form method="post" action="PostController" style="display:inline;">
+                                                            <input type="hidden" name="service" value="toggleStatus">
+                                                            <input type="hidden" name="postId" value="${post.postId}">
+                                                            <button type="submit" class="btn btn-link p-0">
+                                                                <c:choose>
+                                                                    <c:when test="${post.status}">
+                                                                        Published
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        Withdraw 
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </button>
+                                                        </form>
                                                     </td>
                                                     <td>
                                                         <c:choose>
-                                                            <c:when test="${not empty user}">
-                                                                <c:forEach var="user" items="${user}">
+                                                            <c:when test="${not empty users}">
+                                                                <c:forEach var="user" items="${users}">
                                                                     <c:if test="${user.user_id == post.user_id}">
                                                                         ${user.full_name}
                                                                     </c:if>
                                                                 </c:forEach>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                User information is unavailable.
+                                                                Author information is unavailable.
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
@@ -135,16 +149,34 @@
                                             </c:forEach>
                                         </tbody>
                                     </table>
+                                    <div>
+                                        <c:if test="${totalPages > 1}">
+                                            <a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Previous</a>
+                                        </c:if>
+                                        <a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" class="btn btn-secondary">Next</a>
+                                    </div>
                                 </c:if>
                                 <c:if test="${empty posts}">
                                     <p>No posts found.</p>
                                 </c:if>
+                                <!-- Pagination Controls -->
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination">
+                                        <c:forEach begin="1" end="${totalPages}" var="i">
+                                            <li class="page-item ${i == param.currentPage ? 'active' : ''}">
+                                                <a class="page-link" href="?service=getAllPost&page=${i}&pageSize=${param.pageSize}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}&keyword=${param.keyword}">${i}</a>
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </nav>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </main>
+
         <!--Main container end -->
 
         <!-- Footer ==== -->
