@@ -127,11 +127,7 @@
                                         <li><a href="faq-2.html">FAQ's 2</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="javascript:;">Contact Us<i class="fa fa-angle-right"></i></a>
-                                    <ul class="sub-menu">
-                                        <li><a href="contact-1.html">Contact Us 1</a></li>
-                                        <li><a href="contact-2.html">Contact Us 2</a></li>
-                                    </ul>
+                                <li><a href="ContactController?contactPage">Contact Us<i class="fa fa-angle-right"></i></a>
                                 </li>
                                 <li><a href="portfolio.html">Portfolio</a></li>
                                     <c:if test="${sessionScope['account'] != null}">
@@ -288,12 +284,7 @@
                                             <li><a href="faq-2.html">FAQ's 2</a></li>
                                         </ul>
                                     </li>
-                                    <li><a href="javascript:;">Contact Us<i class="fa fa-angle-right"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="contact-1.html">Contact Us 1</a></li>
-                                            <li><a href="contact-2.html">Contact Us 2</a></li>
-                                        </ul>
-                                    </li>
+                                    <li><a href="ContactController?action=contactPage">Contact Us<i class="fa fa-angle-right"></i></a>
                                     <li><a href="portfolio.html">Portfolio</a></li>
                                         <c:if test="${sessionScope['account'] != null}">
                                         <li><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});

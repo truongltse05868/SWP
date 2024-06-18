@@ -178,4 +178,24 @@ public class SettingDAO extends DBConnect {
         }
         return settings;
     }
+    public List<Setting> getALlContactType(){
+        List<Setting> settings = new ArrayList<>();
+        String query = "SELECT * FROM setting where type = 'Contact Type';"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
+
+            while (rs.next()) {
+                settings.add(new Setting(
+                        rs.getInt("setting_id"),
+                        rs.getString("setting_name"),
+                        rs.getString("type"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                ));
+
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return settings;
+    }
 }
