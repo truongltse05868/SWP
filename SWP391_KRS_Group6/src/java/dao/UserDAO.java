@@ -404,6 +404,35 @@ public class UserDAO extends DBConnect {
         }
         return user;
     }
+    
+    public User getUserByColum(String colum,String email) {
+        User user = null;
+        String query = "SELECT * FROM user WHERE "+colum+" = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, email);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            //                            rs.getInt("age"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp"),
+                            rs.getTimestamp("otp_expiry")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+        }
+        return user;
+    }
 
     public boolean updateUser(User user) {
         String query = "UPDATE user SET user_name = ?, password = ?, email = ?, "

@@ -188,6 +188,7 @@ public abstract class BaseService {
 //            throw new RuntimeException(e);
 //        }
 //    }
+
     public static boolean sendEmail(String recipientEmail, String subject, String content) {
         final String host = "live.smtp.mailtrap.io";
         final String user = "api";
@@ -221,29 +222,30 @@ public abstract class BaseService {
             return false;
         }
     }
+
     public boolean sendOtpToEmail(String email, String otp, String subjectEmail) {
-    String content = "Your OTP code is: " + otp;
-    return sendEmail(email, subjectEmail, content);
-}
+        String content = "Your OTP code is: " + otp;
+        return sendEmail(email, subjectEmail, content);
+    }
 
-public boolean sendPassToEmail(String email,String userName, String pass, String subjectEmail) {
-String content = "Dear " + userName + ",\n\n"
-        + "Welcome to KRS Learning System!\n\n"
-        + "Your account has been successfully created by the administrator.\n\n"
-        + "Below are your login credentials:\n\n"
-        + "Username: " + userName + "\n"
-        + "Password: " + pass + "\n\n"
-        + "Please use these credentials to login to your account and start using our platform.\n\n"
-        + "We recommend changing your password after your first login for security purposes.\n\n"
-        + "If you have any questions or need assistance, feel free to contact our support team.\n\n"
-        + "Best regards,\n"
-        + "KRS Learning System Team";
-    return sendEmail(email, subjectEmail, content);
-}
+    public boolean sendPassToEmail(String email, String userName, String pass, String subjectEmail) {
+        String content = "Dear " + userName + ",\n\n"
+                + "Welcome to KRS Learning System!\n\n"
+                + "Your account has been successfully created by the administrator.\n\n"
+                + "Below are your login credentials:\n\n"
+                + "Username: " + userName + "\n"
+                + "Password: " + pass + "\n\n"
+                + "Please use these credentials to login to your account and start using our platform.\n\n"
+                + "We recommend changing your password after your first login for security purposes.\n\n"
+                + "If you have any questions or need assistance, feel free to contact our support team.\n\n"
+                + "Best regards,\n"
+                + "KRS Learning System Team";
+        return sendEmail(email, subjectEmail, content);
+    }
 
-public void sendEmailVerifyLink(String recipientEmail,String userName, String confirmationLink, String email) {
-    String content = "Dear " + userName + "\n\n Please click the following link to confirm your email address: " + confirmationLink;
-    sendEmail(recipientEmail, "Email Confirmation", content);
-}
+    public void sendEmailVerifyLink(String recipientEmail, String userName, String confirmationLink, String email) {
+        String content = "Dear " + userName + "\n\n Please click the following link to confirm your email address: " + confirmationLink;
+        sendEmail(recipientEmail, "Email Confirmation", content);
+    }
 
 }

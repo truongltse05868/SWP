@@ -4,6 +4,7 @@ import dao.PostDAO;
 import dao.UserDAO;
 import entity.Post;
 import entity.User;
+import service.BaseService;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
@@ -268,10 +269,18 @@ public class PostController extends HttpServlet {
             PostDAO dao = new PostDAO();
             if (submit != null && submit.equals("insertPost")) {
                 int author = user_id;
-                String Title = request.getParameter("title");
-                String Sum = request.getParameter("summary");
-                String Thumbnail = request.getParameter("thumbnail_url");
-                String Content = request.getParameter("content");
+                String title = request.getParameter("title");
+                String summary = request.getParameter("summary");
+                String thumbnail = request.getParameter("thumbnail_url");
+                String content = request.getParameter("content");
+
+                // Validate inputs
+                if (title == null || title.isEmpty() || summary == null || summary.isEmpty()
+                        || thumbnail == null || thumbnail.isEmpty() || content == null || content.isEmpty()) {
+                    request.setAttribute("errorMessage", "All fields are required.");
+                    request.getRequestDispatcher("WEB-INF/Post/insertPost.jsp").forward(request, response);
+                    return;
+                }
 
                 boolean status = false; // Default status for non-admin users
                 if (author == 1) {
@@ -279,18 +288,49 @@ public class PostController extends HttpServlet {
                     status = (statusParam != null && statusParam.equals("on"));
                 }
 
-                Post post = new Post(0, Title, Sum, Thumbnail, Content, status, author);
+                Post post = new Post(0, title, summary, thumbnail, content, status, author);
                 dao.addPost(post);
 
                 String successMessage = (author == 1) ? "Post added successfully." : "Post added successfully! The admin will publish it soon.";
                 request.setAttribute("successMessage", successMessage);
 
-                // Forward to the same JSP to display the message
+                // Fetch and set the list of posts
                 List<Post> posts = dao.getAllPosts();
                 request.setAttribute("postList", posts);
+
                 if (author == 1) {
                     request.getRequestDispatcher("WEB-INF/Post/PostList.jsp").forward(request, response);
                 } else {
+                    UserDAO udao = new UserDAO();
+                    User u = udao.getUserByColum("role_id", "1");
+                    if (u != null) {
+                        String email = u.getEmail();
+                        boolean emailExists = udao.checkEmailExists(email);
+
+                        if (emailExists) {
+                            User au = udao.getUserById(author);
+                            String subject = "REQUEST Publish New Post";
+                            String emailContent = String.format(
+                                    "Dear Publisher %s,\n\n"
+                                    + "A new post has been submitted for publication on EduChamp.\n"
+                                    + "Post title: %s by %s\n\n"
+                                    + "We kindly request that you review the post and consider it for publication. "
+                                    + "If any revisions are required, please let us know, and we will inform the author accordingly.\n"
+                                    + "\n"
+                                    + "Thank you for your attention to this request. We look forward to your feedback and the potential publication of this user-submitted content.\n"
+                                    + "\n"
+                                    + "Best regards,\n"
+                                    + "EduChamp",
+                                    u.getFull_name(), post.getTitle(), au.getFull_name());
+
+                            BaseService.sendEmail(email, subject, emailContent);
+                        } else {
+                            request.setAttribute("errorMessage", "Admin email address does not exist.");
+                        }
+                    } else {
+                        request.setAttribute("errorMessage", "Admin user not found.");
+                    }
+
                     request.getRequestDispatcher("WEB-INF/Post/BlogDisplay.jsp").forward(request, response);
                 }
             } else {
