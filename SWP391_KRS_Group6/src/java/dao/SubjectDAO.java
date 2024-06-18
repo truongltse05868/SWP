@@ -67,7 +67,7 @@ public class SubjectDAO extends DBConnect {
         }
         return false;
     }
-    
+
     public boolean addSubject(Subject subject) {
         String sql = "INSERT INTO subject (subject_code, name, description, status) VALUES (?, ?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -81,7 +81,7 @@ public class SubjectDAO extends DBConnect {
         }
         return false;
     }
-    
+
     public Subject getSubjectById(int subjectId) {
         String sql = "SELECT * FROM subject WHERE subject_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -100,6 +100,104 @@ public class SubjectDAO extends DBConnect {
             Logger.getLogger(SubjectDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    // Search subjects by keyword in title or summary
+    public List<Subject> searchCourse(String keyword, String column, String order, int page, int pageSize) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT * FROM subject WHERE (title LIKE ? OR summary LIKE ?) AND status =1 "
+                + "ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String query = "%" + keyword + "%";
+            ps.setString(1, query);
+            ps.setString(2, query);
+            ps.setInt(3, pageSize);
+            ps.setInt(4, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                subjects.add(new Subject(
+                        rs.getInt("subject_id"),
+                        rs.getString("subject_code"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error searching subjects", ex);
+        }
+        return subjects;
+    }
+
+    // Get all subjects sorted by a specific column with pagination
+    public List<Subject> getAllCourseSortedBy(String column, String order, int page, int pageSize) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT * FROM subject WHERE status =1 ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                subjects.add(new Subject(
+                        rs.getInt("subject_id"),
+                        rs.getString("subject_code"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching sorted subjects", ex);
+        }
+        return subjects;
+    }
+
+    public List<Subject> searchSubjects(String keyword, String column, String order, int page, int pageSize) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT * FROM subject WHERE title LIKE ? OR summary LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String query = "%" + keyword + "%";
+            ps.setString(1, query);
+            ps.setString(2, query);
+            ps.setInt(3, pageSize);
+            ps.setInt(4, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                subjects.add(new Subject(
+                        rs.getInt("subject_id"),
+                        rs.getString("subject_code"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error searching subjects", ex);
+        }
+        return subjects;
+    }
+
+    // Get all subjects sorted by a specific column with pagination
+    public List<Subject> getAllSubjectsSortedBy(String column, String order, int page, int pageSize) {
+        List<Subject> subjects = new ArrayList<>();
+        String sql = "SELECT * FROM subject ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                subjects.add(new Subject(
+                        rs.getInt("subject_id"),
+                        rs.getString("subject_code"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching sorted subjects", ex);
+        }
+        return subjects;
     }
 
 }

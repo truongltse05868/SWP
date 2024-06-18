@@ -60,10 +60,25 @@ public class SubjectController extends HttpServlet {
                     case "ListAllSubject":
                         getAllSubject(request, response);
                         break;
+                    case "toggleStatus":
+                        SubjectDAO dao = new SubjectDAO();
+                        int poid = Integer.parseInt(request.getParameter("postId"));
+                        Subject subject = dao.getSubjectById(poid);
+                        if (subject != null) {
+                            subject.setStatus(!subject.isStatus()); // Toggle status
+                            dao.updateSubject(subject);
+                        }
+                        response.sendRedirect("SubjectController?service=ListAllSubject");
+                        break;
                     case "updateSubject":
                         int pid = Integer.parseInt(request.getParameter("pid"));
                         UpdateSubject(request, response, pid, submit);
                         break;
+                    case "CourseDetail":
+                        int bid = Integer.parseInt(request.getParameter("pid"));
+                        GetCourseDetail(request, response, bid);
+                        break;
+
                     case "insertSubject":
                         InsertSubject(request, response, submit);
                         break;
@@ -129,15 +144,58 @@ public class SubjectController extends HttpServlet {
         processRequest(request, response);
     }
 
+    private void GetCourseDetail(HttpServletRequest request, HttpServletResponse response, int pid)
+            throws ServletException, IOException {
+        try {
+            SubjectDAO dao = new SubjectDAO();
+            Subject subject = dao.getSubjectById(pid);
+            request.setAttribute("subjectList", subject);
+
+            request.getRequestDispatcher("WEB-INF/Subject/CourseDetail.jsp").forward(request, response);
+
+        } catch (NumberFormatException e) {
+            logger.log(Level.SEVERE, "Invalid subject ID format", e);
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid subject ID format");
+        } catch (ServletException | IOException e) {
+            logger.log(Level.SEVERE, "Error view detail of subject", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while view detail of subject.");
+        }
+    }
+
     private void getAllSubject(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+//
+//            SubjectDAO subjectDAO = new SubjectDAO();
+//
+//            List<Subject> subjectList = subjectDAO.getAllSubjects();
+//
+//            request.setAttribute("subjectList", subjectList);
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Subject/SubjectList.jsp");
+//            dispatcher.forward(request, response);
 
             SubjectDAO subjectDAO = new SubjectDAO();
 
-            List<Subject> subjectList = subjectDAO.getAllSubjects();
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "6");
+            String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "subject_id";
+            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+            String keyword = request.getParameter("keyword");
 
-            request.setAttribute("subjectList", subjectList);
+            List<Subject> subjects;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                subjects = subjectDAO.searchSubjects(keyword, sortBy, sortOrder, page, pageSize);
+            } else {
+                subjects = subjectDAO.getAllSubjectsSortedBy(sortBy, sortOrder, page, pageSize);
+            }
+
+            request.setAttribute("subjectList", subjects);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("sortBy", sortBy);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("keyword", keyword);
+
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Subject/SubjectList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {

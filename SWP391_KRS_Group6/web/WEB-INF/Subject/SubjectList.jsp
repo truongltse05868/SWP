@@ -112,7 +112,7 @@
                                     <div class="widget">
                                         <a href="#"><img src="assets/images/adv/adv.jpg" alt=""/></a>
                                     </div>
-                                    
+
                                 </div>
                                 <div class="col-lg-9 col-md-8 col-sm-12">
                                     <form method="post" action="SubjectController" class="my-3">
@@ -123,44 +123,54 @@
                                         <div class="row">
                                             <c:forEach var="subjectList" items="${subjectList}">
                                                 <div class="col-md-6 col-lg-4 col-sm-6 mb-4">
-                                                    <div class="card ">
-                                                        <div class="card-header p-0 ">
-                                                            <img src="assets/images/courses/pic1.jpg" class="card-img-top" alt="">
-                                                            <form method="post" action="SubjectController" >
+                                                    <div class="card h-100"> <!-- Ensure each card has the h-100 class for equal height -->
+                                                        <div class="card-header p-0">
+                                                            <img src="assets/images/courses/pic${subjectList.subject_id}.jpg" class="card-img-top" alt="">
+                                                            <form method="post" action="SubjectController">
                                                                 <input type="hidden" name="service" value="updateSubject">
                                                                 <input type="hidden" name="pid" value="${subjectList.subject_id}">
                                                                 <button type="submit" class="btn btn-block btn-primary">Update</button>
                                                             </form>
                                                         </div>
-                                                        <div class="card-body">
-                                                            
+                                                        <div class="card-body d-flex flex-column"> <!-- Use flex-column for equal heights -->
                                                             <div class="info-bx mt-3 text-center">
-                                                                <h4>${subjectList.subject_code}</h4>
+                                                                <h5>${subjectList.subject_name}</h5>
                                                             </div>
                                                             <div class="info-bx mt-2">
                                                                 <div class="text-center">
-                                                                    <h6>${subjectList.subject_name}</h6>
+                                                                    <h6>${subjectList.subject_code}</h6>
                                                                 </div>
-                                                                <div class="mt-2">
-                                                                    <p>Description: ${subjectList.description}</p>
+                                                                <div class="mt-2 text-center">
+                                                                    <form method="post" action="SubjectController">
+                                                                        <input type="hidden" name="service" value="CourseDetail">
+                                                                        <input type="hidden" name="pid" value="${subjectList.subject_id}">
+                                                                        <button type="submit" class="btn-info">Read More</button>
+                                                                    </form>
+
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="card-footer text-center">
-                                                            <div class="d-flex justify-content-between">
-                                                                <div>
-                                                                    <c:choose>
-                                                                        <c:when test="${subjectList.status}">
-                                                                            <span class="badge badge-success">Active</span>
-                                                                        </c:when>
-                                                                        <c:otherwise>
-                                                                            <span class="badge badge-secondary">Inactive</span>
-                                                                        </c:otherwise>
-                                                                    </c:choose>
-                                                                </div>
-                                                                <div class="price">
-                                                                    <del>$190</del>
-                                                                    <h5 class="d-inline">$120</h5>
+                                                            <div class=" mt-auto"> <!-- mt-auto pushes footer to bottom -->
+                                                                <div class="d-flex justify-content-between">
+                                                                    <div>
+                                                                        <form method="post" action="SubjectController" style="display:inline;">
+                                                                            <input type="hidden" name="service" value="toggleStatus">
+                                                                            <input type="hidden" name="postId" value="${subjectList.subject_id}">
+                                                                            <button type="submit" class="btn-link p-0">
+                                                                                <c:choose>
+                                                                                    <c:when test="${subjectList.status}">
+                                                                                        <span class="badge badge-success">Active</span>
+                                                                                    </c:when>
+                                                                                    <c:otherwise>
+                                                                                        <span class="badge badge-secondary">Inactive</span>
+                                                                                    </c:otherwise>
+                                                                                </c:choose>
+                                                                            </button>
+                                                                        </form>
+                                                                    </div>
+                                                                    <div class="price">
+                                                                        <del>$190</del>
+                                                                        <h5 class="d-inline">$120</h5>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -168,24 +178,43 @@
                                                 </div>
                                             </c:forEach>
 
+                                        </div>
+                                        <div class="pagination-bx rounded-sm gray clearfix">
+                                            <ul class="pagination">
+                                                <c:if test="${currentPage > 1}">
+                                                    <li class="previous"><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                        <c:if test="${currentPage > 2}">
+                                                        <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        </c:if>
+                                                    <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
 
-
+                                                </c:if>
+                                                <li class="active"><a href="SubjectController?service=ListAllSubject&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
+                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
+                                                <li class="next"><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                            </ul>
                                         </div>
                                     </c:if>
                                     <c:if test="${empty subjectList}">
                                         <p>No subject found.</p>
-                                    </c:if>
-                                    <div class="col-lg-12 m-b20">
                                         <div class="pagination-bx rounded-sm gray clearfix">
                                             <ul class="pagination">
-                                                <li class="previous"><a href="#"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li class="next"><a href="#">Next <i class="ti-arrow-right"></i></a></li>
+                                                <c:if test="${currentPage > 1}">
+                                                    <li class="previous"><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                        <c:if test="${currentPage > 2}">
+                                                        <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        </c:if>
+                                                    <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+
+                                                </c:if>
+                                                <li class="active"><a href="SubjectController?service=ListAllSubject&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
+                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
+                                                <li class="next"><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
                                             </ul>
                                         </div>
-                                    </div>
+                                    </c:if>
                                 </div>
                             </div>
                         </div>

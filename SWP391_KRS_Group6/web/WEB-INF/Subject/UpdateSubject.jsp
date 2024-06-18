@@ -57,6 +57,7 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <script src="ckeditor/ckeditor.js"></script>
 
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
@@ -120,7 +121,7 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Description:</label>
                                             <div class="col-sm-7">
-                                                <textarea class=" form-control" name="description" type='text'><%=s.getDescription()%></textarea>
+                                                <textarea style="height: 320px;" id="ckeditor" class=" form-control" name="description" type='text'><%=s.getDescription()%></textarea>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -155,6 +156,11 @@
             </div>
         </main>
         <div class="ttr-overlay"></div>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                CKEDITOR.replace('ckeditor');
+            });
+        </script>
 
         <!-- External JavaScripts -->
         <script src="admin/assets/js/jquery.min.js"></script>
