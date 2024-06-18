@@ -28,4 +28,7 @@ public class SettingService extends BaseService {
     public Setting getSettingById(int id){
         return settingDAO.getSettingById(id);
     }
+    public List<Setting> getAllContactType(){
+        return settingDAO.getALlContactType();
+    }
 }
