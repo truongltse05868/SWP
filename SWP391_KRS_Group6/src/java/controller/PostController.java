@@ -302,30 +302,33 @@ public class PostController extends HttpServlet {
                     request.getRequestDispatcher("WEB-INF/Post/PostList.jsp").forward(request, response);
                 } else {
                     UserDAO udao = new UserDAO();
-                    User u = udao.getUserByColum("role_id", "1");
-                    if (u != null) {
-                        String email = u.getEmail();
-                        boolean emailExists = udao.checkEmailExists(email);
+                    List<User> adminUsers = udao.getUserByColumn("role_id", "1"); // Assuming this method returns a list of users with role_id 1
 
-                        if (emailExists) {
-                            User au = udao.getUserById(author);
-                            String subject = "REQUEST Publish New Post";
-                            String emailContent = String.format(
-                                    "Dear Publisher %s,\n\n"
-                                    + "A new post has been submitted for publication on EduChamp.\n"
-                                    + "Post title: %s by %s\n\n"
-                                    + "We kindly request that you review the post and consider it for publication. "
-                                    + "If any revisions are required, please let us know, and we will inform the author accordingly.\n"
-                                    + "\n"
-                                    + "Thank you for your attention to this request. We look forward to your feedback and the potential publication of this user-submitted content.\n"
-                                    + "\n"
-                                    + "Best regards,\n"
-                                    + "EduChamp",
-                                    u.getFull_name(), post.getTitle(), au.getFull_name());
+                    if (adminUsers != null && !adminUsers.isEmpty()) {
+                        for (User admin : adminUsers) {
+                            String email = admin.getEmail();
+                            boolean emailExists = udao.checkEmailExists(email);
 
-                            BaseService.sendEmail(email, subject, emailContent);
-                        } else {
-                            request.setAttribute("errorMessage", "Admin email address does not exist.");
+                            if (emailExists) {
+                                User au = udao.getUserById(author);
+                                String subject = "REQUEST Publish New Post";
+                                String emailContent = String.format(
+                                        "Dear publisher %s,\n\n"
+                                        + "A new post has been submitted for publication on EduChamp.\n"
+                                        + "Post title: %s by %s\n\n"
+                                        + "We kindly request that you review the post and consider it for publication. "
+                                        + "If any revisions are required, please let us know, and we will inform the author accordingly.\n"
+                                        + "\n"
+                                        + "Thank you for your attention to this request. We look forward to your feedback and the potential publication of this user-submitted content.\n"
+                                        + "\n"
+                                        + "Best regards,\n"
+                                        + "EduChamp",
+                                        admin.getFull_name(), post.getTitle(), au.getFull_name());
+
+                                BaseService.sendEmail(email, subject, emailContent);
+                            } else {
+                                request.setAttribute("errorMessage", "Admin email address does not exist.");
+                            }
                         }
                     } else {
                         request.setAttribute("errorMessage", "Admin user not found.");

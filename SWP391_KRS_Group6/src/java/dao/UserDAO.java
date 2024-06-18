@@ -137,7 +137,7 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-    
+
     public List<User> checkLogin(String identifier, String password) {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user WHERE (user_name = ? OR email = ?) AND password = ? AND status = 1";
@@ -404,15 +404,15 @@ public class UserDAO extends DBConnect {
         }
         return user;
     }
-    
-    public User getUserByColum(String colum,String email) {
-        User user = null;
-        String query = "SELECT * FROM user WHERE "+colum+" = ?";
+
+    public List<User> getUserByColumn(String column, String value) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE " + column + " = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, email);
+            ps.setString(1, value);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    user = new User(
+                while (rs.next()) {
+                    User user = new User(
                             rs.getInt("user_id"),
                             rs.getString("user_name"),
                             rs.getString("password"),
@@ -426,12 +426,13 @@ public class UserDAO extends DBConnect {
                             rs.getString("otp"),
                             rs.getTimestamp("otp_expiry")
                     );
+                    users.add(user);
                 }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+            logger.log(Level.SEVERE, "Error fetching users by column", e);
         }
-        return user;
+        return users;
     }
 
     public boolean updateUser(User user) {
