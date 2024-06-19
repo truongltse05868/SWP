@@ -169,15 +169,24 @@ public class ClassController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
         }
     }
+
     private void deteteUserInclass(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            List<Class> classList = classService.getAllClass();
-            List<Subject> subjectList = subjectService.getAllSubjects();
-            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-            request.setAttribute("classes", classList);
-            request.setAttribute("userCountMap", userCountMap);
-            request.setAttribute("subjectList", subjectList);
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            int userId = Integer.parseInt(request.getParameter("userId"));
+            boolean isDelete = classService.deleteUserInclass(classId, userId);
+            List<Setting> role = settingService.getAllRoles();
+            List<User> users = userService.getAllUsersInClass(classId);
+            Class classs = classService.getClassById(classId);
+            if(isDelete){
+                request.setAttribute("successMessage", "Xoá thành công");
+            }else{
+                request.setAttribute("successMessage", "Xoá không thành công");
+            }
+            request.setAttribute("users", users);
+            request.setAttribute("roles", role);
+            request.setAttribute("classs", classs);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
@@ -193,9 +202,11 @@ public class ClassController extends HttpServlet {
             Class classs = classService.getClassById(classId);
             List<User> users = userService.getAllUsersInClass(classId);
             Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+            List<Setting> roles = settingService.getAllRoles();
             request.setAttribute("classs", classs);
             request.setAttribute("userCountMap", userCountMap);
             request.setAttribute("users", users);
+            request.setAttribute("roles", roles);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
@@ -229,25 +240,23 @@ public class ClassController extends HttpServlet {
             int class_id = Integer.parseInt(request.getParameter("classId"));
             int UserId = Integer.parseInt(request.getParameter("UserId"));
             Class classs = classService.getClassById(class_id);
-            List<User> users = userService.getAllUsersNotInClass(class_id);
+            
             User user = userService.getUserById(UserId);
             List<Setting> role = settingService.getAllRoles();
             boolean isAddSuccess = classService.addUserToClass(user, class_id);
+            List<User> users = userService.getAllUsersNotInClass(class_id);
             if (isAddSuccess) {
-                request.setAttribute("users", users);
-                request.setAttribute("roles", role);
-                request.setAttribute("classs", classs);
                 request.setAttribute("successMessage", "Thêm thành công");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
-                dispatcher.forward(request, response);
             } else {
-                request.setAttribute("users", users);
-                request.setAttribute("roles", role);
-                request.setAttribute("classs", classs);
                 request.setAttribute("successMessage", "Thêm thất bại");
-                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
-                dispatcher.forward(request, response);
             }
+
+            request.setAttribute("users", users);
+            request.setAttribute("roles", role);
+            request.setAttribute("classs", classs);
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
+            dispatcher.forward(request, response);
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get add class page", e);
@@ -302,7 +311,7 @@ public class ClassController extends HttpServlet {
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
                 request.setAttribute("class_name", className);
-                request.setAttribute("subject", subjects);
+                request.setAttribute("subjectList", subjects);
                 request.setAttribute("status", status);
                 request.setAttribute("successMessage", "Cập nhật không thành công.");
                 request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
@@ -321,12 +330,12 @@ public class ClassController extends HttpServlet {
                 request.setAttribute("successMessage", message);
                 List<Class> classes = classService.getAllClasses();
                 request.setAttribute("classes", classes);
-                request.setAttribute("subject", subjects);
+                request.setAttribute("subjectList", subjects);
                 request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
             } else {
                 request.setAttribute("roles", roles);
                 request.setAttribute("class_name", className);
-                request.setAttribute("subject", subjects);
+                request.setAttribute("subjectList", subjects);
                 request.setAttribute("status", status);
                 request.setAttribute("successMessage", message);
                 request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
@@ -369,16 +378,15 @@ public class ClassController extends HttpServlet {
             classUpdate.setSubject_id(subjectId);
             classUpdate.setStatus(status);
 
-            Map<String, String> errors = classService.validateClassData(className);
-            if (!errors.isEmpty()) {
-                request.setAttribute("errors", errors);
-                List<Subject> subjectList = subjectService.getAllSubjects();
-                request.setAttribute("classes", classUpdate);
-                request.setAttribute("subject", subjectList);
-                request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
-                return;
-            }
-
+//            Map<String, String> errors = classService.validateClassData(className);
+//            if (!errors.isEmpty()) {
+//                request.setAttribute("errors", errors);
+//                List<Subject> subjectList = subjectService.getAllSubjects();
+//                request.setAttribute("classes", classUpdate);
+//                request.setAttribute("subject", subjectList);
+//                request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
+//                return;
+//            }
             boolean isUpdate = classService.updateClass(classUpdate);
             if (isUpdate) {
                 List<Class> classList = classService.getAllClasses();

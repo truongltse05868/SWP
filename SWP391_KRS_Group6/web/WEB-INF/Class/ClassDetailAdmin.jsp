@@ -162,6 +162,7 @@
                                             <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
                                             <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
                                             <th>Gender</th>
+                                            <th>Role</th>
                                             <th><a href="?sortField=status">Status</a></th>
                                             <th>Delete</th>
 
@@ -175,6 +176,20 @@
                                                 <td>${user.gender}</td>
                                                 <td>
                                                     <c:choose>
+                                                        <c:when test="${not empty roles}">
+                                                            <c:forEach var="role" items="${roles}">
+                                                                <c:if test="${role.settingId == user.role_id}">
+                                                                    ${role.settingName}
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Role information is unavailable.
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
                                                         <c:when test="${user.status}">
                                                             Active
                                                         </c:when>
@@ -185,7 +200,7 @@
                                                 </td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">
-                                                        <input type="hidden" name="UserId" value="${user.user_id}" />
+                                                        <input type="hidden" name="userId" value="${user.user_id}" />
                                                         <input type="hidden" name="classId" value="${classs.class_id}">
                                                         <input type="hidden" name="action" value="deteteUserInclass">
                                                         <button class="btn btn-primary btn-sm" type="submit">Delete</button>

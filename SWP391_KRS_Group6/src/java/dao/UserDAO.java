@@ -63,26 +63,26 @@ public class UserDAO extends DBConnect {
         String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.status, u.role_id, u.otp "
                 + "FROM user u "
                 + "LEFT JOIN class_user cu ON u.user_id = cu.user_id AND cu.class_id = ? "
-                + "WHERE cu.class_id IS NULL";
+                + "WHERE cu.class_id IS NULL AND u.role_id <> 1 AND u.status = TRUE";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, classId); // Setting the class ID parameter
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                User user = new User(
-                        rs.getInt("user_id"),
-                        rs.getString("user_name"),
-                        rs.getString("password"),
-                        rs.getString("email"),
-                        rs.getString("full_name"),
-                        rs.getString("phone"),
-                        rs.getString("gender"),
-                        rs.getBoolean("status"),
-                        rs.getInt("role_id"),
-                        rs.getString("otp")
-                );
-                users.add(user);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
+                    );
+                    users.add(user);
+                }
             }
         } catch (SQLException e) {
             logger.log(Level.SEVERE, "Error getting users not in class with ID " + classId, e);
@@ -685,7 +685,7 @@ public class UserDAO extends DBConnect {
         String query = "SELECT u.* FROM class_user as cu "
                 + "inner JOIN user as u "
                 + "ON cu.user_id= u.user_id "
-                + "where cu.class_id = ? and u.status = 1;"; // Ensure table name matches the one in your database
+                + "where cu.class_id = ? and cu.status = 1 and u.status = 1;"; // Ensure table name matches the one in your database
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, class_id);
             try (ResultSet rs = ps.executeQuery()) {

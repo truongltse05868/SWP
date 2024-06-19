@@ -76,5 +76,7 @@ public class ClassService extends BaseService {
     public List<Class> sortClass(String search) {
         return classDAO.getClassSortedBy(search);
     }
-    
+    public boolean deleteUserInclass(int classId, int userId){
+        return classDAO.deleteUserInclass(classId, userId);
+    }
 }

@@ -139,6 +139,18 @@ public class ClassDAO extends DBConnect {
             return false;
         }
     }
+    public boolean deleteUserInclass(int class_id, int user_id) {
+        String query = "UPDATE class_user SET status = 0 WHERE class_id = ? AND user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, class_id);
+            ps.setInt(2, user_id);
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating class_user", e);
+            return false;
+        }
+    }
 
     public Class getClassById(int classId) {
         Class classes = null;
