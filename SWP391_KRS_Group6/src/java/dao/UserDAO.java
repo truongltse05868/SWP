@@ -25,8 +25,39 @@ public class UserDAO extends DBConnect {
     /**
      * Fetches all users from the database.
      *
+     * @param classId
      * @return a list of User objects
      */
+    public List<User> getAllUsersInClass(int classId) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.status, u.role_id, u.otp "
+                + "FROM class_user cu "
+                + "JOIN user u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, classId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                // Populate user object
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error getting user in class by " + classId, e);
+        }
+        return users;
+    }
+
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user"; // Ensure table name matches the one in your database
@@ -219,6 +250,33 @@ public class UserDAO extends DBConnect {
                         rs.getInt("role_id"),
                         rs.getString("otp")
                 );
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all users", e);
+        }
+        return users;
+    }
+
+    public List<User> getUsersByRole(int roleId) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user where role_id = ? and status = 1"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, roleId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                // Populate user object
                 users.add(user);
             }
         } catch (SQLException e) {

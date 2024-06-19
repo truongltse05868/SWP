@@ -1,6 +1,7 @@
 package dao;
 
 import entity.Class;
+import entity.User;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -43,6 +44,27 @@ public class ClassDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error fetching all class", e);
         }
         return classList;
+    }
+
+    public boolean addUserToClass(User user, int classId ) {
+        String query = "INSERT INTO class_user (user_id, class_id, status) "
+                + "VALUES (?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, user.getUser_id());
+            ps.setInt(2, classId);
+            ps.setBoolean(3, user.isStatus());
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.log(Level.INFO, "Add user to class successfully");
+                return true;
+            } else {
+                logger.log(Level.WARNING, "No rows affected");
+                return false;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error adding user", e);
+            return false;
+        }
     }
 
     public List<Class> getAllClassUser() {
@@ -210,7 +232,7 @@ public class ClassDAO extends DBConnect {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Class classe = new Class(
-                         rs.getInt("class_id"),
+                        rs.getInt("class_id"),
                         rs.getInt("subject_id"),
                         rs.getString("class_name"),
                         rs.getBoolean("status")
@@ -223,14 +245,15 @@ public class ClassDAO extends DBConnect {
         }
         return classes;
     }
-        public List<Class> getClassSortedBy(String field) {
+
+    public List<Class> getClassSortedBy(String field) {
         List<Class> classes = new ArrayList<>();
         String query = "SELECT * FROM class ORDER BY " + field;
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Class classe = new Class(
-                         rs.getInt("class_id"),
+                        rs.getInt("class_id"),
                         rs.getInt("subject_id"),
                         rs.getString("class_name"),
                         rs.getBoolean("status")

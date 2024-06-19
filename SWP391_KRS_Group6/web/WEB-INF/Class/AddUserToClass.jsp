@@ -78,7 +78,7 @@
             function sendPostRequestSort(sortField, searchUsername) {
                 const form = document.createElement("form");
                 form.method = "POST";
-                form.action = "ClassController";
+                form.action = "userController";
 
                 // Create hidden input for action
                 const actionInput = document.createElement("input");
@@ -98,8 +98,8 @@
                 if (searchUsername) {
                     const searchUsernameInput = document.createElement("input");
                     searchUsernameInput.type = "hidden";
-                    searchUsernameInput.name = "searchClassname";
-                    searchUsernameInput.value = searchClassname;
+                    searchUsernameInput.name = "searchUsername";
+                    searchUsernameInput.value = searchUsername;
                     form.appendChild(searchUsernameInput);
                 }
 
@@ -111,17 +111,17 @@
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
 
-        <jsp:include page="DashboardNav.jsp"/>
+        <jsp:include page="../DashboardNav.jsp"/>
 
 
         <!--Main container start -->
         <main class="ttr-wrapper">
             <div class="container-fluid">
                 <div class="db-breadcrumb">
-                    <h4 class="breadcrumb-title">Class List</h4>
+                    <h4 class="breadcrumb-title">User List</h4>
                     <ul class="db-breadcrumb-list">
                         <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
-                        <li>Class List</li>
+                        <li>User List</li>
                     </ul>
                 </div>
                 <div class="row">
@@ -130,52 +130,47 @@
                         <div class="widget-box">
                             <div class="widget-inner">
                                 <div class="row">
-                                    <form class="row col-sm-3" method="post" action="ClassController">
-                                        <div class="col">
-                                            <input class="form-control" type="text" name="searchClassname" placeholder="Search by class name" value="${searchClassname}">
-                                        </div>
-                                        <div class="col-auto">
-                                            <input type="hidden" name="action" value="searchClass">
-                                            <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                    <form class="col-sm-3" method="post" action="userController">
+                                        <div class="row">
+                                            <div class="col">
+                                                <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
+                                            </div>
+                                            <div class="col-auto">
+                                                <input type="hidden" name="action" value="searchUsername">
+                                                <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                            </div>
                                         </div>
                                     </form>
-                                    <form class="col-sm-7 text-right" action="ClassController" method="post">
-                                        <input type="hidden" name="action" value="addClassPage">
-                                        <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add Class</button>
+                                    <form class="col-sm-7 text-right" action="userController" method="post">
+                                        <input type="hidden" name="action" value="addUserPage">
+                                        <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
                                     </form>
                                 </div>
                             </div>
                             <div class="widget-inner">
-                                <c:if test="${not empty classes}">
+                                <c:if test="${not empty users}">
                                     <table >
                                         <tr>
-                                            <th><a href="SortByClassName" onclick="sendPostRequestSort('class_name', '${searchClassname}');return false;">Class Name</a></th>
-                                            <th><a href="SortBySubject" >Subject</a></th>
-                                            <th><a href="">Status</a></th>
-                                            <th>User In Class</th>
-                                            <th><a href="">Update</a></th>
-                                            <th>Detail</th>
+                                            <th><a href="SortByUserName" onclick="sendPostRequestSort('user_name', '${searchUsername}');return false;">Username</a></th>
+                                            <th><a href="SortByEmail" onclick="sendPostRequestSort('email', '${searchUsername}');return false;">Email</a></th>
+                                            <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
+                                            <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
+                                            <th>Gender</th>
+                                            <th><a href="?sortField=status">Status</a></th>
+                                            <th>Role</th>
+                                            <th>Update</th>
                                         </tr>
-                                        <c:forEach var="classList" items="${classes}">
+                                        <c:forEach var="user" items="${users}">
                                             <tr>
-                                                <td>${classList.class_name}</td>                                                
+                                                <td>${user.user_name}</td>
+                                                <td>${user.email}</td>
+                                                <td>${user.full_name}</td>
+                                                <td>${user.phone}</td>
+                                                <td>${user.gender}</td>
+
                                                 <td>
                                                     <c:choose>
-                                                        <c:when test="${not empty subjectList}">
-                                                            <c:forEach var="subjects" items="${subjectList}">
-                                                                <c:if test="${subjects.subject_id == classList.subject_id}">
-                                                                    ${subjects.subject_name}
-                                                                </c:if>
-                                                            </c:forEach>
-                                                        </c:when>
-                                                        <c:otherwise>
-                                                            Subject information is unavailable.
-                                                        </c:otherwise>
-                                                    </c:choose>
-                                                </td>
-                                                <td>
-                                                    <c:choose>
-                                                        <c:when test="${classList.status}">
+                                                        <c:when test="${user.status}">
                                                             Active
                                                         </c:when>
                                                         <c:otherwise>
@@ -184,21 +179,24 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                    <c:out value="${userCountMap[classList.class_id]}" />
+                                                    <c:choose>
+                                                        <c:when test="${not empty roles}">
+                                                            <c:forEach var="role" items="${roles}">
+                                                                <c:if test="${role.settingId == user.role_id}">
+                                                                    ${role.settingName}
+                                                                </c:if>
+                                                            </c:forEach>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Role information is unavailable.
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">
-                                                        <input type="hidden" name="classId" value="${classList.class_id}" />
-                                                        <input type="hidden" name="action" value="updateClassPage">
-                                                        <button class="btn btn-primary btn-sm" type="submit">Edit</button>
-                                                    </form>
-
-                                                </td>
-                                                <td>
-                                                    <form action="${pageContext.request.contextPath}/ClassController" method="post">
-                                                        <input type="hidden" name="classId" value="${classList.class_id}" />
-                                                        <input type="hidden" name="action" value="classDetail">
-                                                        <button class="btn btn-primary btn-sm" type="submit">Detail</button>
+                                                        <input type="hidden" name="id" value="${user.user_id}" />
+                                                        <input type="hidden" name="action" value="addUserToClass">
+                                                        <button class="btn btn-primary btn-sm" type="submit">Add</button>
                                                     </form>
 
                                                 </td>
@@ -206,16 +204,11 @@
                                         </c:forEach>
                                     </table>
                                 </c:if>
-                                <c:if test="${empty classes}">
-                                    <p>No classes found.</p>
+                                <c:if test="${empty users}">
+                                    <p>No users found.</p>
                                 </c:if>
+                                <div><span>${successMessage}</span></div>
 
-
-                            </div>
-                            <div>
-                                <span>
-                                    ${successMessage}
-                                </span>
                             </div>
                         </div>
                     </div>

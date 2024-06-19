@@ -24,6 +24,7 @@ import java.util.Map;
 import service.ClassService;
 import service.SubjectService;
 import service.SettingService;
+import service.UserService;
 
 /**
  *
@@ -32,6 +33,7 @@ import service.SettingService;
 public class ClassController extends HttpServlet {
 
     ClassService classService = new ClassService();
+    UserService userService = new UserService();
     SubjectService subjectService = new SubjectService();
     SettingService settingService = new SettingService();
     private static final Logger logger = Logger.getLogger(UserController.class.getName());
@@ -84,6 +86,12 @@ public class ClassController extends HttpServlet {
                         break;
                     case "sort":
                         searchClassByName(request, response);
+                        break;
+                    case "classDetail":
+                        getClassDetail(request, response);
+                        break;
+                    case "addUserToClassPage":
+                        addUserToClassPage(request, response);
                         break;
                     default:
 
@@ -141,7 +149,7 @@ public class ClassController extends HttpServlet {
 
     private void getAllClasses(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {;
+        try {
             List<Class> classList = classService.getAllClass();
             List<Subject> subjectList = subjectService.getAllSubjects();
             Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
@@ -153,6 +161,42 @@ public class ClassController extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list Class", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
+
+    private void getClassDetail(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            Class classs = classService.getClassById(classId);
+            List<User> users = userService.getAllUsersInClass(classId);
+
+            List<Class> classList = classService.getAllClass();
+            List<Subject> subjectList = subjectService.getAllSubjects();
+            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+            request.setAttribute("classes", classList);
+            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("users", users);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list Class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
+
+    private void addUserToClassPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+//            List<User> user = userService.getUsersByRole(3);
+            List<User> user = userService.getAllUsers();
+            List<Setting> role = settingService.getAllRoles();
+            request.setAttribute("users", user);
+            request.setAttribute("roles", role);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get add class page", e);
         }
     }
 

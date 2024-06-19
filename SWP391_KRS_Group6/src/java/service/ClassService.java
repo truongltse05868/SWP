@@ -6,6 +6,7 @@ package service;
 
 import dao.ClassDAO;
 import entity.Class;
+import entity.User;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,9 @@ public class ClassService extends BaseService {
     //chọc vào DAO
     public boolean addClass(Class newClass) {
         return classDAO.addClass(newClass);
+    }
+    public boolean addUserToClass(User user, int classId) {
+        return classDAO.addUserToClass(user, classId);
     }
 
     public List<Class> getAllClasses() {

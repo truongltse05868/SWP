@@ -18,6 +18,7 @@ import java.util.Map;
  * @author Ngs-MT305
  */
 public class UserService extends BaseService {
+
     private final String CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+<>?";
 //    private static final Logger logger = Logger.getLogger(userDAO.class.getName());
     private final UserDAO userDAO;
@@ -31,6 +32,10 @@ public class UserService extends BaseService {
         Map<String, String> errors = new HashMap<>();
         errors.putAll(validateNotEmpty(className, "blankClassName", "Tên lớp học không được để trống"));
         return errors;
+    }
+
+    public List<User> getAllUsersInClass(int classId) {
+        return userDAO.getAllUserInClass(classId);
     }
 
     public List<User> getAllUsers() {
@@ -92,6 +97,9 @@ public class UserService extends BaseService {
     public List<User> getUsersSortedBy(String field) {
         return userDAO.getUsersSortedBy(field);
     }
+    public List<User> getUsersByRole(int role) {
+        return userDAO.getUsersByRole(role);
+    }
 
     public boolean confirmUser(String email, String otp) {
         return userDAO.confirmUser(email, otp);
@@ -118,7 +126,6 @@ public class UserService extends BaseService {
     public boolean addUserRegister(User user) {
         return userDAO.addUserRegister(user);
     }
-    
 
     public String generatePassword() {
         SecureRandom random = new SecureRandom();
