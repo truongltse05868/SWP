@@ -143,13 +143,14 @@
                                     </form>
                                     <form class="col-sm-7 text-right" action="ClassController" method="post">
                                         <input type="hidden" name="action" value="addUserToClassPage">
+                                        <input type="hidden" name="classId" value="${classs.class_id}" />
                                         <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add User To Class</button>
                                     </form>
                                 </div>
                             </div>
                             <div class="widget-inner">
                                 <div class="row">
-                                   
+
                                 </div>
                             </div>
                             <div class="widget-inner">
@@ -162,6 +163,8 @@
                                             <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
                                             <th>Gender</th>
                                             <th><a href="?sortField=status">Status</a></th>
+                                            <th>Delete</th>
+
                                         </tr>
                                         <c:forEach var="user" items="${users}">
                                             <tr>
@@ -179,6 +182,14 @@
                                                             Inactive
                                                         </c:otherwise>
                                                     </c:choose>
+                                                </td>
+                                                <td>
+                                                    <form action="${pageContext.request.contextPath}/ClassController" method="post">
+                                                        <input type="hidden" name="UserId" value="${user.user_id}" />
+                                                        <input type="hidden" name="classId" value="${classs.class_id}">
+                                                        <input type="hidden" name="action" value="deteteUserInclass">
+                                                        <button class="btn btn-primary btn-sm" type="submit">Delete</button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         </c:forEach>

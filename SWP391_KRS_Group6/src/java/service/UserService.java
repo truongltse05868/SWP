@@ -97,8 +97,13 @@ public class UserService extends BaseService {
     public List<User> getUsersSortedBy(String field) {
         return userDAO.getUsersSortedBy(field);
     }
+
     public List<User> getUsersByRole(int role) {
         return userDAO.getUsersByRole(role);
+    }
+
+    public List<User> getAllUsersNotInClass(int class_id) {
+        return userDAO.getAllUsersNotInClass(class_id);
     }
 
     public boolean confirmUser(String email, String otp) {

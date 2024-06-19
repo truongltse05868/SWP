@@ -76,5 +76,5 @@ public class ClassService extends BaseService {
     public List<Class> sortClass(String search) {
         return classDAO.getClassSortedBy(search);
     }
-
+    
 }

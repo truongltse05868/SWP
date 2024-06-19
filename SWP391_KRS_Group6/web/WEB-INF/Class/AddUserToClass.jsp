@@ -148,6 +148,13 @@
                                 </div>
                             </div>
                             <div class="widget-inner">
+                                <div class="row">
+                                    <label>Class: ${classs.class_name}</label>
+                                    <!--<label>Teacher: ${classs.class_name}</label>-->
+                                    
+                                </div>
+                            </div>
+                            <div class="widget-inner">
                                 <c:if test="${not empty users}">
                                     <table >
                                         <tr>
@@ -194,7 +201,8 @@
                                                 </td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">
-                                                        <input type="hidden" name="id" value="${user.user_id}" />
+                                                        <input type="hidden" name="UserId" value="${user.user_id}" />
+                                                        <input type="hidden" name="classId" value="${classs.class_id}">
                                                         <input type="hidden" name="action" value="addUserToClass">
                                                         <button class="btn btn-primary btn-sm" type="submit">Add</button>
                                                     </form>

@@ -93,6 +93,12 @@ public class ClassController extends HttpServlet {
                     case "addUserToClassPage":
                         addUserToClassPage(request, response);
                         break;
+                    case "addUserToClass":
+                        addUserToClass(request, response);
+                        break;
+                    case "deteteUserInclass":
+                        deteteUserInclass(request, response);
+                        break;
                     default:
 
                         break;
@@ -163,6 +169,22 @@ public class ClassController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
         }
     }
+    private void deteteUserInclass(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<Class> classList = classService.getAllClass();
+            List<Subject> subjectList = subjectService.getAllSubjects();
+            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+            request.setAttribute("classes", classList);
+            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("subjectList", subjectList);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list Class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
 
     private void getClassDetail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -170,11 +192,8 @@ public class ClassController extends HttpServlet {
             int classId = Integer.parseInt(request.getParameter("classId"));
             Class classs = classService.getClassById(classId);
             List<User> users = userService.getAllUsersInClass(classId);
-
-            List<Class> classList = classService.getAllClass();
-            List<Subject> subjectList = subjectService.getAllSubjects();
             Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-            request.setAttribute("classes", classList);
+            request.setAttribute("classs", classs);
             request.setAttribute("userCountMap", userCountMap);
             request.setAttribute("users", users);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
@@ -189,12 +208,47 @@ public class ClassController extends HttpServlet {
             throws ServletException, IOException {
         try {
 //            List<User> user = userService.getUsersByRole(3);
-            List<User> user = userService.getAllUsers();
+            int class_id = Integer.parseInt(request.getParameter("classId"));
+            Class classs = classService.getClassById(class_id);
+            List<User> user = userService.getAllUsersNotInClass(class_id);
             List<Setting> role = settingService.getAllRoles();
             request.setAttribute("users", user);
             request.setAttribute("roles", role);
+            request.setAttribute("classs", classs);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
             dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get add class page", e);
+        }
+    }
+
+    private void addUserToClass(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+//            List<User> user = userService.getUsersByRole(3);
+            int class_id = Integer.parseInt(request.getParameter("classId"));
+            int UserId = Integer.parseInt(request.getParameter("UserId"));
+            Class classs = classService.getClassById(class_id);
+            List<User> users = userService.getAllUsersNotInClass(class_id);
+            User user = userService.getUserById(UserId);
+            List<Setting> role = settingService.getAllRoles();
+            boolean isAddSuccess = classService.addUserToClass(user, class_id);
+            if (isAddSuccess) {
+                request.setAttribute("users", users);
+                request.setAttribute("roles", role);
+                request.setAttribute("classs", classs);
+                request.setAttribute("successMessage", "Thêm thành công");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                request.setAttribute("users", users);
+                request.setAttribute("roles", role);
+                request.setAttribute("classs", classs);
+                request.setAttribute("successMessage", "Thêm thất bại");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
+                dispatcher.forward(request, response);
+            }
+
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get add class page", e);
         }
