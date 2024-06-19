@@ -306,7 +306,7 @@ public class ClassController extends HttpServlet {
             boolean status = request.getParameter("status") != null;
 
             // Validate các trường
-            Map<String, String> errors = classService.validateClassData(className);
+            Map<String, String> errors = classService.validateClassData(className, 0);
 
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
@@ -378,15 +378,15 @@ public class ClassController extends HttpServlet {
             classUpdate.setSubject_id(subjectId);
             classUpdate.setStatus(status);
 
-//            Map<String, String> errors = classService.validateClassData(className);
-//            if (!errors.isEmpty()) {
-//                request.setAttribute("errors", errors);
-//                List<Subject> subjectList = subjectService.getAllSubjects();
-//                request.setAttribute("classes", classUpdate);
-//                request.setAttribute("subject", subjectList);
-//                request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
-//                return;
-//            }
+            Map<String, String> errors = classService.validateClassData(className, classId);
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                List<Subject> subjectList = subjectService.getAllSubjects();
+                request.setAttribute("classes", classUpdate);
+                request.setAttribute("subject", subjectList);
+                request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
+                return;
+            }
             boolean isUpdate = classService.updateClass(classUpdate);
             if (isUpdate) {
                 List<Class> classList = classService.getAllClasses();

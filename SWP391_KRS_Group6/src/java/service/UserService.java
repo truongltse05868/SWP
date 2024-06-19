@@ -140,4 +140,12 @@ public class UserService extends BaseService {
         }
         return password.toString();
     }
+
+    public boolean isUserNameExists(String userName, int userId) {
+        return userDAO.isUserNameExists(userName, userId);
+    }
+
+    public boolean isEmailExists(String email, int userId) {
+        return userDAO.isEmailExists(email, userId);
+    }
 }

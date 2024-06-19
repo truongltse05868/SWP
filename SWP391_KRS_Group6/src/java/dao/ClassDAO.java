@@ -92,7 +92,7 @@ public class ClassDAO extends DBConnect {
 
     public Map<Integer, Integer> getUserCountForClasses() {
         Map<Integer, Integer> userCountMap = new HashMap<>();
-        String sql = "SELECT class_id, COUNT(user_id) AS user_count FROM class_user GROUP BY class_id";
+        String sql = "SELECT class_id, COUNT(user_id) AS user_count FROM class_user where status = 1 GROUP BY class_id";
         try (PreparedStatement ps = connection.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 userCountMap.put(rs.getInt("class_id"), rs.getInt("user_count"));
@@ -199,10 +199,11 @@ public class ClassDAO extends DBConnect {
         return classList;
     }
 
-    public boolean isClassNameExists(String className) {
-        String query = "SELECT COUNT(*) FROM class WHERE class_name = ?";
+    public boolean isClassNameExists(String className, int class_id) {
+        String query = "SELECT COUNT(*) FROM class WHERE class_name = ? AND class_id <> ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, className);
+            ps.setInt(2, class_id);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1) > 0;

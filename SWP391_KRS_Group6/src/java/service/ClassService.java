@@ -22,19 +22,19 @@ public class ClassService extends BaseService {
     }
 
     //validate
-    public Map<String, String> validateClassData(String className) {
+    public Map<String, String> validateClassData(String className, int class_id) {
         Map<String, String> errors = new HashMap<>();
         errors.putAll(validateNotEmpty(className, "blankClassName", "Tên lớp học không được để trống"));
 
-        if (isClassNameExists(className)) {
+        if (isClassNameExists(className, class_id)) {
             errors.put("duplicateClassName", "Tên lớp học đã tồn tại");
         }
 
         return errors;
     }
 
-    private boolean isClassNameExists(String className) {
-        return classDAO.isClassNameExists(className);
+    private boolean isClassNameExists(String className, int classId) {
+        return classDAO.isClassNameExists(className, classId);
     }
 
     //chọc vào DAO

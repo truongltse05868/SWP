@@ -28,6 +28,7 @@ public class UserController extends HttpServlet {
     SettingService settingService = new SettingService();
     UserService userService = new UserService();
     SubjectService subjectService = new SubjectService();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -215,7 +216,35 @@ public class UserController extends HttpServlet {
             User user = userService.getUserById(userId);
 
             if (user != null) {
+                boolean userNameExists = userService.isUserNameExists(userName, userId);
+                boolean emailExists = userService.isEmailExists(email, userId);
+                if (userNameExists || emailExists) {
+                    String errorUserName = "";
+                    String errorEmail = "";
+                    if (userNameExists) {
+                        errorUserName = "Username đã tồn tại.";
+                    }
+                    if (emailExists) {
+                        errorEmail = errorEmail.isEmpty() ? "Email đã tồn tại." : errorEmail + " và Email đã tồn tại.";
+                    }
+                    request.setAttribute("errorUserName", errorUserName);
+                    request.setAttribute("errorEmail", errorEmail);
 
+                    // Lấy danh sách roles và users để giữ nguyên data của page
+                    user.setUser_name(userName);
+                    user.setEmail(email);
+                    user.setFull_name(fullName);
+                    user.setPhone(phone);
+                    user.setGender(gender);
+                    user.setStatus(status);
+                    user.setRole_id(roleId);
+                    List<Setting> roles = settingService.getAllRoles();
+                    request.setAttribute("user", user);
+                    request.setAttribute("roles", roles);
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserProfile.jsp");
+                    dispatcher.forward(request, response);
+                    return;
+                }
                 user.setUser_name(userName);
                 user.setEmail(email);
                 user.setFull_name(fullName);
@@ -315,7 +344,6 @@ public class UserController extends HttpServlet {
             String newPassword = request.getParameter("newPassword");
             String reNewPassword = request.getParameter("reNewPassword");
             String message;
-
 
             User user = userService.getUserById(userId);
 
@@ -558,7 +586,7 @@ public class UserController extends HttpServlet {
             String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
             if (isSuccess) {
                 String subjectEmail = "Bạn đã được tạo tài khoản thành công";
-                userService.sendPassToEmail(email,userName, password, subjectEmail);
+                userService.sendPassToEmail(email, userName, password, subjectEmail);
                 request.setAttribute("successMessage", message);
                 List<User> users = userService.getAllUsers();
                 request.setAttribute("users", users);

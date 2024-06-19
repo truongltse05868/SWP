@@ -184,7 +184,7 @@
                                                     </c:choose>
                                                 </td>
                                                 <td>
-                                                    <c:out value="${userCountMap[classList.class_id]}" />
+                                                    <c:out value="${userCountMap[classList.class_id] != null ? userCountMap[classList.class_id] : 0}" />
                                                 </td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">

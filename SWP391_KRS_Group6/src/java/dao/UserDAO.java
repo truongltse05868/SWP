@@ -711,5 +711,34 @@ public class UserDAO extends DBConnect {
         return users;
     }
     //end of class
+    public boolean isUserNameExists(String userName, int userId) {
+        String query = "SELECT COUNT(*) FROM user WHERE user_name = ? AND user_id <> ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, userName);
+            ps.setInt(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error user name is exists", e);
+        }
+        return false;
+    }
+
+    public boolean isEmailExists(String email, int userId) {
+        String query = "SELECT COUNT(*) FROM user WHERE email = ? AND user_id <> ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, email);
+            ps.setInt(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error email is exists", e);
+        }
+        return false;
+    }
 
 }
