@@ -150,7 +150,9 @@
                             </div>
                             <div class="widget-inner">
                                 <div class="row">
-
+                                    <label>Class: ${classs.class_name}</label>
+                                    <!--<label>Teacher: ${classs.class_name}</label>-->
+                                    
                                 </div>
                             </div>
                             <div class="widget-inner">
