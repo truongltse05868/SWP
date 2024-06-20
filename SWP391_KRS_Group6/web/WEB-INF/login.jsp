@@ -125,6 +125,7 @@
                             <div class="col-lg-12 m-b30">
                                 <button type="submit" class="btn button-md">Login</button>
                             </div>
+                            <span class="error" style="font-size: smaller;">${errors['errorsUpdate']}</span>
                             <div class="col-lg-12">
                                 <h6>Login with Social media</h6>
                                 <div class="d-flex">

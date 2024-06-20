@@ -312,11 +312,13 @@ public class UserController extends HttpServlet {
                 return;
             }
             if (!errors.isEmpty()) {
-                request.setAttribute("errors", errors);
-                request.setAttribute("user", user);
-                request.setAttribute("roles", roles);
-                request.setAttribute("tab", "change-password");
-                request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+                request.setAttribute("successMessage", message);
+//                request.setAttribute("errors", errors);
+//                request.setAttribute("user", user);
+//                request.setAttribute("roles", roles);
+//                request.setAttribute("tab", "change-password");
+//                request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
+                request.getRequestDispatcher("Login").forward(request, response);
                 return;
             }
             request.setAttribute("errors", errors);
