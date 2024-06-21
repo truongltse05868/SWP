@@ -2,6 +2,9 @@ package controller;
 
 //import dao.SettingDAO;
 //import dao.UserDAO;
+import dao.PostDAO;
+import dao.UserDAO;
+import entity.Post;
 import entity.Setting;
 import entity.User;
 import jakarta.servlet.RequestDispatcher;
@@ -46,7 +49,12 @@ public class UserController extends HttpServlet {
             }
 
             String action = request.getParameter("action");
-// Kiểm tra quyền truy cập của người dùng
+//// Kiểm tra quyền truy cập của người dùng
+//            if (currentUser != null) {
+//                if (action.equals("myPost")) {
+//                    getAllPost(request, response);
+//                }
+//            }
             if (setting.getSettingName().toLowerCase().equals("admin")) {
                 // Nếu là quản trị viên, cho phép truy cập vào các tính năng quản trị
                 switch (action) {
@@ -86,6 +94,9 @@ public class UserController extends HttpServlet {
                     case "confirmEmailChange":
                         confirmEmailChange(request, response);
                         break;
+                    case "myPost":
+                        getAllPost(request, response);
+                        break;
                     default:
 //                        getUserProfle(request, response);
                         break;
@@ -104,6 +115,9 @@ public class UserController extends HttpServlet {
                         break;
                     case "confirmEmailChange":
                         confirmEmailChange(request, response);
+                        break;
+                    case "myPost":
+                        getAllPost(request, response);
                         break;
                 }
             }
@@ -131,12 +145,35 @@ public class UserController extends HttpServlet {
     private void getProfileUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            int userId = Integer.parseInt(request.getParameter("userId"));
-//            UserDAO userDAO = new UserDAO();
-//            SettingDAO settingDAO = new SettingDAO();
 
+            //
+            PostDAO postDAO = new PostDAO();
+
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "6");
+            String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
+            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+            String keyword = request.getParameter("keyword");
+            int userId = Integer.parseInt(request.getParameter("userId"));
+
+            List<Post> posts;
             User user = userService.getUserById(userId);
             List<Setting> roles = settingService.getAllRoles();
+
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                posts = postDAO.searchMyPosts(keyword, sortBy, sortOrder, page, pageSize, userId);
+            } else {
+                posts = postDAO.getAllMyPostsSortedBy(sortBy, sortOrder, page, pageSize, userId);
+            }
+            //
+//            UserDAO userDAO = new UserDAO();
+//            SettingDAO settingDAO = new SettingDAO();
+            request.setAttribute("posts", posts);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("sortBy", sortBy);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("keyword", keyword);
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ProfileUser.jsp");
@@ -652,6 +689,42 @@ public class UserController extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error getting user list", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
+        }
+    }
+
+    private void getAllPost(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            PostDAO postDAO = new PostDAO();
+            UserDAO userDAO = new UserDAO();
+
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "3");
+            String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
+            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+            String keyword = request.getParameter("keyword");
+
+            List<Post> posts;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                posts = postDAO.searchPosts(keyword, sortBy, sortOrder, page, pageSize);
+            } else {
+                posts = postDAO.getAllPostsSortedBy(sortBy, sortOrder, page, pageSize);
+            }
+            List<User> users = userDAO.getAllUsers();
+
+            request.setAttribute("posts", posts);
+            request.setAttribute("users", users);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("sortBy", sortBy);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("keyword", keyword);
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ProfileUser.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error getting list of posts", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the list of posts.");
         }
     }
 

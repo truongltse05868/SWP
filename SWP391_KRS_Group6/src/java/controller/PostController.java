@@ -86,6 +86,10 @@ public class PostController extends HttpServlet {
                         int Author = currentUser.getUser_id();
                         InsertPost(request, response, submit, Author);
                     }
+                    case "updatePost" -> {
+                        int pid = Integer.parseInt(request.getParameter("pid"));
+                        UpdatePost(request, response, pid, submit);
+                    }
                     case "BlogList" ->
                         getAllBlog(request, response);
                     case "BlogDetail" -> {

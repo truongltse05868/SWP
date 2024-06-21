@@ -114,7 +114,7 @@
                                                                         </c:forEach>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        Post information is unavailable.
+                                                                        Anonymous.
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </i></li>

@@ -208,4 +208,58 @@ public class PostDAO extends DBConnect {
         return posts;
     }
 
+    //
+    public List<Post> searchMyPosts(String keyword, String column, String order, int page, int pageSize, int author) {
+        List<Post> posts = new ArrayList<>();
+        String sql = "SELECT * FROM post WHERE title LIKE ? OR summary LIKE ? And user_id = ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String query = "%" + keyword + "%";
+            ps.setString(1, query);
+            ps.setString(2, query);
+            ps.setInt(3, author);
+            ps.setInt(4, pageSize);
+            ps.setInt(5, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                posts.add(new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("thumbnail_url"),
+                        rs.getString("content"),
+                        rs.getBoolean("status"),
+                        rs.getInt("user_id")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error searching posts", ex);
+        }
+        return posts;
+    }
+
+    // Get all posts sorted by a specific column with pagination
+    public List<Post> getAllMyPostsSortedBy(String column, String order, int page, int pageSize, int author) {
+        List<Post> posts = new ArrayList<>();
+        String sql = "SELECT * FROM post where user_id = ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, author);
+            ps.setInt(2, pageSize);
+            ps.setInt(3, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                posts.add(new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("thumbnail_url"),
+                        rs.getString("content"),
+                        rs.getBoolean("status"),
+                        rs.getInt("user_id")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching sorted posts", ex);
+        }
+        return posts;
+    }
 }
