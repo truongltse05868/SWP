@@ -274,7 +274,47 @@ public class ClassController extends HttpServlet {
             logger.log(Level.SEVERE, "Error get add class page", e);
         }
     }
+    
+    private void getAllClassesAdmin2(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "6");
+            String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "subject_id";
+            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+            String keyword = request.getParameter("keyword");
+            
+            List<Class> ClassList;
+            if (keyword != null && !keyword.trim().isEmpty()) {
+                ClassList = classService.getAllClassAdmin(keyword, sortBy, sortOrder, page, pageSize);
+            } else {
+                ClassList = classService.getAllClassSortedBy(sortBy, sortOrder, page, pageSize);
+            }
 
+            request.setAttribute("subjectList", ClassList);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("sortBy", sortBy);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("keyword", keyword);
+
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Subject/SubjectList.jsp");
+            dispatcher.forward(request, response);
+//            List<Class> classList = classService.getAllClass();
+//            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+//            List<Subject> subjectList = subjectService.getAllSubjects();
+//            request.setAttribute("classes", classList);
+//            request.setAttribute("userCountMap", userCountMap);
+//            request.setAttribute("subjectList", subjectList);
+//
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp");
+//            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list Class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
     private void getAllClassesAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {

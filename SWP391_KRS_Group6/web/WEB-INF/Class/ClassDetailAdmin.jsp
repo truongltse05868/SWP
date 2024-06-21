@@ -152,7 +152,7 @@
                                 <div class="row">
                                     <label>Class: ${classs.class_name}</label>
                                     <!--<label>Teacher: ${classs.class_name}</label>-->
-                                    
+
                                 </div>
                             </div>
                             <div class="widget-inner">
@@ -211,7 +211,24 @@
                                             </tr>
                                         </c:forEach>
                                     </table>
+                                    <div class="pagination-bx rounded-sm gray clearfix">
+                                        <ul class="pagination">
+                                            <c:if test="${currentPage > 1}">
+                                                <li class="previous"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                    <c:if test="${currentPage > 2}">
+                                                    <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                    </c:if>
+                                                <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage - 1}</a></li>
+
+                                            </c:if>
+                                            <li class="active"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage}</a></li>
+                                            <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                            <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage+2}</a></li>
+                                            <li class="next"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                        </ul>
+                                    </div>
                                 </c:if>
+
                                 <c:if test="${empty users}">
                                     <p>No users found.</p>
                                 </c:if>

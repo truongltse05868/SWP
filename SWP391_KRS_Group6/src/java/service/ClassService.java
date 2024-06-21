@@ -41,6 +41,7 @@ public class ClassService extends BaseService {
     public boolean addClass(Class newClass) {
         return classDAO.addClass(newClass);
     }
+
     public boolean addUserToClass(User user, int classId) {
         return classDAO.addUserToClass(user, classId);
     }
@@ -65,6 +66,12 @@ public class ClassService extends BaseService {
         return classDAO.getAllClass();
     }
 
+    public List<Class> getAllClassAdmin(String keyword, String column, String order, int page, int pageSize) {
+        return classDAO.searchClassAdmin(keyword, column, order, 0, 0);
+    }
+    public List<Class> getAllClassSortedBy(String column, String order, int page, int pageSize) {
+        return classDAO.getAllClassSortedBy(column, order, page, pageSize);
+    }
     public List<Class> searchByClassNameAndSort(String field, String search) {
         return classDAO.getClassSortedSearchBy(field, search);
     }
@@ -76,7 +83,8 @@ public class ClassService extends BaseService {
     public List<Class> sortClass(String search) {
         return classDAO.getClassSortedBy(search);
     }
-    public boolean deleteUserInclass(int classId, int userId){
+
+    public boolean deleteUserInclass(int classId, int userId) {
         return classDAO.deleteUserInclass(classId, userId);
     }
 }

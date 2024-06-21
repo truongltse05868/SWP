@@ -46,7 +46,53 @@ public class ClassDAO extends DBConnect {
         return classList;
     }
 
-    public boolean addUserToClass(User user, int classId ) {
+    public List<Class> searchClassAdmin(String keyword, String column, String order, int page, int pageSize) {
+        List<Class> classList = new ArrayList<>();
+        String sql = "SELECT * FROM class WHERE class_name LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            String query = "%" + keyword + "%";
+
+            ps.setString(1, query);
+            ps.setInt(2, pageSize);
+            ps.setInt(3, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                classList.add(new Class(
+                        rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error searching class", ex);
+        }
+        return classList;
+    }
+
+    // Get all subjects sorted by a specific column with pagination
+    public List<Class> getAllClassSortedBy(String column, String order, int page, int pageSize) {
+        List<Class> classList = new ArrayList<>();
+        String sql = "SELECT * FROM class ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, pageSize);
+            ps.setInt(2, (page - 1) * pageSize);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                classList.add(new Class(
+                        rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching sorted subjects", ex);
+        }
+        return classList;
+    }
+
+    public boolean addUserToClass(User user, int classId) {
         String query = "INSERT INTO class_user (user_id, class_id, status) "
                 + "VALUES (?, ?, ?)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -139,6 +185,7 @@ public class ClassDAO extends DBConnect {
             return false;
         }
     }
+
     public boolean deleteUserInclass(int class_id, int user_id) {
         String query = "UPDATE class_user SET status = 0 WHERE class_id = ? AND user_id = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
