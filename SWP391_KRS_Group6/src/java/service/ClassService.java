@@ -65,6 +65,9 @@ public class ClassService extends BaseService {
     public List<Class> getAllClass() {
         return classDAO.getAllClass();
     }
+    public List<Class> getClassesWithoutUser(int userId) {
+        return classDAO.getClassesWithoutUser(userId);
+    }
 
     public List<Class> getAllClassAdmin(String keyword, String column, String order, int page, int pageSize) {
         return classDAO.searchClassAdmin(keyword, column, order, 0, 0);

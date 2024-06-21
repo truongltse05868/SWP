@@ -46,6 +46,28 @@ public class ClassDAO extends DBConnect {
         return classList;
     }
 
+    public List<Class> getClassesWithoutUser(int userId) {
+        List<Class> classList = new ArrayList<>();
+        String query = "SELECT * FROM class WHERE class_id NOT IN (SELECT class_id FROM class_user WHERE user_id = ?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    Class classs = new Class(
+                            rs.getInt("class_id"),
+                            rs.getInt("subject_id"),
+                            rs.getString("class_name"),
+                            rs.getBoolean("status")
+                    );
+                    classList.add(classs);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching classes without user", e);
+        }
+        return classList;
+    }
+
     public List<Class> searchClassAdmin(String keyword, String column, String order, int page, int pageSize) {
         List<Class> classList = new ArrayList<>();
         String sql = "SELECT * FROM class WHERE class_name LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";

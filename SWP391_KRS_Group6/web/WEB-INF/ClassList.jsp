@@ -214,16 +214,12 @@
                                                         </div>
 
                                                         <div class="cours-more-info">
-                                                            <div class="review">
-                                                                <span>3 Review</span>
-                                                                <ul class="cours-star">
-                                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                                    <li class="active"><i class="fa fa-star"></i></li>
-                                                                    <li><i class="fa fa-star"></i></li>
-                                                                    <li><i class="fa fa-star"></i></li>
-                                                                </ul>
-                                                            </div>
+                                                            <form method="post" action="ClassController" >
+                                                                <input type="hidden" name="action" value="enrollClass">
+                                                                <input type="hidden" name="classId" value="${classList.class_id}">
+                                                                
+                                                                <button type="submit" class="btn btn-block btn-primary">Enroll Me</button>
+                                                            </form>
                                                             <div class="price">
                                                                 <!--<del>$190</del>-->
                                                                 <span>Student: <c:out value="${userCountMap[classList.class_id]}" /></span>
@@ -240,6 +236,7 @@
                                     <c:if test="${empty classes}">
                                         <p>No Classes found.</p>
                                     </c:if>
+                                        <div>${successMessage}</div>
                                     <div class="col-lg-12 m-b20">
                                         <div class="pagination-bx rounded-sm gray clearfix">
                                             <ul class="pagination">
