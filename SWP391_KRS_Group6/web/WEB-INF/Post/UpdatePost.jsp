@@ -132,12 +132,14 @@
                                                 <textarea style=" height: 320px;" id="ckeditor" class=" form-control" name="content" type='text'><%=s.getContent()%></textarea>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
-                                            <label class="col-sm-2 col-form-label">Status</label>
-                                            <div class="col-sm-7">
-                                                <input class="form-control"  name="status" type="checkbox" ${s.isStatus() ? 'checked' : ''}>
+                                        <c:if test="${sessionScope['account'].getRole_id() == 1}">
+                                            <div class="form-group row">
+                                                <label class="col-sm-2 col-form-label">Status</label>
+                                                <div class="col-sm-7">
+                                                    <input class="form-control"  name="status" type="checkbox" ${s.isStatus() ? 'checked' : ''}>
+                                                </div>
                                             </div>
-                                        </div>
+                                        </c:if>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Author Id</label>
                                             <div class="col-sm-7">
