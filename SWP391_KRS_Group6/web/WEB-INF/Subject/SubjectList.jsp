@@ -115,10 +115,12 @@
 
                                 </div>
                                 <div class="col-lg-9 col-md-8 col-sm-12">
-                                    <form method="post" action="SubjectController" class="my-3">
-                                        <input type="hidden" name="service" value="insertSubject">
-                                        <button type="submit" class=" btn btn-block btn-primary">Add</button>
-                                    </form>
+                                    <c:if test="${sessionScope['account'].getRole_id() == 1}">
+                                        <form method="post" action="SubjectController" class="my-3">
+                                            <input type="hidden" name="service" value="insertSubject">
+                                            <button type="submit" class=" btn btn-block btn-primary">Add</button>
+                                        </form>
+                                    </c:if>
                                     <c:if test="${not empty subjectList}">
                                         <div class="row">
                                             <c:forEach var="subjectList" items="${subjectList}">
@@ -126,11 +128,13 @@
                                                     <div class="card h-100"> <!-- Ensure each card has the h-100 class for equal height -->
                                                         <div class="card-header p-0">
                                                             <img src="assets/images/courses/pic${subjectList.subject_id}.jpg" class="card-img-top" alt="">
-                                                            <form method="post" action="SubjectController">
-                                                                <input type="hidden" name="service" value="updateSubject">
-                                                                <input type="hidden" name="pid" value="${subjectList.subject_id}">
-                                                                <button type="submit" class="btn btn-block btn-primary">Update</button>
-                                                            </form>
+                                                            <c:if test="${sessionScope['account'].getRole_id() == 1}">
+                                                                <form method="post" action="SubjectController">
+                                                                    <input type="hidden" name="service" value="updateSubject">
+                                                                    <input type="hidden" name="pid" value="${subjectList.subject_id}">
+                                                                    <button type="submit" class="btn btn-block btn-primary">Update</button>
+                                                                </form>
+                                                            </c:if>
                                                         </div>
                                                         <div class="card-body d-flex flex-column"> <!-- Use flex-column for equal heights -->
                                                             <div class="info-bx mt-3 text-center">
@@ -140,36 +144,45 @@
                                                                 <div class="text-center">
                                                                     <h6>${subjectList.subject_code}</h6>
                                                                 </div>
-                                                                <div class="mt-2 text-center">
-                                                                    <form method="post" action="SubjectController">
-                                                                        <input type="hidden" name="service" value="CourseDetail">
-                                                                        <input type="hidden" name="pid" value="${subjectList.subject_id}">
-                                                                        <button type="submit" class="btn-info">Read More</button>
-                                                                    </form>
-
-                                                                </div>
                                                             </div>
                                                             <div class=" mt-auto"> <!-- mt-auto pushes footer to bottom -->
                                                                 <div class="d-flex justify-content-between">
-                                                                    <div>
-                                                                        <form method="post" action="SubjectController" style="display:inline;">
-                                                                            <input type="hidden" name="service" value="toggleStatus">
-                                                                            <input type="hidden" name="postId" value="${subjectList.subject_id}">
-                                                                            <button type="submit" class="btn-link p-0">
-                                                                                <c:choose>
-                                                                                    <c:when test="${subjectList.status}">
-                                                                                        <span class="badge badge-success">Active</span>
-                                                                                    </c:when>
-                                                                                    <c:otherwise>
-                                                                                        <span class="badge badge-secondary">Inactive</span>
-                                                                                    </c:otherwise>
-                                                                                </c:choose>
-                                                                            </button>
-                                                                        </form>
-                                                                    </div>
+                                                                    <c:if test="${sessionScope['account'].getRole_id() == 1}">
+                                                                        <div>
+                                                                            <form method="post" action="SubjectController" >
+                                                                                <input type="hidden" name="service" value="toggleStatus">
+                                                                                <input type="hidden" name="postId" value="${subjectList.subject_id}">
+                                                                                <button type="submit" class="btn-link p-0">
+                                                                                    <c:choose>
+                                                                                        <c:when test="${subjectList.status}">
+                                                                                            <span class="badge badge-success">Active</span>
+                                                                                        </c:when>
+                                                                                        <c:otherwise>
+                                                                                            <span class="badge badge-secondary">Inactive</span>
+                                                                                        </c:otherwise>
+                                                                                    </c:choose>
+                                                                                </button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </c:if>
+                                                                    <c:if test="${sessionScope['account'].getRole_id() != 1}">
+                                                                        <div>
+                                                                            <c:choose>
+                                                                                <c:when test="${subjectList.status}">
+                                                                                    <span class="badge badge-success">Active</span>
+                                                                                </c:when>
+                                                                                <c:otherwise>
+                                                                                    <span class="badge badge-secondary">Inactive</span>
+                                                                                </c:otherwise>
+                                                                            </c:choose>
+                                                                        </div>
+                                                                    </c:if>
                                                                     <div class="price">
-                                                                        <del>$190</del>
-                                                                        <h5 class="d-inline">$120</h5>
+                                                                        <form method="post" action="SubjectController">
+                                                                            <input type="hidden" name="service" value="CourseDetail">
+                                                                            <input type="hidden" name="pid" value="${subjectList.subject_id}">
+                                                                            <button type="submit" class="btn">Read More</button>
+                                                                        </form>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -177,7 +190,6 @@
                                                     </div>
                                                 </div>
                                             </c:forEach>
-
                                         </div>
                                         <div class="pagination-bx rounded-sm gray clearfix">
                                             <ul class="pagination">
