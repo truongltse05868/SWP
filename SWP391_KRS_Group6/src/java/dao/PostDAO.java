@@ -102,6 +102,29 @@ public class PostDAO extends DBConnect {
         return null;
     }
 
+    public List<Post> getPostByUser(int postId) {
+        List<Post> posts = new ArrayList<>();
+        String sql = "SELECT * FROM post WHERE user_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, postId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                posts.add(new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("thumbnail_url"),
+                        rs.getString("content"),
+                        rs.getBoolean("status"),
+                        rs.getInt("user_id")
+                ));
+            }
+        } catch (SQLException ex) {
+            logger.log(Level.SEVERE, "Error fetching post by ID", ex);
+        }
+        return posts;
+    }
+
     // Search posts by keyword in title or summary
     public List<Post> searchBlog(String keyword, String column, String order, int page, int pageSize) {
         List<Post> posts = new ArrayList<>();

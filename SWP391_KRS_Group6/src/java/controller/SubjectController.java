@@ -175,6 +175,9 @@ public class SubjectController extends HttpServlet {
 //            dispatcher.forward(request, response);
 
             SubjectDAO subjectDAO = new SubjectDAO();
+            HttpSession session = request.getSession(false);
+            User currentUser = (User) session.getAttribute("account");
+            int roleId = currentUser.getRole_id();
 
             int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
             int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "6");
@@ -183,10 +186,11 @@ public class SubjectController extends HttpServlet {
             String keyword = request.getParameter("keyword");
 
             List<Subject> subjects;
-            if (keyword != null && !keyword.trim().isEmpty()) {
-                subjects = subjectDAO.searchSubjects(keyword, sortBy, sortOrder, page, pageSize);
-            } else {
+
+            if (roleId == 1) {
                 subjects = subjectDAO.getAllSubjectsSortedBy(sortBy, sortOrder, page, pageSize);
+            } else {
+                subjects = subjectDAO.getAllCourseSortedBy(sortBy, sortOrder, page, pageSize);
             }
 
             request.setAttribute("subjectList", subjects);

@@ -204,8 +204,8 @@
                                                         </ul>
                                                     </div>
                                                 </div>
-                                                <div class="courses-filter">
-                                                    <div class="clearfix">
+                                                <div class="courses-filter ">
+                                                    <div class="clearfix post-list">
                                                         <ul id="masonry" class="ttr-gallery-listing magnific-image row">
                                                             <c:if test="${not empty posts}">
                                                                 <c:forEach var="post" items="${posts}">
@@ -256,21 +256,24 @@
                                                                 <p>No post found.</p>
                                                             </c:if>
                                                         </ul>
-                                                        <div class="pagination-bx rounded-sm gray clearfix">
-                                                            <ul class="pagination">
-                                                                <c:if test="${currentPage > 1}">
-                                                                    <li class="previous"><a href="userController?action=profileUserPage&userId=${user.user_id}&page=${currentPage - 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                                        <c:if test="${currentPage > 2}">
-                                                                        <li><a href="userController?action=profileUserPage&userId=${user.user_id}&page=${currentPage - 2}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        <c:if test="${totalPost.size() > pageSize}">
+                                                            <div class="pagination-bx rounded-sm gray clearfix">
+                                                                <ul class="pagination">
+                                                                    <c:if test="${currentPage > 1}">
+                                                                        <li class="previous"><a href="userController?action=profileUserPage&Tab=post-list&userId=${user.user_id}&page=${currentPage - 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                                            <c:if test="${currentPage > 2}">
+                                                                            <li><a href="userController?action=profileUserPage&Tab=post-list&userId=${user.user_id}&page=${currentPage - 2}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                                            </c:if>
+                                                                        <li><a href="userController?action=profileUserPage&Tab=post-list&userId=${user.user_id}&page=${currentPage - 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
                                                                         </c:if>
-                                                                    <li><a href="userController?action=profileUserPage&userId=${user.user_id}&page=${currentPage - 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
-                                                                    </c:if>
-                                                                <li class="active"><a href="userController?action=profileUserPage&userId=${user.user_id}&page=${currentPage}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
-                                                                <li><a href="userController?action=profileUserPage&userId=${user.user_id}&page=${currentPage + 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                                                <li><a href="userController?action=profileUserPage&userId=${user.user_id}&page=${currentPage+2}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
-                                                                <li class="next"><a href="userController?action=profileUserPage&userId=${user.user_id}&page=${currentPage + 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
-                                                            </ul>
-                                                        </div>
+                                                                    <li class="active"><a href="userController?action=profileUserPage&Tab=post-list&userId=${user.user_id}&page=${currentPage}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
+                                                                    <li><a href="userController?action=profileUserPage&Tab=post-list&userId=${user.user_id}&page=${currentPage + 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                                                    <li><a href="userController?action=profileUserPage&Tab=post-list&userId=${user.user_id}&page=${currentPage+2}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
+                                                                    <li class="next"><a href="userController?Tab=post-list&action=profileUserPage&userId=${user.user_id}&page=${currentPage + 1}&sortColumn=${sortBy}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </c:if>
+
                                                     </div>
                                                 </div>
                                             </div>

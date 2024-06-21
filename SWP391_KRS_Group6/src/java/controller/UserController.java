@@ -154,8 +154,10 @@ public class UserController extends HttpServlet {
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
             String keyword = request.getParameter("keyword");
+             String tab = request.getParameter("Tab");
             int userId = Integer.parseInt(request.getParameter("userId"));
 
+            List<Post> totalPost = postDAO.getPostByUser(userId);
             List<Post> posts;
             User user = userService.getUserById(userId);
             List<Setting> roles = settingService.getAllRoles();
@@ -169,6 +171,7 @@ public class UserController extends HttpServlet {
 //            UserDAO userDAO = new UserDAO();
 //            SettingDAO settingDAO = new SettingDAO();
             request.setAttribute("posts", posts);
+            request.setAttribute("totalPost", totalPost);
             request.setAttribute("currentPage", page);
             request.setAttribute("pageSize", pageSize);
             request.setAttribute("sortBy", sortBy);
@@ -176,6 +179,7 @@ public class UserController extends HttpServlet {
             request.setAttribute("keyword", keyword);
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
+            request.setAttribute("tab", tab);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ProfileUser.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
