@@ -112,7 +112,9 @@ public class ClassController extends HttpServlet {
                     case "enrollClass":
                         enrollToClass(request, response, userId);
                         break;
-
+                    case "classDetail":
+                        getClassDetail(request, response);
+                        break;
                     default:
 //                        getUserProfle(request, response);
                         break;

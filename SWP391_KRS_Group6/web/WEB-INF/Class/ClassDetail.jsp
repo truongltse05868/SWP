@@ -1,9 +1,8 @@
 <%-- 
-    Document   : ClassList
-    Created on : Jun 3, 2024, 10:39:49 AM
-    Author     : Ngs-MT305
+    Document   : ClassDetail
+    Created on : Jun 22, 2024, 10:38:57 AM
+    Author     : Sunshine
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
@@ -89,7 +88,7 @@
             <div id="loading-icon-bx"></div>
 
             <!-- Header Top ==== -->
-            <jsp:include page="Header.jsp"/>
+            <jsp:include page="../Header.jsp"/>
             <!-- header END ==== -->
             <!-- Content -->
             <div class="page-content bg-white">
@@ -179,64 +178,75 @@
                                     </div>
                                 </div>
                                 <div class="col-lg-9 col-md-8 col-sm-12">
-                                    <c:if test="${not empty classes}">
-                                        <div class="row">
+                                    <c:if test="${not empty users}">
+                                        <table >
+                                            <tr>
+                                                <th><a href="SortByUserName" onclick="sendPostRequestSort('user_name', '${searchUsername}');return false;">Username</a></th>
+                                                <th><a href="SortByEmail" onclick="sendPostRequestSort('email', '${searchUsername}');return false;">Email</a></th>
+                                                <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
+                                                <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
+                                                <th>Gender</th>
+                                                <th>Role</th>
+                                                <th><a href="?sortField=status">Status</a></th>
 
-                                            <c:forEach var="classList" items="${classes}">
-                                                <div class="col-md-6 col-lg-4 col-sm-6 m-b30">
-                                                    <div class="cours-bx">
-                                                        <div class="action-box">
-                                                            <img src="assets/images/courses/pic1.jpg" alt="">
-                                                            <a href="#" class="btn">Read More</a>
-                                                        </div>
-                                                        <div class="info-bx text-center">
-<!--                                                            <h5><a href="#" onclick="sendPostRequestLesson('lessonListBySubject', '${classList.subject_id}');
-                                                                    return false;">Class: ${classList.class_name}</a></h5>-->
-                                                            <form method="post" action="ClassController" >
-                                                                <input type="hidden" name="action" value="ClassDetail">
-                                                                <input type="hidden" name="classId" value="${classList.class_id}">
-                                                                <button type="submit" class="btn btn-block btn-primary">Class: ${classList.class_name}</button>
-                                                            </form>
-                                                            <span>
-                                                                <c:choose>
-                                                                    <c:when test="${not empty subjectList}">
-                                                                        <c:forEach var="subjects" items="${subjectList}">
-                                                                            <c:if test="${subjects.subject_id == classList.subject_id}">
-                                                                                ${subjects.subject_name}
-                                                                            </c:if>
-                                                                        </c:forEach>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        No subject found
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </span>
-                                                        </div>
 
-                                                        <div class="cours-more-info">
-                                                            <form method="post" action="ClassController" >
-                                                                <input type="hidden" name="action" value="enrollClass">
-                                                                <input type="hidden" name="classId" value="${classList.class_id}">
-                                                                
-                                                                <button type="submit" class="btn btn-block btn-primary">Enroll Me</button>
-                                                            </form>
-                                                            <div class="price">
-                                                                <!--<del>$190</del>-->
-                                                                <span>Student: <c:out value="${userCountMap[classList.class_id]}" /></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            </tr>
+                                            <c:forEach var="user" items="${users}">
+                                                <tr>
+                                                    <td>${user.user_name}</td>
+                                                    <td>${user.email}</td>
+                                                    <td>${user.full_name}</td>
+                                                    <td>${user.phone}</td>
+                                                    <td>${user.gender}</td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${not empty roles}">
+                                                                <c:forEach var="role" items="${roles}">
+                                                                    <c:if test="${role.settingId == user.role_id}">
+                                                                        ${role.settingName}
+                                                                    </c:if>
+                                                                </c:forEach>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Role information is unavailable.
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                    <td>
+                                                        <c:choose>
+                                                            <c:when test="${user.status}">
+                                                                Active
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Inactive
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
                                             </c:forEach>
+                                        </table>
+                                        <div class="pagination-bx rounded-sm gray clearfix">
+                                            <ul class="pagination">
+                                                <c:if test="${currentPage > 1}">
+                                                    <li class="previous"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                        <c:if test="${currentPage > 2}">
+                                                        <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        </c:if>
+                                                    <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage - 1}</a></li>
 
-
-
+                                                </c:if>
+                                                <li class="active"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage}</a></li>
+                                                <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage + 1}</a></li>
+                                                <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage+2}</a></li>
+                                                <li class="next"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                            </ul>
                                         </div>
                                     </c:if>
-                                    <c:if test="${empty classes}">
-                                        <p>No Classes found.</p>
+
+                                    <c:if test="${empty users}">
+                                        <p>No users found.</p>
                                     </c:if>
-                                        <div>${successMessage}</div>
+                                    <div>${successMessage}</div>
                                     <div class="col-lg-12 m-b20">
                                         <div class="pagination-bx rounded-sm gray clearfix">
                                             <ul class="pagination">
@@ -257,7 +267,7 @@
             </div>
             <!-- Content END-->
             <!-- Footer ==== -->
-            <jsp:include page="Footer.jsp"/>
+            <jsp:include page="../Footer.jsp"/>
             <!-- Footer END ==== -->
             <button class="back-to-top fa fa-chevron-up" ></button>
         </div>
