@@ -18,9 +18,9 @@ public class UserDAO extends DBConnect {
 
     private static final Logger logger = Logger.getLogger(UserDAO.class.getName());
 
-    public UserDAO() {
-        super(); // Gọi constructor của superclass để khởi tạo kết nối
-    }
+//    public UserDAO() {
+//        super(); // Gọi constructor của superclass để khởi tạo kết nối
+//    }
 
     /**
      * Fetches all users from the database.

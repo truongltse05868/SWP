@@ -68,7 +68,7 @@ public class ClassDAO extends DBConnect {
 
     public List<Class> getClassesWithoutUser(int userId) {
         List<Class> classList = new ArrayList<>();
-        String query = "SELECT * FROM class WHERE class_id NOT IN (SELECT class_id FROM class_user WHERE user_id = ?)";
+        String query = "SELECT * FROM class WHERE class_id NOT IN (SELECT class_id FROM class_user WHERE user_id = ? AND status = 1)";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
