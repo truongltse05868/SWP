@@ -182,22 +182,22 @@
                                         <table >
                                             <tr>
                                                 <th><a href="SortByUserName" onclick="sendPostRequestSort('user_name', '${searchUsername}');return false;">Username</a></th>
-                                                <th><a href="SortByEmail" onclick="sendPostRequestSort('email', '${searchUsername}');return false;">Email</a></th>
+                                                
                                                 <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
-                                                <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
-                                                <th>Gender</th>
+
+
                                                 <th>Role</th>
-                                                <th><a href="?sortField=status">Status</a></th>
+                                                
 
 
                                             </tr>
                                             <c:forEach var="user" items="${users}">
                                                 <tr>
                                                     <td>${user.user_name}</td>
-                                                    <td>${user.email}</td>
+
                                                     <td>${user.full_name}</td>
-                                                    <td>${user.phone}</td>
-                                                    <td>${user.gender}</td>
+
+
                                                     <td>
                                                         <c:choose>
                                                             <c:when test="${not empty roles}">
@@ -212,16 +212,7 @@
                                                             </c:otherwise>
                                                         </c:choose>
                                                     </td>
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${user.status}">
-                                                                Active
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                Inactive
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
+                                                    
                                                 </tr>
                                             </c:forEach>
                                         </table>
@@ -247,17 +238,17 @@
                                         <p>No users found.</p>
                                     </c:if>
                                     <div>${successMessage}</div>
-                                    <div class="col-lg-12 m-b20">
-                                        <div class="pagination-bx rounded-sm gray clearfix">
-                                            <ul class="pagination">
-                                                <li class="previous"><a href="#"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li class="next"><a href="#">Next <i class="ti-arrow-right"></i></a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
+                                    <!--                                    <div class="col-lg-12 m-b20">
+                                                                            <div class="pagination-bx rounded-sm gray clearfix">
+                                                                                <ul class="pagination">
+                                                                                    <li class="previous"><a href="#"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                                                    <li class="active"><a href="#">1</a></li>
+                                                                                    <li><a href="#">2</a></li>
+                                                                                    <li><a href="#">3</a></li>
+                                                                                    <li class="next"><a href="#">Next <i class="ti-arrow-right"></i></a></li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div>-->
                                 </div>
                             </div>
                         </div>

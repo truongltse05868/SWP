@@ -113,7 +113,7 @@ public class ClassController extends HttpServlet {
                         enrollToClass(request, response, userId);
                         break;
                     case "classDetail":
-                        getClassDetail(request, response);
+                        getClassDetail2(request, response);
                         break;
                     default:
 //                        getUserProfle(request, response);
@@ -230,6 +230,25 @@ public class ClassController extends HttpServlet {
             request.setAttribute("users", users);
             request.setAttribute("roles", roles);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get list Class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
+    private void getClassDetail2(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            Class classs = classService.getClassById(classId);
+            List<User> users = userService.getAllUsersInClass(classId);
+            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+            List<Setting> roles = settingService.getAllRoles();
+            request.setAttribute("classs", classs);
+            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("users", users);
+            request.setAttribute("roles", roles);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetail.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list Class", e);
