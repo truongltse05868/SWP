@@ -65,13 +65,37 @@ public class Dashboard extends HttpServlet {
                 posts = postDAO.getAllPostsSortedBy(sortBy, sortOrder, page, pageSize);
             }
             List<User> users = userDAO.getAllUsers();
-            List<Subject> subject = SubjectDAO.getAllSubjects();
-            List<Class> classes = ClassDAO.getAllClass();
-
+            List<User> usersActive = userDAO.getAllUsersForDashboard(1);
+            List<User> usersUnactive = userDAO.getAllUsersForDashboard(0);
+            List<Subject> subjectActive = SubjectDAO.getAllSubjectsForDash(1);
+            List<Subject> subjectUnactive = SubjectDAO.getAllSubjectsForDash(0);
+            List<Class> classesActive = ClassDAO.getAllClassForDash(1);
+            List<Class> classesInactive = ClassDAO.getAllClassForDash(0);
+            List<Post> postPubLised = postDAO.getAllPosts(1);
+            List<Post> postPending = postDAO.getAllPosts(0);
+            
+            int numerOfPost = postPubLised.size() + postPending.size();
+            int publishPercent = (postPubLised.size() * 100) / numerOfPost;
+            
+            int numerOfUser = usersActive.size() + usersUnactive.size();
+            int userActivePercent = (usersActive.size() * 100)/numerOfUser;
+            
+            int numerOfClass = classesActive.size() + classesInactive.size();
+            int classActivePercent = (classesActive.size() * 100)/numerOfClass;
+            
+            int numerOfSubject = subjectActive.size() + subjectUnactive.size();
+            int subjectActivePercent = (subjectActive.size() * 100)/numerOfSubject;
+            
             request.setAttribute("posts", posts);
+            request.setAttribute("numerOfPost", numerOfPost);
+            request.setAttribute("publishPercent", publishPercent);
+            request.setAttribute("numerOfUser", numerOfUser);
+            request.setAttribute("userActivePercent", userActivePercent);
             request.setAttribute("users", users);
-            request.setAttribute("subject", subject);
-            request.setAttribute("classes", classes);
+            request.setAttribute("numerOfSubject", numerOfSubject);
+            request.setAttribute("subjectActivePercent", subjectActivePercent);
+            request.setAttribute("numerOfClass", numerOfClass);
+             request.setAttribute("classActivePercent", classActivePercent);
             request.setAttribute("currentPage", page);
             request.setAttribute("pageSize", pageSize);
             request.setAttribute("sortBy", sortBy);

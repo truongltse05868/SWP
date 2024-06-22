@@ -117,6 +117,34 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
+    
+    public List<User> getAllUsersForDashboard(int status) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user where status =?"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, status);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        //                        rs.getInt("age"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all users", e);
+        }
+        return users;
+    }
 // Method to get users by username
 
     public List<User> searchUsersByUsername(String username) {

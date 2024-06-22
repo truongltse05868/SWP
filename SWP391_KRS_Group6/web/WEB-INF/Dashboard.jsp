@@ -84,23 +84,23 @@
                         <div class="widget-card widget-bg1">					 
                             <div class="wc-item">
                                 <h4 class="wc-title">
-                                    Total Subject
+                                    Total Users
                                 </h4>
                                 <span class="wc-des">
-                                    All Customs Value
+                                    All Users Number
                                 </span>
                                 <span class="wc-stats counter">
-                                    ${subject.size()}
+                                    ${numerOfUser}
                                 </span>	
                                 <div class="progress wc-progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 78%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar" role="progressbar" style="width:  ${userActivePercent}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <span class="wc-progress-bx">
                                     <span class="wc-change">
-                                        Change
+                                        Active
                                     </span>
                                     <span class="wc-number ml-auto">
-                                        78%
+                                        ${userActivePercent}%
                                     </span>
                                 </span>
                             </div>				      
@@ -110,23 +110,23 @@
                         <div class="widget-card widget-bg2">					 
                             <div class="wc-item">
                                 <h4 class="wc-title">
-                                     Total Blogs
+                                    Total Blogs
                                 </h4>
                                 <span class="wc-des">
                                     Customer Review
                                 </span>
                                 <span class="wc-stats counter">
-                                    ${posts.size()}
+                                    ${numerOfPost}
                                 </span>		
                                 <div class="progress wc-progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 88%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar" role="progressbar" style="width: ${publishPercent}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <span class="wc-progress-bx">
                                     <span class="wc-change">
-                                        Change
+                                        Published
                                     </span>
                                     <span class="wc-number ml-auto">
-                                        88%
+                                        ${publishPercent}%
                                     </span>
                                 </span>
                             </div>				      
@@ -136,23 +136,23 @@
                         <div class="widget-card widget-bg3">					 
                             <div class="wc-item">
                                 <h4 class="wc-title">
-                                   Total Orders 
+                                    Total Classes 
                                 </h4>
                                 <span class="wc-des">
                                     Fresh Order Amount 
                                 </span>
                                 <span class="wc-stats counter">
-                                    ${classes.size()}
+                                    ${numerOfClass}
                                 </span>		
                                 <div class="progress wc-progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar" role="progressbar" style="width: ${classActivePercent}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <span class="wc-progress-bx">
                                     <span class="wc-change">
-                                        Change
+                                        Active
                                     </span>
                                     <span class="wc-number ml-auto">
-                                        65%
+                                        ${classActivePercent}%
                                     </span>
                                 </span>
                             </div>				      
@@ -162,23 +162,23 @@
                         <div class="widget-card widget-bg4">					 
                             <div class="wc-item">
                                 <h4 class="wc-title">
-                                    Total Users 
+                                    Total Subject 
                                 </h4>
                                 <span class="wc-des">
-                                    Joined New User
+                                    Number Of Subject
                                 </span>
                                 <span class="wc-stats counter">
-                                    ${users.size()} 
+                                    ${numerOfSubject} 
                                 </span>		
                                 <div class="progress wc-progress">
-                                    <div class="progress-bar" role="progressbar" style="width: 90%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                    <div class="progress-bar" role="progressbar" style="width:  ${subjectActivePercent}%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                 </div>
                                 <span class="wc-progress-bx">
                                     <span class="wc-change">
-                                        Change
+                                        Active
                                     </span>
                                     <span class="wc-number ml-auto">
-                                        90%
+                                         ${subjectActivePercent}%
                                     </span>
                                 </span>
                             </div>				      
@@ -219,17 +219,17 @@
                                                     <span class="notification-time">
                                                         <a href="#" class="fa fa-close"></a>
                                                         <span>By  <c:choose>
-                                                            <c:when test="${not empty users}">
-                                                                <c:forEach var="user" items="${users}">
-                                                                    <c:if test="${user.user_id == post.user_id}">
-                                                                        ${user.full_name}
-                                                                    </c:if>
-                                                                </c:forEach>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                Author information is unavailable.
-                                                            </c:otherwise>
-                                                        </c:choose></span>
+                                                                <c:when test="${not empty users}">
+                                                                    <c:forEach var="user" items="${users}">
+                                                                        <c:if test="${user.user_id == post.user_id}">
+                                                                            ${user.full_name}
+                                                                        </c:if>
+                                                                    </c:forEach>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    Author information is unavailable.
+                                                                </c:otherwise>
+                                                            </c:choose></span>
                                                     </span>
                                                 </li>
                                             </c:forEach>

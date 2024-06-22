@@ -138,7 +138,7 @@ public class PostController extends HttpServlet {
             UserDAO userDAO = new UserDAO();
 
             int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "3");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "6");
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
             String keyword = request.getParameter("keyword");
@@ -176,7 +176,7 @@ public class PostController extends HttpServlet {
             int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
             int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "2");
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
-            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "DESC";
             String keyword = request.getParameter("keyword");
 
             List<Post> posts;
@@ -299,7 +299,7 @@ public class PostController extends HttpServlet {
                 request.setAttribute("successMessage", successMessage);
 
                 // Fetch and set the list of posts
-                List<Post> posts = dao.getAllPosts();
+                List<Post> posts = dao.getAllPosts(1);
                 request.setAttribute("postList", posts);
 
                 if (author == 1) {
@@ -341,7 +341,7 @@ public class PostController extends HttpServlet {
                     request.getRequestDispatcher("WEB-INF/Post/BlogDisplay.jsp").forward(request, response);
                 }
             } else {
-                List<Post> posts = dao.getAllPosts();
+                List<Post> posts = dao.getAllPosts(1);
                 request.setAttribute("postList", posts);
                 request.getRequestDispatcher("WEB-INF/Post/insertPost.jsp").forward(request, response);
             }

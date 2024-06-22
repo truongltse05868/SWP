@@ -188,9 +188,17 @@ public class SubjectController extends HttpServlet {
             List<Subject> subjects;
 
             if (roleId == 1) {
-                subjects = subjectDAO.getAllSubjectsSortedBy(sortBy, sortOrder, page, pageSize);
+                if (keyword != null && !keyword.isEmpty()) {
+                    subjects = subjectDAO.searchSubjects(keyword, sortBy, sortOrder, page, pageSize);
+                } else {
+                    subjects = subjectDAO.getAllSubjectsSortedBy(sortBy, sortOrder, page, pageSize);
+                }
             } else {
-                subjects = subjectDAO.getAllCourseSortedBy(sortBy, sortOrder, page, pageSize);
+                if (keyword != null && !keyword.isEmpty()) {
+                    subjects = subjectDAO.searchCourse(keyword, sortBy, sortOrder, page, pageSize);
+                } else {
+                     subjects = subjectDAO.getAllCourseSortedBy(sortBy, sortOrder, page, pageSize);
+                }
             }
 
             request.setAttribute("subjectList", subjects);

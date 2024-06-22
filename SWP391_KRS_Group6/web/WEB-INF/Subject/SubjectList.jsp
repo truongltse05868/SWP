@@ -93,10 +93,14 @@
                                 <div class="col-lg-3 col-md-4 col-sm-12 m-b30">
                                     <div class="widget courses-search-bx placeani">
                                         <div class="form-group">
-                                            <div class="input-group">
-                                                <label>Search Courses</label>
-                                                <input name="dzName" type="text" required class="form-control">
-                                            </div>
+                                            <form method="get" action="SubjectController">
+                                                <div class="input-group">
+                                                    <label for="keyword">Search Courses</label>
+                                                    <input type="hidden" name="service" value="ListAllSubject">
+                                                    <input type="text" id="keyword" name="keyword" class="form-control" style="width: 300px;" value="${param.searchSetting}">
+                                                    <button type="submit" class="btn">Search</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                     <div class="widget widget_archive">

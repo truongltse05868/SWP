@@ -47,6 +47,27 @@ public class SubjectDAO extends DBConnect {
         }
         return sbjectList;
     }
+     public List<Subject> getAllSubjectsForDash(int n) {
+        List<Subject> sbjectList = new ArrayList<>();
+        String query = "SELECT * FROM subject where status = ?"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, n);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Subject subjects = new Subject(
+                        rs.getInt("subject_id"),
+                        rs.getString("subject_code"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                );
+                sbjectList.add(subjects);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all class", e);
+        }
+        return sbjectList;
+    }
 
     public boolean updateSubject(Subject subject) {
         String sql = "UPDATE subject\n"
@@ -105,7 +126,7 @@ public class SubjectDAO extends DBConnect {
     // Search subjects by keyword in title or summary
     public List<Subject> searchCourse(String keyword, String column, String order, int page, int pageSize) {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM subject WHERE (title LIKE ? OR summary LIKE ?) AND status =1 "
+        String sql = "SELECT * FROM subject WHERE (subject_code LIKE ? OR name LIKE ?) AND status =1 "
                 + "ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             String query = "%" + keyword + "%";
@@ -154,7 +175,7 @@ public class SubjectDAO extends DBConnect {
 
     public List<Subject> searchSubjects(String keyword, String column, String order, int page, int pageSize) {
         List<Subject> subjects = new ArrayList<>();
-        String sql = "SELECT * FROM subject WHERE title LIKE ? OR summary LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        String sql = "SELECT * FROM subject WHERE subject_code LIKE ? OR name LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             String query = "%" + keyword + "%";
             ps.setString(1, query);

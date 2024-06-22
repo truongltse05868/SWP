@@ -95,6 +95,10 @@
                                 </div>
                                 <!-- Left part start -->
                                 <div class="col-md-7 col-lg-8 col-xl-8">
+                                    <a href="PostController?service=BlogList&amp;page=${currentPage}&amp;sortColumn=${sortColumn}
+                                       &amp;sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}&amp;keyword=${param.keyword}" class="btn">
+                                        <span>${sortOrder == 'asc' ? 'Newest Post' : 'Oldest Post'}</span>
+                                    </a>
 
                                     <c:if test="${not empty posts}">
                                         <c:forEach var="posts" items="${posts}">
@@ -139,16 +143,16 @@
                                         <div class="pagination-bx rounded-sm gray clearfix">
                                             <ul class="pagination">
                                                 <c:if test="${currentPage > 1}">
-                                                    <li class="previous"><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                    <li class="previous"><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}"><i class="ti-arrow-left"></i> Prev</a></li>
                                                         <c:if test="${currentPage > 2}">
-                                                        <li><a href="PostController?service=BlogList&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        <li><a href="PostController?service=BlogList&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 2}</a></li>
                                                         </c:if>
-                                                    <li><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+                                                    <li><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 1}</a></li>
                                                     </c:if>
-                                                <li class="active"><a href="PostController?service=BlogList&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
-                                                <li><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                                <li><a href="PostController?service=BlogList&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
-                                                <li class="next"><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                                <li class="active"><a href="PostController?service=BlogList&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage + 1}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage+2}</a></li>
+                                                <li class="next"><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >Next<i class="ti-arrow-right"></i></a></li>
                                             </ul>
                                         </div>
                                     </c:if>
@@ -157,16 +161,16 @@
                                         <div class="pagination-bx rounded-sm gray clearfix">
                                             <ul class="pagination">
                                                 <c:if test="${currentPage > 1}">
-                                                    <li class="previous"><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
+                                                    <li class="previous"><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}"><i class="ti-arrow-left"></i> Prev</a></li>
                                                         <c:if test="${currentPage > 2}">
-                                                        <li><a href="PostController?service=BlogList&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
+                                                        <li><a href="PostController?service=BlogList&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 2}</a></li>
                                                         </c:if>
-                                                    <li><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+                                                    <li><a href="PostController?service=BlogList&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 1}</a></li>
                                                     </c:if>
-                                                <li class="active"><a href="PostController?service=BlogList&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
-                                                <li><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                                <li><a href="PostController?service=BlogList&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
-                                                <li class="next"><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                                <li class="active"><a href="PostController?service=BlogList&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage + 1}</a></li>
+                                                <li><a href="PostController?service=BlogList&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage+2}</a></li>
+                                                <li class="next"><a href="PostController?service=BlogList&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >Next<i class="ti-arrow-right"></i></a></li>
                                             </ul>
                                         </div>
                                     </c:if>

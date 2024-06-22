@@ -1,46 +1,39 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dao;
 
-
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DBConnect {
 
     protected Connection connection;
-    public Properties configProp;
-    public String propertiesFilePath = "/SWP391_KRS_Group6/config.properties";
+    
+    // Define multiple sets of credentials
+    private final String[][] credentials = {
+        {"root", "Mysql-suck", "jdbc:mysql://127.0.0.1:3306/KRS_SWP?zeroDateTimeBehavior=CONVERT_TO_NULL"},
+        {"root", "Simon@0410", "jdbc:mysql://127.0.0.1:3306/KRS_SWP?zeroDateTimeBehavior=CONVERT_TO_NULL"},
+        {"root", "Simon0410@", "jdbc:mysql://127.0.0.1:3306/KRS_SWP?zeroDateTimeBehavior=CONVERT_TO_NULL"},
+        // Add more credentials as needed
+    };
+    
     public DBConnect() {
         try {
-//            configProp = new Properties();
-//            configProp.load(new FileInputStream(propertiesFilePath));
-//            String user = configProp.getProperty("user");
-//            String pass = configProp.getProperty("password");
-//            String url = configProp.getProperty("url");
-//            input your database username, password and url here
-            // anh em sửa thành connection của mình nhé. 
-            //connection của Truonglt
-            String user = "root";
-
-//          String pass = "Mysql-suck"; //duc
-            String pass = "Simon@0410"; //máy công ty, máy dell
-//            String pass = "Simon0410@"; //PC
-            String url = "jdbc:mysql://127.0.0.1:3306/KRS_SWP?zeroDateTimeBehavior=CONVERT_TO_NULL"; //máy dell
-//            String url = "jdbc:mysql://127.0.0.1:3306/KRS_SWR?zeroDateTimeBehavior=CONVERT_TO_NULL";
-//            String user = "b76e9fadcbb87f";
-//            String pass = "3138654c";
-//            String url = "jdbc:mysql://b76e9fadcbb87f:3138654c@us-cluster-east-01.k8s.cleardb.net/heroku_c1578a6530a02f2?reconnect=true"; //connect to DB on server
             Class.forName("com.mysql.cj.jdbc.Driver");
-            connection = DriverManager.getConnection(url, user, pass);
+            boolean connected = false;
+            for (String[] credential : credentials) {
+                try {
+                    connection = DriverManager.getConnection(credential[2], credential[0], credential[1]);
+                    connected = true;
+                    System.out.println("Connected successfully with user: " + credential[0]);
+                    break;
+                } catch (Exception ex) {
+                    Logger.getLogger(DBConnect.class.getName()).log(Level.WARNING, "Failed to connect with user: " + credential[0], ex);
+                }
+            }
+            if (!connected) {
+                throw new Exception("Unable to connect to the database with any provided credentials.");
+            }
         } catch (Exception ex) {
             Logger.getLogger(DBConnect.class.getName()).log(Level.SEVERE, null, ex);
         }

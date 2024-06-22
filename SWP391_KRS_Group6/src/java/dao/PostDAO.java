@@ -17,11 +17,12 @@ public class PostDAO extends DBConnect {
 
     private static final Logger logger = Logger.getLogger(PostDAO.class.getName());
 
-    public List<Post> getAllPosts() {
+    public List<Post> getAllPosts(int status) {
         List<Post> postList = new ArrayList<>();
-        String query = "SELECT * FROM post WHERE status = 1";
-        try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {
-
+        String query = "SELECT * FROM post where status = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, status);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Post post = new Post(
                         rs.getInt("post_id"),
@@ -128,14 +129,18 @@ public class PostDAO extends DBConnect {
     // Search posts by keyword in title or summary
     public List<Post> searchBlog(String keyword, String column, String order, int page, int pageSize) {
         List<Post> posts = new ArrayList<>();
-        String sql = "SELECT * FROM post WHERE (title LIKE ? OR summary LIKE ?) AND status =1 "
+        String sql = "SELECT post.*\n"
+                + "FROM post\n"
+                + "JOIN `user` ON post.user_id = user.user_id\n"
+                + "WHERE (post.title LIKE ? OR post.summary LIKE ? OR user.full_name LIKE ?) AND post.status = 1\n"
                 + "ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             String query = "%" + keyword + "%";
             ps.setString(1, query);
             ps.setString(2, query);
-            ps.setInt(3, pageSize);
-            ps.setInt(4, (page - 1) * pageSize);
+            ps.setString(3, query);
+            ps.setInt(4, pageSize);
+            ps.setInt(5, (page - 1) * pageSize);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 posts.add(new Post(
@@ -181,13 +186,18 @@ public class PostDAO extends DBConnect {
 
     public List<Post> searchPosts(String keyword, String column, String order, int page, int pageSize) {
         List<Post> posts = new ArrayList<>();
-        String sql = "SELECT * FROM post WHERE title LIKE ? OR summary LIKE ? ORDER BY " + column + " " + order + " LIMIT ? OFFSET ?";
+        String sql = "SELECT post.*\n"
+                + "FROM post\n"
+                + "JOIN `user` ON post.user_id = user.user_id\n"
+                + "WHERE post.title LIKE ? OR post.summary LIKE ? OR user.full_name LIKE ?\n"
+                + "ORDER BY  " + column + " " + order + " LIMIT ? OFFSET ?";
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             String query = "%" + keyword + "%";
             ps.setString(1, query);
             ps.setString(2, query);
-            ps.setInt(3, pageSize);
-            ps.setInt(4, (page - 1) * pageSize);
+            ps.setString(3, query);
+            ps.setInt(4, pageSize);
+            ps.setInt(5, (page - 1) * pageSize);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 posts.add(new Post(

@@ -45,6 +45,26 @@ public class ClassDAO extends DBConnect {
         }
         return classList;
     }
+    public List<Class> getAllClassForDash( int status) {
+        List<Class> classList = new ArrayList<>();
+        String query = "SELECT * FROM class where status = ?"; // Ensure table name matches the one in your database
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, status);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Class classs = new Class(
+                        rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status")
+                );
+                classList.add(classs);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all class", e);
+        }
+        return classList;
+    }
 
     public List<Class> getClassesWithoutUser(int userId) {
         List<Class> classList = new ArrayList<>();
