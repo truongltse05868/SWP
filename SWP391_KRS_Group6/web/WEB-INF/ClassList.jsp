@@ -195,7 +195,7 @@
                                                             <form method="post" action="LessonController" >
                                                                 <input type="hidden" name="action" value="lessonListBySubject">
                                                                 <input type="hidden" name="subjectId" value="${classList.subject_id}">
-                                                                <button type="submit" class="btn btn-block btn-primary">Class: ${classList.class_name}</button>
+                                                                <h5><button type="submit" class="btn-link">Class: ${classList.class_name}</button></h5>
                                                             </form>
                                                             <span>
                                                                 <c:choose>

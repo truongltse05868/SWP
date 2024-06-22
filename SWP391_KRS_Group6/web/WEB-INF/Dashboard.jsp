@@ -178,7 +178,7 @@
                                         Active
                                     </span>
                                     <span class="wc-number ml-auto">
-                                         ${subjectActivePercent}%
+                                        ${subjectActivePercent}%
                                     </span>
                                 </span>
                             </div>				      
@@ -217,7 +217,6 @@
                                                         <span>New Post </span>${post.title}
                                                     </span>
                                                     <span class="notification-time">
-                                                        <a href="#" class="fa fa-close"></a>
                                                         <span>By  <c:choose>
                                                                 <c:when test="${not empty users}">
                                                                     <c:forEach var="user" items="${users}">
@@ -367,16 +366,6 @@
                                         </li>
                                     </ul>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12 m-b30">
-                        <div class="widget-box">
-                            <div class="wc-title">
-                                <h4>Basic Calendar</h4>
-                            </div>
-                            <div class="widget-inner">
-                                <div id="calendar"></div>
                             </div>
                         </div>
                     </div>
