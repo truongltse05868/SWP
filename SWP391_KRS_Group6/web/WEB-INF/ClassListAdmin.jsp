@@ -6,6 +6,8 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -183,11 +185,11 @@
                                             <select class="form-control" name="subjectId">
                                                 <c:choose>
                                                     <c:when test="${not empty subjectList}">
-                                                         <option value="" <c:if test="${searchSubjectId == null}">selected</c:if>>All Subjects</option>
+                                                        <option value="" <c:if test="${searchSubjectId == null}">selected</c:if>>All Subjects</option>
                                                         <c:forEach var="subject" items="${subjectList}">
                                                             <option value="${subject.subject_id}" <c:if test="${subject.subject_id == searchSubjectId}">selected</c:if>>${subject.subject_name}</option>
                                                         </c:forEach>
-                                                       
+
                                                     </c:when>
                                                     <c:otherwise>
                                                         <option value="" selected>All Subjects</option>
@@ -199,7 +201,7 @@
                                         <div class="col-auto">
                                             <input type="hidden" name="action" value="searchClass">
                                             <input type="hidden" name="page" value="${currentPage}">
-                                            <input type="hidden" name="size" value="10">
+                                            <input type="hidden" name="size" value="3">
                                             <button class="btn btn-primary btn-sm" type="submit">Search</button>
                                         </div>
                                     </form>
@@ -274,7 +276,7 @@
                                             <ul class="pagination">
                                                 <c:forEach begin="1" end="${totalPages}" var="i">
                                                     <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
-                                                        <a class="page-link" href="ClassController?action=searchClass&page=${i}&size=10&searchClassname=${searchClassname}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
+                                                        <a class="page-link" href="ClassController?action=searchClass&page=${i}&size=3&searchClassname=${fn:escapeXml(searchClassname)}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
                                                     </li>
                                                 </c:forEach>
                                             </ul>
