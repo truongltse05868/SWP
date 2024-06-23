@@ -106,6 +106,51 @@
                 document.body.appendChild(form);
                 form.submit();
             }
+            function sendPostRequestSort2(sortField, searchClassname, searchSubjectId, sortOrder) {
+                const form = document.createElement('form');
+                form.method = 'post';
+                form.action = 'ClassController';
+
+                const actionField = document.createElement('input');
+                actionField.type = 'hidden';
+                actionField.name = 'action';
+                actionField.value = 'searchClass';
+                form.appendChild(actionField);
+
+                const sortFieldInput = document.createElement('input');
+                sortFieldInput.type = 'hidden';
+                sortFieldInput.name = 'sortField';
+                sortFieldInput.value = sortField;
+                form.appendChild(sortFieldInput);
+
+                const sortOrderInput = document.createElement('input');
+                sortOrderInput.type = 'hidden';
+                sortOrderInput.name = 'sortOrder';
+                sortOrderInput.value = sortOrder;
+                form.appendChild(sortOrderInput);
+
+                const searchClassnameInput = document.createElement('input');
+                searchClassnameInput.type = 'hidden';
+                searchClassnameInput.name = 'searchClassname';
+                searchClassnameInput.value = searchClassname;
+                form.appendChild(searchClassnameInput);
+
+                const searchSubjectIdInput = document.createElement('input');
+                searchSubjectIdInput.type = 'hidden';
+                searchSubjectIdInput.name = 'subjectId';
+                searchSubjectIdInput.value = searchSubjectId;
+                form.appendChild(searchSubjectIdInput);
+
+                const pageInput = document.createElement('input');
+                pageInput.type = 'hidden';
+                pageInput.name = 'page';
+                pageInput.value = '1';
+                form.appendChild(pageInput);
+
+                document.body.appendChild(form);
+                form.submit();
+            }
+
         </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
@@ -120,7 +165,7 @@
                 <div class="db-breadcrumb">
                     <h4 class="breadcrumb-title">Class List</h4>
                     <ul class="db-breadcrumb-list">
-                        <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                        <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
                         <li>Class List</li>
                     </ul>
                 </div>
@@ -129,36 +174,56 @@
                     <div class="col-lg-12 m-b30">
                         <div class="widget-box">
                             <div class="widget-inner">
-                                <div class="row">
-                                    <form class="row col-sm-3" method="post" action="ClassController">
+                                <div class="row d-flex justify-content-between align-items-center">
+                                    <form class="col-sm-7 d-flex" method="post" action="ClassController">
                                         <div class="col">
                                             <input class="form-control" type="text" name="searchClassname" placeholder="Search by class name" value="${searchClassname}">
                                         </div>
+                                        <div class="col">
+                                            <select class="form-control" name="subjectId">
+                                                <c:choose>
+                                                    <c:when test="${not empty subjectList}">
+                                                         <option value="" <c:if test="${searchSubjectId == null}">selected</c:if>>All Subjects</option>
+                                                        <c:forEach var="subject" items="${subjectList}">
+                                                            <option value="${subject.subject_id}" <c:if test="${subject.subject_id == searchSubjectId}">selected</c:if>>${subject.subject_name}</option>
+                                                        </c:forEach>
+                                                       
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <option value="" selected>All Subjects</option>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </select>
+
+                                        </div>
                                         <div class="col-auto">
                                             <input type="hidden" name="action" value="searchClass">
+                                            <input type="hidden" name="page" value="${currentPage}">
+                                            <input type="hidden" name="size" value="10">
                                             <button class="btn btn-primary btn-sm" type="submit">Search</button>
                                         </div>
                                     </form>
-                                    <form class="col-sm-7 text-right" action="ClassController" method="post">
+                                    <form class="col-sm-3 text-right" action="ClassController" method="post">
                                         <input type="hidden" name="action" value="addClassPage">
-                                        <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add Class</button>
+                                        <button class="btn btn-primary btn-sm" type="submit"><i class="fa fa-fw fa-plus-circle"></i> Add Class</button>
                                     </form>
                                 </div>
                             </div>
                             <div class="widget-inner">
                                 <c:if test="${not empty classes}">
-                                    <table >
+                                    <table class="table table-bordered">
+
                                         <tr>
-                                            <th><a href="SortByClassName" onclick="sendPostRequestSort('class_name', '${searchClassname}');return false;">Class Name</a></th>
-                                            <th><a href="SortBySubject" >Subject</a></th>
-                                            <th><a href="">Status</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('class_name', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Class Name</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('subject_id', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Subject</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('status', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Status</a></th>
                                             <th>User In Class</th>
-                                            <th><a href="">Update</a></th>
+                                            <th>Update</th>
                                             <th>Detail</th>
                                         </tr>
                                         <c:forEach var="classList" items="${classes}">
                                             <tr>
-                                                <td>${classList.class_name}</td>                                                
+                                                <td>${classList.class_name}</td>
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${not empty subjectList}">
@@ -192,7 +257,6 @@
                                                         <input type="hidden" name="action" value="updateClassPage">
                                                         <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                                                     </form>
-
                                                 </td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">
@@ -200,11 +264,22 @@
                                                         <input type="hidden" name="action" value="classDetail">
                                                         <button class="btn btn-primary btn-sm" type="submit">Detail</button>
                                                     </form>
-
                                                 </td>
                                             </tr>
                                         </c:forEach>
                                     </table>
+                                    <!-- Pagination -->
+                                    <div class="row mt-3">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination">
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
+                                                        <a class="page-link" href="ClassController?action=searchClass&page=${i}&size=10&searchClassname=${searchClassname}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 </c:if>
                                 <c:if test="${empty classes}">
                                     <p>No classes found.</p>
@@ -213,15 +288,14 @@
 
                             </div>
                             <div>
-                                <span>
-                                    ${successMessage}
-                                </span>
+                                <span>${successMessage}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </main>
+
         <!--Main container end -->
 
         <!-- Footer ==== -->

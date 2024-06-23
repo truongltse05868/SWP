@@ -65,6 +65,7 @@ public class ClassService extends BaseService {
     public List<Class> getAllClass() {
         return classDAO.getAllClass();
     }
+
     public List<Class> getClassesWithoutUser(int userId) {
         return classDAO.getClassesWithoutUser(userId);
     }
@@ -72,9 +73,11 @@ public class ClassService extends BaseService {
     public List<Class> getAllClassAdmin(String keyword, String column, String order, int page, int pageSize) {
         return classDAO.searchClassAdmin(keyword, column, order, 0, 0);
     }
+
     public List<Class> getAllClassSortedBy(String column, String order, int page, int pageSize) {
         return classDAO.getAllClassSortedBy(column, order, page, pageSize);
     }
+
     public List<Class> searchByClassNameAndSort(String field, String search) {
         return classDAO.getClassSortedSearchBy(field, search);
     }
@@ -89,5 +92,21 @@ public class ClassService extends BaseService {
 
     public boolean deleteUserInclass(int classId, int userId) {
         return classDAO.deleteUserInclass(classId, userId);
+    }
+
+    public List<Class> searchAndSortClasses(String searchClassName, String searchSubjectId, String sortField, String sortOrder, int page, int size) {
+        return classDAO.searchAndSortClasses(searchClassName, searchSubjectId, sortField, sortOrder, page, size);
+    }
+    public int countClasses(String searchClassName, String searchSubjectId) {
+        return classDAO.countClasses(searchClassName, searchSubjectId);
+    }
+    public List<Class> sortClasses(String sortField, String sortOrder, int page, int size) {
+        return classDAO.sortClasses(sortField, sortOrder, page, size);
+    }
+    public List<Class> searchClasses(String searchClassName, String searchSubjectId, int page, int size) {
+        return classDAO.searchClasses(searchClassName, searchSubjectId, page, size);
+    }
+    public List<Class> getAllClasses(int page, int size) {
+        return classDAO.getAllClasses(page, size);
     }
 }
