@@ -141,9 +141,14 @@
                                             </div>
                                         </div>
                                     </form>
-                                    <form class="col-sm-7 text-right" action="userController" method="post">
+<!--                                    <form class="col-sm-7 text-right" action="userController" method="post">
                                         <input type="hidden" name="action" value="addUserPage">
                                         <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
+                                    </form>-->
+                                    <form class="col-sm-7 text-right" action="ClassController" method="post">
+                                        <input type="hidden" name="action" value="classDetail">
+                                        <input type="hidden" name="classId" value="${classs.class_id}">
+                                        <button class="btn btn-primary btn-sm" type="submit" ><i class=""></i>Back To Class</button>
                                     </form>
                                 </div>
                             </div>
@@ -151,7 +156,7 @@
                                 <div class="row">
                                     <label>Class: ${classs.class_name}</label>
                                     <!--<label>Teacher: ${classs.class_name}</label>-->
-                                    
+
                                 </div>
                             </div>
                             <div class="widget-inner">
