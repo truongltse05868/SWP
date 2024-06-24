@@ -320,7 +320,7 @@ public class ClassController extends HttpServlet {
             int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
             int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
             Class classs = classService.getClassById(classId);
-//            int totalClasses = classService.countClasses(searchUserName, searchSubjectId);
+
 // Get total count of users in the class
             int totalUserCount = userService.countUsersInClass(classId, searchUserName, searchRoleId);
             // Calculate total pages

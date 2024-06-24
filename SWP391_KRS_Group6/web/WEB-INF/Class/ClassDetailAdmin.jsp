@@ -76,37 +76,6 @@
                 document.body.appendChild(form);
                 form.submit();
             }
-            function sendPostRequestSort(sortField, searchUsername) {
-                const form = document.createElement("form");
-                form.method = "POST";
-                form.action = "ClassController";
-
-                // Create hidden input for action
-                const actionInput = document.createElement("input");
-                actionInput.type = "hidden";
-                actionInput.name = "action";
-                actionInput.value = "sort";
-                form.appendChild(actionInput);
-
-                // Create hidden input for sortField
-                const sortFieldInput = document.createElement("input");
-                sortFieldInput.type = "hidden";
-                sortFieldInput.name = "sortField";
-                sortFieldInput.value = sortField;
-                form.appendChild(sortFieldInput);
-
-                // Create hidden input for searchUsername if it exists
-                if (searchUsername) {
-                    const searchUsernameInput = document.createElement("input");
-                    searchUsernameInput.type = "hidden";
-                    searchUsernameInput.name = "searchClassname";
-                    searchUsernameInput.value = searchClassname;
-                    form.appendChild(searchUsernameInput);
-                }
-
-                document.body.appendChild(form);
-                form.submit();
-            }
             function sendPostRequestClassList(action) {
                 // Tạo form ẩn
                 var form = document.createElement("form");
@@ -148,7 +117,7 @@
                 sortOrderInput.name = 'sortOrder';
                 sortOrderInput.value = sortOrder;
                 form.appendChild(sortOrderInput);
-                
+
                 const sortOrderInput = document.createElement('input');
                 sortOrderInput.type = 'hidden';
                 sortOrderInput.name = 'classId';
@@ -200,28 +169,28 @@
                         <div class="widget-box">
                             <div class="widget-inner">
                                 <div class="row">
-                                    <form class="col-sm-3" method="post" action="ClassController">
+                                    <form id="searchForm"  class="col-sm-3" method="post" action="ClassController">
                                         <div class="row">
                                             <div class="col">
                                                 <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
                                             </div>
                                             <div class="col">
-                                            <select class="form-control" name="roleId">
-                                                <c:choose>
-                                                    <c:when test="${not empty roles}">
-                                                        <option value="" <c:if test="${searchRoleId == null}">selected</c:if>>All Roles</option>
-                                                        <c:forEach var="role" items="${roles}">
-                                                            <option value="${role.settingId}" <c:if test="${role.settingId == searchRoleId}">selected</c:if>>${role.settingName}</option>
-                                                        </c:forEach>
+                                                <select class="form-control" name="roleId">
+                                                    <c:choose>
+                                                        <c:when test="${not empty roles}">
+                                                            <option value="" <c:if test="${searchRoleId == null}">selected</c:if>>All Roles</option>
+                                                            <c:forEach var="role" items="${roles}">
+                                                                <option value="${role.settingId}" <c:if test="${role.settingId == searchRoleId}">selected</c:if>>${role.settingName}</option>
+                                                            </c:forEach>
 
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <option value="" selected>All roles</option>
-                                                    </c:otherwise>
-                                                </c:choose>
-                                            </select>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <option value="" selected>All roles</option>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </select>
 
-                                        </div>
+                                            </div>
                                             <div class="col-auto">
                                                 <input type="hidden" name="action" value="searchUserInClass">
                                                 <input type="hidden" name="classId" value="${classs.class_id}" />
@@ -231,13 +200,18 @@
                                             </div>
                                         </div>
                                     </form>
-                                            
-                                    <form class="col-sm-7 text-right" action="ClassController" method="post">
-                                        <input type="hidden" name="action" value="addUserToClassPage">
-                                        <input type="hidden" name="classId" value="${classs.class_id}" />
-                                        <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add New User To Class</button>
-                                    </form>
-                                    <button type="button" onclick="sendPostRequestClassList('classList'); return false;" class="btn-secondry">Back</button>
+                                    <div class="row col-sm-7">
+                                        <form class="col-sm-8 text-right" action="ClassController" method="post">
+                                            <input type="hidden" name="action" value="addUserToClassPage">
+                                            <input type="hidden" name="classId" value="${classs.class_id}" />
+                                            <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add New User To Class</button>
+                                        </form>
+                                        <form class="col-sm-3 text-right" action="ClassController" method="post">
+                                            <input type="hidden" name="action" value="searchClass">
+                                            <input type="hidden" name="page" value="${currentPage}">
+                                            <button type="submit" class="btn-secondry">Back</button>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                             <div class="widget-inner">
@@ -251,13 +225,13 @@
                                 <c:if test="${not empty users}">
                                     <table >
                                         <tr>
-                                            <th><a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField='user_name'&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Username</a></th>
-                                            <th><a href="#" onclick="sendPostRequestSort3('email', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Email</a></th>
-                                            <th><a href="#" onclick="sendPostRequestSort3('full_name', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Full Name</a></th>
-                                            <th><a href="#" onclick="sendPostRequestSort3('phone', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Phone</a></th>
+                                            <th><a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=user_name&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Username</a></th>
+                                            <th><a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=email&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Email</a></th>
+                                            <th><a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=full_name&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Full Name</a></th>
+                                            <th><a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=phone&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Phone</a></th>
                                             <th>Gender</th>
                                             <th>Role</th>
-                                            <th><a href="?sortField=status">Status</a></th>
+                                            <th><a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=status&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Status</a></th>
                                             <th>Delete</th>
 
                                         </tr>

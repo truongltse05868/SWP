@@ -264,6 +264,7 @@
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">
                                                         <input type="hidden" name="classId" value="${classList.class_id}" />
                                                         <input type="hidden" name="action" value="classDetail">
+                                                        <!--<input type="hidden" name="page" value="${currentPage}">-->
                                                         <button class="btn btn-primary btn-sm" type="submit">Detail</button>
                                                     </form>
                                                 </td>
