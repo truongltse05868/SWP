@@ -59,7 +59,7 @@ public class ForgotPasswordController extends HttpServlet {
                     updatePassOTP(request, response);
                     break;
                 case "reSentOTP":
-                    checkMail(request, response);
+                    reSentOTP(request, response);
                     break;
                 default:
 //                    getUserProfle(request, response);
@@ -132,6 +132,38 @@ public class ForgotPasswordController extends HttpServlet {
                 request.setAttribute("message", "Email không tồn tại.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
                 dispatcher.forward(request, response);
+            }
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating user", e);
+        }
+
+    }
+
+    private void reSentOTP(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+
+            String email = request.getParameter("email");
+            String subjectEmail = "KRS_G6 Reset Password";
+            // Kiểm tra email có tồn tại trong database
+
+            // Tạo mã OTP và lưu vào database
+            String otp = userService.generateOTP();
+
+            boolean saveSuccess = userService.saveOtpToDatabase(email, otp);
+            if (saveSuccess) {
+                // Gửi email OTP
+                userService.sendOtpToEmail(email, otp, subjectEmail);
+
+                // Chuyển hướng đến trang resetPassword.jsp với email
+                request.setAttribute("email", email);
+                request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
+                dispatcher.forward(request, response);
+            } else {
+                request.setAttribute("message", "Lỗi hệ thống OTP");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
             }
 
         } catch (Exception e) {

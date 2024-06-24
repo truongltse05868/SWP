@@ -1,15 +1,8 @@
-<%-- 
-    Document   : ResetPassword
-    Created on : May 29, 2024, 9:22:59 AM
-    Author     : Simon
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
     <head>
-
         <!-- META ============================================= -->
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -53,17 +46,6 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
-        <!--        <style>
-                    .hidden {
-                        display: none;
-                    }
-                </style>
-                <script>
-                    function showOtpForm() {
-                        document.getElementById("emailForm").classList.add("hidden");
-                        document.getElementById("otpForm").classList.remove("hidden");
-                    }
-                </script>-->
     </head>
     <body id="bg">
         <div class="page-wraper">
@@ -89,7 +71,6 @@
                                                 <label for="email">OTP:</label>
                                                 <input type="text" id="otp" name="otp" required class="form-control">
                                             </div>
-
                                         </div>
                                         <div class="form-group">
                                             <div class="input-group">
@@ -112,43 +93,9 @@
                             <form id="otpForm" action="${pageContext.request.contextPath}/ForgotPasswordController" method="post">
                                 <input type="hidden" name="action" value="reSentOTP"> 
                                 <input type="hidden" name="email" value="${email}" class="form-control">
-                                <button id="resendBtn" name="submit" type="submit" value="Submit" class="btn button-md">ReSend OTP</button>
+                                <button id="resendBtn" name="submit" type="submit" value="Submit" class="btn button-md">Re-send OTP</button>
                             </form>
-                            <script>
-                                let lastResendTime = 0; // Timestamp of the last time "ReSend OTP" was clicked
-                                let resendTimeout = 300000; // 5 minutes in milliseconds
-                                let resendEnabled = true; // Flag to track if resend is enabled
-
-                                // Function to enable resend button after a specified timeout
-                                function enableResendButton() {
-                                document.getElementById('resendBtn').disabled = false;
-                                document.getElementById('message').textContent = ''; // Clear any previous message
-                                resendEnabled = true; // Update flag
-                                }
-
-                                // Function to disable resend button and start timer
-                                function disableResendButton() {
-                                document.getElementById('resendBtn').disabled = true;
-                                document.getElementById('message').textContent = 'Please wait 5 minutes before retrying.'; // Display message
-                                setTimeout(enableResendButton, resendTimeout); // Set timeout to enable resend button
-                                resendEnabled = false; // Update flag
-                                }
-
-                                // Event listener for "ReSend OTP" button click
-                                document.getElementById('resendBtn').addEventListener('click', function(event) {
-                                let currentTime = Date.now();
-                                if (currentTime - lastResendTime >= resendTimeout || lastResendTime === 0) {
-                                lastResendTime = currentTime; // Update lastResendTime
-                                disableResendButton(); // Disable resend button and start timer
-                                } else {
-                                event.preventDefault(); // Prevent default action if resend is disabled
-                                }
-                                });
-                                // Initial setup: disable resend button if necessary
-                                if (!resendEnabled) {
-                                disableResendButton();
-                                }
-                            </script>
+                            <p id="countdown"></p>
                             <p>${message}</p>
                             <p id="message"></p>
                         </div>
@@ -172,5 +119,63 @@
         <script src="assets/js/functions.js"></script>
         <script src="assets/js/contact.js"></script>
         <script src='assets/vendors/switcher/switcher.js'></script>
+        <script>
+            let resendTimeout = 60000; // 1 minute in milliseconds
+            let countdownElement = document.getElementById('countdown');
+            let resendButton = document.getElementById('resendBtn');
+
+            function startCountdown(duration) {
+                let timer = duration, minutes, seconds;
+                let countdownInterval = setInterval(function () {
+                    minutes = parseInt(timer / 60, 10);
+                    seconds = parseInt(timer % 60, 10);
+
+                    minutes = minutes < 10 ? "0" + minutes : minutes;
+                    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                    countdownElement.textContent = "Resend OTP in " + minutes + ":" + seconds;
+
+                    if (--timer < 0) {
+                        clearInterval(countdownInterval);
+                        countdownElement.textContent = "";
+                        resendButton.disabled = false;
+                    }
+                }, 1000);
+            }
+
+            function disableResendButton() {
+                resendButton.disabled = true;
+                startCountdown(resendTimeout / 1000);
+            }
+
+            function sendOTPRequest(event) {
+                event.preventDefault(); // Prevent form submission
+                $.ajax({
+                    url: $("#otpForm").attr("action"),
+                    type: "POST",
+                    data: $("#otpForm").serialize(),
+                    success: function (response) {
+                        // Handle success
+                        disableResendButton();
+                        countdownElement.textContent = "OTP sent successfully!";
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle error
+                        countdownElement.textContent = "Error in sending OTP. Please try again.";
+                    }
+                });
+            }
+
+            resendButton.addEventListener('click', function (event) {
+                if (!resendButton.disabled) {
+                    sendOTPRequest(event);
+                } else {
+                    event.preventDefault();
+                }
+            });
+
+            // Initial setup: disable resend button and start countdown
+            disableResendButton();
+        </script>
     </body>
 </html>
