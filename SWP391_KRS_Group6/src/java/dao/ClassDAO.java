@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -45,7 +46,8 @@ public class ClassDAO extends DBConnect {
         }
         return classList;
     }
-    public List<Class> getAllClassForDash( int status) {
+
+    public List<Class> getAllClassForDash(int status) {
         List<Class> classList = new ArrayList<>();
         String query = "SELECT * FROM class where status = ?"; // Ensure table name matches the one in your database
         try (PreparedStatement ps = connection.prepareStatement(query)) {
@@ -367,6 +369,182 @@ public class ClassDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error sorting users by " + field, e);
         }
         return classes;
+    }
+
+    //search class
+    public List<Class> searchAndSortClasses(String searchClassName, String searchSubjectId, String sortField, String sortOrder, int page, int size) {
+        String query = "SELECT * FROM class WHERE 1=1";
+        if (searchClassName != null && !searchClassName.isEmpty()) {
+            query += " AND class_name LIKE ?";
+        }
+        if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+            query += " AND subject_id = ?";
+        }
+        query += " ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            if (searchClassName != null && !searchClassName.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchClassName + "%");
+            }
+            if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(searchSubjectId));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, (page - 1) * size);
+
+            ResultSet rs = ps.executeQuery();
+            List<Class> classes = new ArrayList<>();
+            while (rs.next()) {
+                Class classs = new Class(
+                        rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status")
+                );
+                classes.add(classs);
+            }
+            return classes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    public int countClasses(String searchClassName, String searchSubjectId) {
+        String query = "SELECT COUNT(*) FROM class WHERE 1=1";
+        if (searchClassName != null && !searchClassName.isEmpty()) {
+            query += " AND class_name LIKE ?";
+        }
+        if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+            query += " AND subject_id = ?";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            if (searchClassName != null && !searchClassName.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchClassName + "%");
+            }
+            if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(searchSubjectId));
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<Class> sortClasses(String sortField, String sortOrder, int page, int size) {
+        // Calculate the offset
+        int offset = (page - 1) * size;
+
+        // Update the query to include pagination
+        String query = "SELECT * FROM class ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            // Set the limit and offset parameters
+            ps.setInt(1, size);
+            ps.setInt(2, offset);
+
+            ResultSet rs = ps.executeQuery();
+            List<Class> classes = new ArrayList<>();
+
+            while (rs.next()) {
+                Class classs = new Class(rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status"));
+                // Populate class object with data from result set
+                classes.add(classs);
+            }
+
+            return classes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
+    }
+
+    public List<Class> searchClasses(String searchClassName, String searchSubjectId, int page, int size) {
+        String query = "SELECT * FROM class WHERE 1=1";
+
+        if (searchClassName != null && !searchClassName.isEmpty()) {
+            query += " AND class_name LIKE ?";
+        }
+        if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+            query += " AND subject_id = ?";
+        }
+
+        query += " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            if (searchClassName != null && !searchClassName.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchClassName + "%");
+            }
+            if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(searchSubjectId));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex++, (page - 1) * size);
+
+            ResultSet rs = ps.executeQuery();
+            List<Class> classes = new ArrayList<>();
+            while (rs.next()) {
+                Class classs = new Class(rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status"));
+                // Populate class object with data from result set
+                classes.add(classs);
+            }
+            return classes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+    //get all class wtih phan trang
+    public List<Class> getAllClasses(int page, int size) {
+        String query = "SELECT * FROM class LIMIT ? OFFSET ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+            ResultSet rs = ps.executeQuery();
+            List<Class> classes = new ArrayList<>();
+            while (rs.next()) {
+                Class classs = new Class(
+                        rs.getInt("class_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("class_name"),
+                        rs.getBoolean("status"));
+                // Populate class object with data from result set
+                classes.add(classs);
+            }
+            return classes;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+    
+    public int countClasses() {
+        String query = "SELECT COUNT(*) FROM class";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

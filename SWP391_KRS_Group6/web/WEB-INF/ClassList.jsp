@@ -194,7 +194,7 @@
                                                                     return false;">Class: ${classList.class_name}</a></h5>-->
 
                                                             <form method="post" action="ClassController" >
-                                                                <input type="hidden" name="action" value="ClassDetail">
+                                                                <input type="hidden" name="action" value="classDetail">
                                                                 <input type="hidden" name="classId" value="${classList.class_id}">
                                                                 <h5><button type="submit" class="btn btn-block btn-primary">Class: ${classList.class_name}</button></h5>
 
