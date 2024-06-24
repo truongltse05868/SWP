@@ -68,11 +68,13 @@ public class ClassDAO extends DBConnect {
         return classList;
     }
 
-    public List<Class> getClassesWithoutUser(int userId) {
+    public List<Class> getClassesWithoutUser(int userId, int page, int pageSize) {
         List<Class> classList = new ArrayList<>();
-        String query = "SELECT * FROM class WHERE class_id NOT IN (SELECT class_id FROM class_user WHERE user_id = ? AND status = 1)";
+        String query = "SELECT * FROM class WHERE class_id NOT IN (SELECT class_id FROM class_user WHERE user_id = ? AND status = 1) LIMIT ? OFFSET ? ";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, userId);
+            ps.setInt(2, pageSize);
+            ps.setInt(3, (page - 1) * pageSize);
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     Class classs = new Class(
@@ -88,6 +90,24 @@ public class ClassDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error fetching classes without user", e);
         }
         return classList;
+    }
+
+    public int getTotalClassesWithoutUser(int userId) {
+        String query = "SELECT COUNT(*) FROM class WHERE class_id NOT IN (SELECT class_id FROM class_user WHERE user_id = ? AND status = 1)";
+        int totalClasses = 0;
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    totalClasses = rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error counting classes without user", e);
+        }
+
+        return totalClasses;
     }
 
     public List<Class> searchClassAdmin(String keyword, String column, String order, int page, int pageSize) {
@@ -509,10 +529,11 @@ public class ClassDAO extends DBConnect {
         }
         return Collections.emptyList();
     }
+
     //get all class wtih phan trang
     public List<Class> getAllClasses(int page, int size) {
         String query = "SELECT * FROM class LIMIT ? OFFSET ?";
-        
+
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, size);
             ps.setInt(2, (page - 1) * size);
@@ -533,7 +554,7 @@ public class ClassDAO extends DBConnect {
         }
         return Collections.emptyList();
     }
-    
+
     public int countClasses() {
         String query = "SELECT COUNT(*) FROM class";
         try (PreparedStatement ps = connection.prepareStatement(query)) {

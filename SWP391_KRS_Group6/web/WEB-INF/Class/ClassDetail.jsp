@@ -5,6 +5,7 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -118,12 +119,12 @@
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 col-sm-12 m-b30">
                                     <div class="widget courses-search-bx placeani">
-                                        <div class="form-group">
+<!--                                        <div class="form-group">
                                             <div class="input-group">
                                                 <label>Search Courses</label>
                                                 <input name="dzName" type="text" required class="form-control">
                                             </div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                     <div class="widget widget_archive">
                                         <h5 class="widget-title style-1">All Courses</h5>
@@ -177,108 +178,134 @@
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-lg-9 col-md-8 col-sm-12">
-                                    <c:if test="${not empty users}">
-                                        <table >
-                                            <tr>
-                                                <th><a href="SortByUserName" onclick="sendPostRequestSort('user_name', '${searchUsername}');return false;">Username</a></th>
-                                                
-                                                <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
-
-
-                                                <th>Role</th>
-                                                
-
-
-                                            </tr>
-                                            <c:forEach var="user" items="${users}">
-                                                <tr>
-                                                    <td>${user.user_name}</td>
-
-                                                    <td>${user.full_name}</td>
-
-
-                                                    <td>
-                                                        <c:choose>
-                                                            <c:when test="${not empty roles}">
-                                                                <c:forEach var="role" items="${roles}">
-                                                                    <c:if test="${role.settingId == user.role_id}">
-                                                                        ${role.settingName}
-                                                                    </c:if>
-                                                                </c:forEach>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                Role information is unavailable.
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </td>
-                                                    
-                                                </tr>
-                                            </c:forEach>
-                                        </table>
-                                        <div class="pagination-bx rounded-sm gray clearfix">
-                                            <ul class="pagination">
-                                                <c:if test="${currentPage > 1}">
-                                                    <li class="previous"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                        <c:if test="${currentPage > 2}">
-                                                        <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage - 2}</a></li>
-                                                        </c:if>
-                                                    <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage - 1}</a></li>
-
-                                                </c:if>
-                                                <li class="active"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage}</a></li>
-                                                <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                                <li><a href="ClassController?action=ListAllClassAdmin&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >${currentPage+2}</a></li>
-                                                <li class="next"><a href="ClassController?action=ListAllClassAdmin&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchClass=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
-                                            </ul>
+                                    <div class="widget-inner">
+                                        <div class="row mb-3">
+                                            <form id="searchForm" class="col-md-12" method="post" action="ClassController">
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-md-4 mb-2">
+                                                        <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
+                                                    </div>
+                                                    <div class="col-md-4 mb-2">
+                                                        <select class="form-control" name="roleId">
+                                                            <c:choose>
+                                                                <c:when test="${not empty roles}">
+                                                                    <option value="" <c:if test="${searchRoleId == null}">selected</c:if>>All Roles</option>
+                                                                    <c:forEach var="role" items="${roles}">
+                                                                        <option value="${role.settingId}" <c:if test="${role.settingId == searchRoleId}">selected</c:if>>${role.settingName}</option>
+                                                                    </c:forEach>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <option value="" selected>All roles</option>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-4 mb-2">
+                                                        <input type="hidden" name="action" value="searchUserInClassUser">
+                                                        <input type="hidden" name="classId" value="${classs.class_id}">
+                                                        <input type="hidden" name="page" value="${currentPage}">
+                                                        <input type="hidden" name="size" value="3">
+                                                        <button class="btn btn-primary btn-sm btn-block" type="submit">Search</button>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                            <form class="col-md-2 text-right" action="ClassController" method="post">
+                                                <input type="hidden" name="action" value="ListAllClass">
+                                                <input type="hidden" name="page" value="${currentPage}">
+                                                <button type="submit" class="btn btn-secondary btn-sm">Back</button>
+                                            </form>
                                         </div>
-                                    </c:if>
-
-                                    <c:if test="${empty users}">
-                                        <p>No users found.</p>
-                                    </c:if>
-                                    <div>${successMessage}</div>
-                                    <!--                                    <div class="col-lg-12 m-b20">
-                                                                            <div class="pagination-bx rounded-sm gray clearfix">
-                                                                                <ul class="pagination">
-                                                                                    <li class="previous"><a href="#"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                                                    <li class="active"><a href="#">1</a></li>
-                                                                                    <li><a href="#">2</a></li>
-                                                                                    <li><a href="#">3</a></li>
-                                                                                    <li class="next"><a href="#">Next <i class="ti-arrow-right"></i></a></li>
-                                                                                </ul>
-                                                                            </div>
-                                                                        </div>-->
+                                        <div class="row mb-3">
+                                            <div class="col-md-12">
+                                                <label><strong>Class:</strong> ${classs.class_name}</label>
+                                                <!--<label>Teacher: ${classs.class_name}</label>-->
+                                            </div>
+                                        </div>
+                                        <c:if test="${not empty users}">
+                                            <table class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>
+                                                            <a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=user_name&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Username</a>
+                                                        </th>
+                                                        <th>
+                                                            <a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=full_name&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Full Name</a>
+                                                        </th>
+                                                        <th>Gender</th>
+                                                        <th>Role</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <c:forEach var="user" items="${users}">
+                                                        <tr>
+                                                            <td>${user.user_name}</td>
+                                                            <td>${user.full_name}</td>
+                                                            <td>${user.gender}</td>
+                                                            <td>
+                                                                <c:choose>
+                                                                    <c:when test="${not empty roles}">
+                                                                        <c:forEach var="role" items="${roles}">
+                                                                            <c:if test="${role.settingId == user.role_id}">
+                                                                                ${role.settingName}
+                                                                            </c:if>
+                                                                        </c:forEach>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        Role information is unavailable.
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </td>
+                                                        </tr>
+                                                    </c:forEach>
+                                                </tbody>
+                                            </table>
+                                            <!-- Pagination -->
+                                            <div class="row mt-3">
+                                                <nav aria-label="Page navigation" class="col-md-12">
+                                                    <ul class="pagination justify-content-center">
+                                                        <c:forEach begin="1" end="${totalPages}" var="i">
+                                                            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
+                                                                <a class="page-link" href="ClassController?action=searchUserInClass&page=${i}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
+                                                            </li>
+                                                        </c:forEach>
+                                                    </ul>
+                                                </nav>
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${empty users}">
+                                            <p>No users found.</p>
+                                        </c:if>
+                                        <div class="alert alert-info mt-3">${successMessage}</div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- contact area END -->
-            </div>
-            <!-- Content END-->
-            <!-- Footer ==== -->
-            <jsp:include page="../Footer.jsp"/>
-            <!-- Footer END ==== -->
-            <button class="back-to-top fa fa-chevron-up" ></button>
-        </div>
-        <!-- External JavaScripts -->
-        <script src="assets/js/jquery.min.js"></script>
-        <script src="assets/vendors/bootstrap/js/popper.min.js"></script>
-        <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
-        <script src="assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
-        <script src="assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
-        <script src="assets/vendors/magnific-popup/magnific-popup.js"></script>
-        <script src="assets/vendors/counter/waypoints-min.js"></script>
-        <script src="assets/vendors/counter/counterup.min.js"></script>
-        <script src="assets/vendors/imagesloaded/imagesloaded.js"></script>
-        <script src="assets/vendors/masonry/masonry.js"></script>
-        <script src="assets/vendors/masonry/filter.js"></script>
-        <script src="assets/vendors/owl-carousel/owl.carousel.js"></script>
-        <script src="assets/js/functions.js"></script>
-        <script src="assets/js/contact.js"></script>
-        <script src='assets/vendors/switcher/switcher.js'></script>
-    </body>
 
-</html>
+                                <!-- contact area END -->
+                            </div>
+                            <!-- Content END-->
+                            <!-- Footer ==== -->
+                            <jsp:include page="../Footer.jsp"/>
+                            <!-- Footer END ==== -->
+                            <button class="back-to-top fa fa-chevron-up" ></button>
+                        </div>
+                        <!-- External JavaScripts -->
+                        <script src="assets/js/jquery.min.js"></script>
+                        <script src="assets/vendors/bootstrap/js/popper.min.js"></script>
+                        <script src="assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+                        <script src="assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+                        <script src="assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
+                        <script src="assets/vendors/magnific-popup/magnific-popup.js"></script>
+                        <script src="assets/vendors/counter/waypoints-min.js"></script>
+                        <script src="assets/vendors/counter/counterup.min.js"></script>
+                        <script src="assets/vendors/imagesloaded/imagesloaded.js"></script>
+                        <script src="assets/vendors/masonry/masonry.js"></script>
+                        <script src="assets/vendors/masonry/filter.js"></script>
+                        <script src="assets/vendors/owl-carousel/owl.carousel.js"></script>
+                        <script src="assets/js/functions.js"></script>
+                        <script src="assets/js/contact.js"></script>
+                        <script src='assets/vendors/switcher/switcher.js'></script>
+                        </body>
+
+                        </html>
 

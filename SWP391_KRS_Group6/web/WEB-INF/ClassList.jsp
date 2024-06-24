@@ -119,12 +119,12 @@
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 col-sm-12 m-b30">
                                     <div class="widget courses-search-bx placeani">
-                                        <div class="form-group">
+<!--                                        <div class="form-group">
                                             <div class="input-group">
                                                 <label>Search Courses</label>
                                                 <input name="dzName" type="text" required class="form-control">
                                             </div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                     <div class="widget widget_archive">
                                         <h5 class="widget-title style-1">All Courses</h5>
@@ -181,23 +181,17 @@
                                 <div class="col-lg-9 col-md-8 col-sm-12">
                                     <c:if test="${not empty classes}">
                                         <div class="row">
-
                                             <c:forEach var="classList" items="${classes}">
-                                                <div class="col-md-6 col-lg-4 col-sm-6 m-b30">
-                                                    <div class="cours-bx">
-                                                        <div class="action-box">
-                                                            <img src="assets/images/courses/pic1.jpg" alt="">
-                                                            <a href="#" class="btn">Read More</a>
+                                                <div class="col-md-6 col-lg-4 col-sm-6 mb-4">
+                                                    <div class="card">
+                                                        <div class="card-img-top">
+                                                            <img src="assets/images/courses/pic1.jpg" class="img-fluid" alt="Class Image">
                                                         </div>
-                                                        <div class="info-bx text-center">
-<!--                                                            <h5><a href="#" onclick="sendPostRequestLesson('lessonListBySubject', '${classList.subject_id}');
-                                                                    return false;">Class: ${classList.class_name}</a></h5>-->
-
-                                                            <form method="post" action="ClassController" >
+                                                        <div class="card-body text-center">
+                                                            <form method="post" action="ClassController">
                                                                 <input type="hidden" name="action" value="classDetail">
                                                                 <input type="hidden" name="classId" value="${classList.class_id}">
-                                                                <h5><button type="submit" class="btn btn-block btn-primary">Class: ${classList.class_name}</button></h5>
-
+                                                                <h5><button type="submit" class="btn btn-link p-0">Class: ${classList.class_name}</button></h5>
                                                             </form>
                                                             <span>
                                                                 <c:choose>
@@ -214,41 +208,35 @@
                                                                 </c:choose>
                                                             </span>
                                                         </div>
-
-                                                        <div class="cours-more-info">
-                                                            <form method="post" action="ClassController" >
+                                                        <div class="card-footer">
+                                                            <form method="post" action="ClassController">
                                                                 <input type="hidden" name="action" value="enrollClass">
                                                                 <input type="hidden" name="classId" value="${classList.class_id}">
-                                                                
-                                                                <button type="submit" class="btn btn-block btn-primary">Enroll Me</button>
+                                                                <button type="submit" class="btn btn-primary btn-block">Enroll Me</button>
                                                             </form>
-                                                            <div class="price">
-                                                                <!--<del>$190</del>-->
-                                                                <span>Student: <c:out value="${userCountMap[classList.class_id]}" /></span>
+                                                            <div class="price mt-2">
+                                                                <span>Student: <c:out value="${userCountMap[classList.class_id] != null ? userCountMap[classList.class_id] : 0}" /></span>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </c:forEach>
-
-
-
                                         </div>
                                     </c:if>
                                     <c:if test="${empty classes}">
                                         <p>No Classes found.</p>
                                     </c:if>
-                                        <div>${successMessage}</div>
-                                    <div class="col-lg-12 m-b20">
-                                        <div class="pagination-bx rounded-sm gray clearfix">
-                                            <ul class="pagination">
-                                                <li class="previous"><a href="#"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                <li class="active"><a href="#">1</a></li>
-                                                <li><a href="#">2</a></li>
-                                                <li><a href="#">3</a></li>
-                                                <li class="next"><a href="#">Next <i class="ti-arrow-right"></i></a></li>
+                                    <div class="alert alert-info mt-3">${successMessage}</div>
+                                    <div class="row mt-3">
+                                        <nav aria-label="Page navigation" class="col-12">
+                                            <ul class="pagination justify-content-center">
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
+                                                        <a class="page-link" href="ClassController?action=ListAllClass&userId=${userId}&page=${i}&size=${pageSize}">${i}</a>
+                                                    </li>
+                                                </c:forEach>
                                             </ul>
-                                        </div>
+                                        </nav>
                                     </div>
                                 </div>
                             </div>

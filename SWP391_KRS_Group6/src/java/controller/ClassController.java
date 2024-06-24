@@ -117,6 +117,9 @@ public class ClassController extends HttpServlet {
                     case "classDetail":
                         getClassDetail2(request, response);
                         break;
+                    case "searchUserInClassUser":
+                        getClassDetail2(request, response);
+                        break;
                     default:
 //                        getUserProfle(request, response);
                         break;
@@ -181,12 +184,28 @@ public class ClassController extends HttpServlet {
     private void getClassesWithoutUser(HttpServletRequest request, HttpServletResponse response, int userId)
             throws ServletException, IOException {
         try {
-            List<Class> classList = classService.getClassesWithoutUser(userId);
+            int page = 1;
+            int pageSize = 3;
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            if (request.getParameter("size") != null) {
+                pageSize = Integer.parseInt(request.getParameter("size"));
+            }
+
+            List<Class> classList = classService.getClassesWithoutUser(userId, page, pageSize);
+            int totalClasses = classService.getTotalClassesWithoutUser(userId);
+            int totalPages = (int) Math.ceil((double) totalClasses / pageSize);
+
             List<Subject> subjectList = subjectService.getAllSubjects();
             Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
             request.setAttribute("classes", classList);
             request.setAttribute("userCountMap", userCountMap);
             request.setAttribute("subjectList", subjectList);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
+
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassList.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
@@ -243,67 +262,6 @@ public class ClassController extends HttpServlet {
         }
     }
 
-    //get class with paging
-//    private void getClassDetailAdmin(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        try {
-//            int classId = Integer.parseInt(request.getParameter("classId"));
-//
-//            // Pagination parameters
-//            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
-//            int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
-//
-//            // Search parameter
-//            String searchQuery = request.getParameter("searchUsername");
-//
-//            // Sorting parameters
-//            String sortField = request.getParameter("sortField") != null ? request.getParameter("sortField") : "user_id";
-//            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
-//
-//            // Get class details
-//            Class classs = classService.getClassById(classId);
-//
-//            // Get subjects
-//            List<Subject> subjectList = subjectService.getAllSubjects();
-//
-//            // Get users with pagination, search, and sorting
-//            List<User> users = userService.getUsersInClass(classId, page, size, searchQuery, sortField, sortOrder);
-//
-//            // Get user count for classes
-//            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-//
-//            // Get roles
-//            List<Setting> roles = settingService.getAllRoles();
-//
-//            // Get total count of users in the class
-//            int totalUserCount = userService.getUserCountInClass(classId, searchQuery);
-//
-//            // Calculate total pages
-//            int totalPages = (int) Math.ceil((double) totalUserCount / size);
-//
-//            // Set attributes for the request
-//            request.setAttribute("classs", classs);
-//            request.setAttribute("userCountMap", userCountMap);
-//            request.setAttribute("users", users);
-//            request.setAttribute("roles", roles);
-//            request.setAttribute("subjectList", subjectList);
-//
-//            // Pagination and search details
-//            request.setAttribute("currentPage", page);
-//            request.setAttribute("pageSize", size);
-//            request.setAttribute("totalPages", totalPages);
-//            request.setAttribute("searchQuery", searchQuery);
-//            request.setAttribute("sortField", sortField);
-//            request.setAttribute("sortOrder", sortOrder);
-//
-//            // Forward to JSP
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
-//            dispatcher.forward(request, response);
-//        } catch (Exception e) {
-//            logger.log(Level.SEVERE, "Error getting class details", e);
-//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting class details.");
-//        }
-//    }
     private void getClassDetailAdmin2(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -328,7 +286,7 @@ public class ClassController extends HttpServlet {
             if ((searchUserName != null && !searchUserName.isEmpty()) || (searchRoleId != null && !searchRoleId.isEmpty())) {
                 if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
                     // Search, sort, and paginate
-                    useres = userService.searchAndSortUsersInClass(classId, searchUserName,searchRoleId, sortField, sortOrder, page, size);
+                    useres = userService.searchAndSortUsersInClass(classId, searchUserName, searchRoleId, sortField, sortOrder, page, size);
                 } else {
                     // Search and paginate
                     useres = userService.searchUsersInClass(classId, searchUserName, searchRoleId, page, size);
@@ -366,15 +324,54 @@ public class ClassController extends HttpServlet {
     private void getClassDetail2(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-            int classId = Integer.parseInt(request.getParameter("classId"));
-            Class classs = classService.getClassById(classId);
-            List<User> users = userService.getAllUsersInClass(classId);
+            List<User> useres;
+            List<Subject> subjects = subjectService.getAllSubjects();
             Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
             List<Setting> roles = settingService.getAllRoles();
-            request.setAttribute("classs", classs);
-            request.setAttribute("userCountMap", userCountMap);
-            request.setAttribute("users", users);
+            // Get search, sort, and pagination parameters
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            String searchUserName = request.getParameter("searchUsername");
+            String searchRoleId = request.getParameter("roleId");
+            String sortField = request.getParameter("sortField");
+            String sortOrder = request.getParameter("sortOrder");
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
+            Class classs = classService.getClassById(classId);
+
+// Get total count of users in the class
+            int totalUserCount = userService.countUsersInClass(classId, searchUserName, searchRoleId);
+            // Calculate total pages
+            int totalPages = (int) Math.ceil((double) totalUserCount / size);
+            if ((searchUserName != null && !searchUserName.isEmpty()) || (searchRoleId != null && !searchRoleId.isEmpty())) {
+                if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                    // Search, sort, and paginate
+                    useres = userService.searchAndSortUsersInClass(classId, searchUserName, searchRoleId, sortField, sortOrder, page, size);
+                } else {
+                    // Search and paginate
+                    useres = userService.searchUsersInClass(classId, searchUserName, searchRoleId, page, size);
+                }
+            } else if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                // Sort and paginate
+                useres = userService.sortUsersInClass(classId, sortField, sortOrder, page, size);
+            } else {
+                // Default: get all classes with pagination
+                useres = userService.getAllUserInClass(classId, page, size);
+            }
+
+            // Set the list of classes as a request attribute
             request.setAttribute("roles", roles);
+            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("classs", classs);
+            request.setAttribute("users", useres);
+            request.setAttribute("subjectList", subjects);
+            request.setAttribute("searchUserName", searchUserName);
+            request.setAttribute("searchRoleId", searchRoleId);
+            request.setAttribute("sortField", sortField);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+
+            // Forward the request to the JSP page
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetail.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
@@ -434,37 +431,46 @@ public class ClassController extends HttpServlet {
     private void enrollToClass(HttpServletRequest request, HttpServletResponse response, int userId)
             throws ServletException, IOException {
         try {
-//            List<User> user = userService.getUsersByRole(3);
-            int class_id = Integer.parseInt(request.getParameter("classId"));
-//            int UserId = Integer.parseInt(request.getParameter("UserId"));
-            Class classs = classService.getClassById(class_id);
+            int page = 1;
+            int pageSize = 3;
+            if (request.getParameter("page") != null) {
+                page = Integer.parseInt(request.getParameter("page"));
+            }
+            if (request.getParameter("size") != null) {
+                pageSize = Integer.parseInt(request.getParameter("size"));
+            }
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            Class classs = classService.getClassById(classId);
 
             User user = userService.getUserById(userId);
             List<Setting> role = settingService.getAllRoles();
-            boolean isAddSuccess = classService.addUserToClass(user, class_id);
-            List<User> users = userService.getAllUsersNotInClass(class_id);
+            boolean isAddSuccess = classService.addUserToClass(user, classId);
+
+            // Thông báo kết quả thêm lớp
             if (isAddSuccess) {
                 request.setAttribute("successMessage", "Thêm thành công");
             } else {
-                request.setAttribute("successMessage", "Thêm thất bại");
+                request.setAttribute("errorMessage", "Thêm thất bại");
             }
+            List<Class> classList = classService.getClassesWithoutUser(userId, page, pageSize);
+            int totalClasses = classService.getTotalClassesWithoutUser(userId);
+            int totalPages = (int) Math.ceil((double) totalClasses / pageSize);
 
-            request.setAttribute("users", users);
-            request.setAttribute("roles", role);
-            request.setAttribute("classs", classs);
-            List<Class> classList = classService.getClassesWithoutUser(userId);
             List<Subject> subjectList = subjectService.getAllSubjects();
             Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
             request.setAttribute("classes", classList);
             request.setAttribute("userCountMap", userCountMap);
             request.setAttribute("subjectList", subjectList);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
+
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassList.jsp");
             dispatcher.forward(request, response);
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassList.jsp");
-//            dispatcher.forward(request, response);
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get add class page", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while enrolling to class.");
         }
     }
 
