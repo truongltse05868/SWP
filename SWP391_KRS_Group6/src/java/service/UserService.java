@@ -38,6 +38,35 @@ public class UserService extends BaseService {
         return userDAO.getAllUserInClass(classId);
     }
 
+//    public List<User> getUsersInClass(int classId, int page, int size, String searchQuery, String sortField, String sortOrder) {
+//        return userDAO.getUsersInClass(classId, page, size, searchQuery, sortField, sortOrder);
+//    }
+//
+//    public int getUserCountInClass(int classId, String searchQuery) {
+//        return userDAO.getUserCountInClass(classId, searchQuery);
+//    }
+    
+    // Method to search users in a specific class by userName and roleId
+
+    public List<User> searchUsersInClass(int classId, String searchUserName, String searchRoleId, int page, int size) {
+        return userDAO.searchUsersInClass(classId, searchUserName, searchRoleId, page, size);
+    }
+
+    // Method to count users in a specific class by userName and roleId
+    public int countUsersInClass(int classId, String searchUserName, String searchRoleId) {
+        return userDAO.countUsersInClass(classId, searchUserName, searchRoleId);
+    }
+    
+    public List<User> sortUsersInClass(int classId, String sortField, String sortOrder, int page, int size) {
+        return userDAO.sortUsersInClass(classId, sortField, sortOrder, page, size);
+    }
+    public List<User> getAllUserInClass(int classId, int page, int size) {
+        return userDAO.getAllUserInClass(classId, page, size);
+    }
+    public List<User> searchAndSortUsersInClass(int classId, String searchUserName, String sortField, String sortOrder, int page, int size) {
+        return userDAO.searchAndSortUsersInClass(classId, searchUserName, sortField, sortOrder, page, size);
+    }
+
     public List<User> getAllUsers() {
         return userDAO.getAllUsers();
     }

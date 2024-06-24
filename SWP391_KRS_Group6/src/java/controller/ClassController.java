@@ -89,7 +89,10 @@ public class ClassController extends HttpServlet {
                         searchClassByName2(request, response);
                         break;
                     case "classDetail":
-                        getClassDetail(request, response);
+                        getClassDetailAdmin2(request, response);
+                        break;
+                    case "searchUserInClass":
+                        getClassDetailAdmin2(request, response);
                         break;
                     case "addUserToClassPage":
                         addUserToClassPage(request, response);
@@ -238,6 +241,126 @@ public class ClassController extends HttpServlet {
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list Class", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
+        }
+    }
+
+    //get class with paging
+//    private void getClassDetailAdmin(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        try {
+//            int classId = Integer.parseInt(request.getParameter("classId"));
+//
+//            // Pagination parameters
+//            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+//            int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
+//
+//            // Search parameter
+//            String searchQuery = request.getParameter("searchUsername");
+//
+//            // Sorting parameters
+//            String sortField = request.getParameter("sortField") != null ? request.getParameter("sortField") : "user_id";
+//            String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
+//
+//            // Get class details
+//            Class classs = classService.getClassById(classId);
+//
+//            // Get subjects
+//            List<Subject> subjectList = subjectService.getAllSubjects();
+//
+//            // Get users with pagination, search, and sorting
+//            List<User> users = userService.getUsersInClass(classId, page, size, searchQuery, sortField, sortOrder);
+//
+//            // Get user count for classes
+//            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+//
+//            // Get roles
+//            List<Setting> roles = settingService.getAllRoles();
+//
+//            // Get total count of users in the class
+//            int totalUserCount = userService.getUserCountInClass(classId, searchQuery);
+//
+//            // Calculate total pages
+//            int totalPages = (int) Math.ceil((double) totalUserCount / size);
+//
+//            // Set attributes for the request
+//            request.setAttribute("classs", classs);
+//            request.setAttribute("userCountMap", userCountMap);
+//            request.setAttribute("users", users);
+//            request.setAttribute("roles", roles);
+//            request.setAttribute("subjectList", subjectList);
+//
+//            // Pagination and search details
+//            request.setAttribute("currentPage", page);
+//            request.setAttribute("pageSize", size);
+//            request.setAttribute("totalPages", totalPages);
+//            request.setAttribute("searchQuery", searchQuery);
+//            request.setAttribute("sortField", sortField);
+//            request.setAttribute("sortOrder", sortOrder);
+//
+//            // Forward to JSP
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
+//            dispatcher.forward(request, response);
+//        } catch (Exception e) {
+//            logger.log(Level.SEVERE, "Error getting class details", e);
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting class details.");
+//        }
+//    }
+    private void getClassDetailAdmin2(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<User> useres;
+            List<Subject> subjects = subjectService.getAllSubjects();
+            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+            List<Setting> roles = settingService.getAllRoles();
+            // Get search, sort, and pagination parameters
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            String searchUserName = request.getParameter("searchUsername");
+            String searchRoleId = request.getParameter("roleId");
+            String sortField = request.getParameter("sortField");
+            String sortOrder = request.getParameter("sortOrder");
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
+            Class classs = classService.getClassById(classId);
+//            int totalClasses = classService.countClasses(searchUserName, searchSubjectId);
+// Get total count of users in the class
+            int totalUserCount = userService.countUsersInClass(classId, searchUserName, searchRoleId);
+            // Calculate total pages
+            int totalPages = (int) Math.ceil((double) totalUserCount / size);
+            if ((searchUserName != null && !searchUserName.isEmpty()) || (searchRoleId != null && !searchRoleId.isEmpty())) {
+                if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                    // Search, sort, and paginate
+                    useres = userService.searchAndSortUsersInClass(classId, searchUserName, sortField, sortOrder, page, size);
+                } else {
+                    // Search and paginate
+                    useres = userService.searchUsersInClass(classId, searchUserName, searchRoleId, page, size);
+                }
+            } else if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                // Sort and paginate
+                useres = userService.sortUsersInClass(classId, sortField, sortOrder, page, size);
+            } else {
+                // Default: get all classes with pagination
+                useres = userService.getAllUserInClass(classId, page, size);
+            }
+
+            // Set the list of classes as a request attribute
+            request.setAttribute("roles", roles);
+            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("classs", classs);
+            request.setAttribute("users", useres);
+            request.setAttribute("subjectList", subjects);
+            request.setAttribute("searchUserName", searchUserName);
+            request.setAttribute("searchRoleId", searchRoleId);
+            request.setAttribute("sortField", sortField);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+
+            // Forward the request to the JSP page
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error getting class list", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the class list.");
         }
     }
 
@@ -417,53 +540,6 @@ public class ClassController extends HttpServlet {
         }
     }
 
-//    private void getAllClassesAdmin3(HttpServletRequest request, HttpServletResponse response)
-//            throws ServletException, IOException {
-//        try {
-//            // Lấy thông tin từ request
-//            String searchClassname = request.getParameter("searchClassname");
-//            String searchSubjectId = request.getParameter("subjectId");
-//            int page = request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1;
-//            int size = request.getParameter("size") != null ? Integer.parseInt(request.getParameter("size")) : 10;
-//            String sortField = request.getParameter("sortField");
-//            String sortOrder = request.getParameter("sortOrder");
-//
-//            // Lấy danh sách lớp học
-//            List<Class> classList = classService.searchAndSortClasses(searchClassname, searchSubjectId, sortField, sortOrder, page, size);
-//
-//            // Lấy số lượng người dùng trong từng lớp
-//            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-//
-//            // Lấy danh sách môn học
-//            List<Subject> subjectList = subjectService.getAllSubjects();
-//
-//            // Tính toán tổng số trang
-//            int totalClasses = classService.getTotalClasses(searchClassname, searchSubjectId);
-//            int totalPages = (int) Math.ceil((double) totalClasses / size);
-//
-//            // Truyền các thông tin vào request để chuyển tiếp sang JSP
-//            request.setAttribute("classes", classList);
-//            request.setAttribute("userCountMap", userCountMap);
-//            request.setAttribute("subjectList", subjectList);
-//            request.setAttribute("currentPage", page);
-//            request.setAttribute("totalPages", totalPages);
-//            request.setAttribute("searchClassname", searchClassname);
-//            request.setAttribute("searchSubjectId", searchSubjectId);
-//            request.setAttribute("sortField", sortField);
-//            request.setAttribute("sortOrder", sortOrder);
-//
-//            // Forward request đến trang JSP
-//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp");
-//            dispatcher.forward(request, response);
-//        } catch (NumberFormatException e) {
-//            logger.log(Level.SEVERE, "Invalid number format", e);
-//            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid number format for pagination.");
-//        } catch (Exception e) {
-//            logger.log(Level.SEVERE, "Error getting list of classes", e);
-//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting list of classes.");
-//        }
-//    }
-
     private void addClassByAdmin(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -580,46 +656,45 @@ public class ClassController extends HttpServlet {
     }
 
     //sort and search class
-    private void searchClassByName(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        try {
-            List<Class> classes;
-            List<Subject> subjects = subjectService.getAllSubjects();
-            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-            // Get search and sort parameters
-            String searchClassName = request.getParameter("searchClassname");
-            String sortField = request.getParameter("sortField");
-
-            if (searchClassName != null && !searchClassName.isEmpty() && sortField != null && !sortField.isEmpty()) {
-                // Sort and search
-                classes = classService.searchByClassNameAndSort(sortField, searchClassName);
-            } else if (searchClassName != null && !searchClassName.isEmpty()) {
-                // Search only
-                classes = classService.searchClassByClassName(searchClassName);
-            } else if (sortField != null && !sortField.isEmpty()) {
-                // Sort only
-                classes = classService.sortClass(sortField);
-            } else {
-                // Default: get all users
-                classes = classService.getAllClass();
-            }
-
-            // Set the list of users as a request attribute
-            request.setAttribute("userCountMap", userCountMap);
-            request.setAttribute("classes", classes);
-            request.setAttribute("subjectList", subjects);
-            request.setAttribute("searchClassname", searchClassName);
-            request.setAttribute("sortField", sortField);
-
-            // Forward the request to the JSP page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp");
-            dispatcher.forward(request, response);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error getting user list", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
-        }
-    }
-
+//    private void searchClassByName(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        try {
+//            List<Class> classes;
+//            List<Subject> subjects = subjectService.getAllSubjects();
+//            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+//            // Get search and sort parameters
+//            String searchClassName = request.getParameter("searchClassname");
+//            String sortField = request.getParameter("sortField");
+//
+//            if (searchClassName != null && !searchClassName.isEmpty() && sortField != null && !sortField.isEmpty()) {
+//                // Sort and search
+//                classes = classService.searchByClassNameAndSort(sortField, searchClassName);
+//            } else if (searchClassName != null && !searchClassName.isEmpty()) {
+//                // Search only
+//                classes = classService.searchClassByClassName(searchClassName);
+//            } else if (sortField != null && !sortField.isEmpty()) {
+//                // Sort only
+//                classes = classService.sortClass(sortField);
+//            } else {
+//                // Default: get all users
+//                classes = classService.getAllClass();
+//            }
+//
+//            // Set the list of users as a request attribute
+//            request.setAttribute("userCountMap", userCountMap);
+//            request.setAttribute("classes", classes);
+//            request.setAttribute("subjectList", subjects);
+//            request.setAttribute("searchClassname", searchClassName);
+//            request.setAttribute("sortField", sortField);
+//
+//            // Forward the request to the JSP page
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp");
+//            dispatcher.forward(request, response);
+//        } catch (Exception e) {
+//            logger.log(Level.SEVERE, "Error getting user list", e);
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
+//        }
+//    }
     //search and phân trang
     private void searchClassByName2(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

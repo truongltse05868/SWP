@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +22,6 @@ public class UserDAO extends DBConnect {
 //    public UserDAO() {
 //        super(); // Gọi constructor của superclass để khởi tạo kết nối
 //    }
-
     /**
      * Fetches all users from the database.
      *
@@ -117,7 +117,7 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
-    
+
     public List<User> getAllUsersForDashboard(int status) {
         List<User> users = new ArrayList<>();
         String query = "SELECT * FROM user where status =?"; // Ensure table name matches the one in your database
@@ -738,6 +738,92 @@ public class UserDAO extends DBConnect {
         }
         return users;
     }
+
+    public List<User> getUsersInClass(int classId, int page, int size, String searchQuery, String sortField, String sortOrder) {
+        int offset = (page - 1) * size;
+
+        // Base query
+        String query = "SELECT u.* FROM class_user as cu "
+                + "INNER JOIN user as u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ? AND cu.status = 1 AND u.status = 1 ";
+
+        // Search filter
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            query += "AND (u.user_name LIKE ? OR u.email LIKE ?) ";
+        }
+
+        // Sorting
+        query += "ORDER BY " + sortField + " " + sortOrder + " ";
+
+        // Pagination
+        query += "LIMIT ? OFFSET ?";
+
+        List<User> users = new ArrayList<>();
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, classId);
+
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchQuery + "%");
+                ps.setString(paramIndex++, "%" + searchQuery + "%");
+            }
+
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, offset);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
+                    );
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching users in class", e);
+        }
+        return users;
+    }
+
+    public int getUserCountInClass(int classId, String searchQuery) {
+        String query = "SELECT COUNT(*) FROM class_user as cu "
+                + "INNER JOIN user as u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ? AND cu.status = 1 AND u.status = 1 ";
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            query += "AND (u.user_name LIKE ? OR u.email LIKE ?)";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, classId);
+
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchQuery + "%");
+                ps.setString(paramIndex, "%" + searchQuery + "%");
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user count in class", e);
+        }
+
+        return 0;
+    }
+
     //end of class
     public boolean isUserNameExists(String userName, int userId) {
         String query = "SELECT COUNT(*) FROM user WHERE user_name = ? AND user_id <> ?";
@@ -767,6 +853,224 @@ public class UserDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error email is exists", e);
         }
         return false;
+    }
+
+    public List<User> searchAndSortUsersInClass(int classId, String searchUserName, String sortField, String sortOrder, int page, int size) {
+        String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.age, u.status, u.role_id, u.otp, u.otp_expiry "
+                + "FROM class_user cu "
+                + "JOIN user u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ? AND cu.status = 1 AND u.status = 1";
+
+        if (searchUserName != null && !searchUserName.isEmpty()) {
+            query += " AND u.user_name LIKE ?";
+        }
+        query += " ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, classId);
+            if (searchUserName != null && !searchUserName.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchUserName + "%");
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, (page - 1) * size);
+
+            ResultSet rs = ps.executeQuery();
+            List<User> users = new ArrayList<>();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    public List<User> getAllUserInClass(int classId, int page, int size) {
+        String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.status, u.role_id, u.otp "
+                + "FROM class_user cu JOIN user u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ? AND cu.status = 1 AND u.status = 1 LIMIT ? OFFSET ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, classId);
+            ps.setInt(2, size);
+            ps.setInt(3, (page - 1) * size);
+            ResultSet rs = ps.executeQuery();
+            List<User> users = new ArrayList<>();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    public int countUsersInClass(int classId, String searchUserName, String searchRoleId) {
+        String query = "SELECT COUNT(*) FROM class_user cu "
+                + "JOIN user u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ? AND cu.status = 1 AND u.status = 1";
+
+        List<Object> params = new ArrayList<>();
+        params.add(classId);
+
+        if (searchUserName != null && !searchUserName.isEmpty()) {
+            query += " AND u.user_name LIKE ?";
+            params.add("%" + searchUserName + "%");
+        }
+
+        if (searchRoleId != null && !searchRoleId.isEmpty()) {
+            query += " AND u.role_id = ?";
+            params.add(searchRoleId);
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            // Set parameters
+            int paramIndex = 1;
+            for (Object param : params) {
+                if (param instanceof String) {
+                    ps.setString(paramIndex++, (String) param);
+                } else if (param instanceof Integer) {
+                    ps.setInt(paramIndex++, (Integer) param);
+                }
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public List<User> sortUsersInClass(int classId, String sortField, String sortOrder, int page, int size) {
+        // Calculate the offset
+        int offset = (page - 1) * size;
+
+        // Update the query to include pagination
+        String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.age, u.status, u.role_id, u.otp, u.otp_expiry "
+                + "FROM class_user cu "
+                + "JOIN user u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ? AND cu.status = 1 AND u.status = 1 "
+                + "ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            // Set the parameters
+            ps.setInt(1, classId);
+            ps.setInt(2, size);
+            ps.setInt(3, offset);
+
+            ResultSet rs = ps.executeQuery();
+            List<User> users = new ArrayList<>();
+
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                users.add(user);
+            }
+
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
+    }
+
+    public List<User> searchUsersInClass(int classId, String searchUserName, String searchRoleId, int page, int size) {
+        String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.age, u.status, u.role_id, u.otp, u.otp_expiry "
+                + "FROM class_user cu "
+                + "JOIN user u ON cu.user_id = u.user_id "
+                + "WHERE cu.class_id = ? AND cu.status = 1 AND u.status = 1";
+
+        List<Object> params = new ArrayList<>();
+        params.add(classId);
+
+        if (searchUserName != null && !searchUserName.isEmpty()) {
+            query += " AND u.user_name LIKE ?";
+            params.add("%" + searchUserName + "%");
+        }
+
+        if (searchRoleId != null && !searchRoleId.isEmpty()) {
+            query += " AND u.role_id = ?";
+            params.add(searchRoleId);
+        }
+
+        query += " LIMIT ? OFFSET ?";
+        params.add(size);
+        params.add((page - 1) * size);
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            // Set parameters
+            int paramIndex = 1;
+            for (Object param : params) {
+                if (param instanceof String) {
+                    ps.setString(paramIndex++, (String) param);
+                } else if (param instanceof Integer) {
+                    ps.setInt(paramIndex++, (Integer) param);
+                }
+            }
+
+            ResultSet rs = ps.executeQuery();
+            List<User> users = new ArrayList<>();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp")
+                );
+                // Populate user object with data from result set
+                users.add(user);
+            }
+            return users;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 
 }

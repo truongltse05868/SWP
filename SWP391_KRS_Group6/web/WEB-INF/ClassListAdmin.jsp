@@ -270,18 +270,18 @@
                                             </tr>
                                         </c:forEach>
                                     </table>
-                                    <!-- Pagination -->
-                                    <div class="row mt-3">
-                                        <nav aria-label="Page navigation">
-                                            <ul class="pagination">
-                                                <c:forEach begin="1" end="${totalPages}" var="i">
-                                                    <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
-                                                        <a class="page-link" href="ClassController?action=searchClass&page=${i}&size=3&searchClassname=${fn:escapeXml(searchClassname)}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
-                                                    </li>
-                                                </c:forEach>
-                                            </ul>
-                                        </nav>
-                                    </div>
+                                            <!-- Pagination -->
+                                            <div class="row mt-3">
+                                                <nav aria-label="Page navigation">
+                                                    <ul class="pagination">
+                                                        <c:forEach begin="1" end="${totalPages}" var="i">
+                                                            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
+                                                                <a class="page-link" href="ClassController?action=searchClass&page=${i}&size=3&searchClassname=${fn:escapeXml(searchClassname)}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
+                                                            </li>
+                                                        </c:forEach>
+                                                    </ul>
+                                                </nav>
+                                            </div>
                                 </c:if>
                                 <c:if test="${empty classes}">
                                     <p>No classes found.</p>
