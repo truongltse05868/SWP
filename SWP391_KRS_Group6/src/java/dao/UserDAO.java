@@ -455,7 +455,7 @@ public class UserDAO extends DBConnect {
             ps.setBoolean(5, user.isStatus());
             ps.setInt(6, user.getRole_id()); //mặc định là student
             ps.setString(7, user.getOtp());
-            long expiryTime = System.currentTimeMillis() + 1 * 60 * 1000;
+            long expiryTime = System.currentTimeMillis() + 5 * 60 * 1000;
             Timestamp otp_expiry = new Timestamp(expiryTime);
             ps.setTimestamp(8, otp_expiry);
             int rowsAffected = ps.executeUpdate();

@@ -109,7 +109,48 @@
                                     </div>
                                 </div>
                             </form>
-                            <p id="message">${message}</p>
+                            <form id="otpForm" action="${pageContext.request.contextPath}/ForgotPasswordController" method="post">
+                                <input type="hidden" name="action" value="reSentOTP"> 
+                                <input type="hidden" name="email" value="${email}" class="form-control">
+                                <button id="resendBtn" name="submit" type="submit" value="Submit" class="btn button-md">ReSend OTP</button>
+                            </form>
+                            <script>
+                                let lastResendTime = 0; // Timestamp of the last time "ReSend OTP" was clicked
+                                let resendTimeout = 300000; // 5 minutes in milliseconds
+                                let resendEnabled = true; // Flag to track if resend is enabled
+
+                                // Function to enable resend button after a specified timeout
+                                function enableResendButton() {
+                                document.getElementById('resendBtn').disabled = false;
+                                document.getElementById('message').textContent = ''; // Clear any previous message
+                                resendEnabled = true; // Update flag
+                                }
+
+                                // Function to disable resend button and start timer
+                                function disableResendButton() {
+                                document.getElementById('resendBtn').disabled = true;
+                                document.getElementById('message').textContent = 'Please wait 5 minutes before retrying.'; // Display message
+                                setTimeout(enableResendButton, resendTimeout); // Set timeout to enable resend button
+                                resendEnabled = false; // Update flag
+                                }
+
+                                // Event listener for "ReSend OTP" button click
+                                document.getElementById('resendBtn').addEventListener('click', function(event) {
+                                let currentTime = Date.now();
+                                if (currentTime - lastResendTime >= resendTimeout || lastResendTime === 0) {
+                                lastResendTime = currentTime; // Update lastResendTime
+                                disableResendButton(); // Disable resend button and start timer
+                                } else {
+                                event.preventDefault(); // Prevent default action if resend is disabled
+                                }
+                                });
+                                // Initial setup: disable resend button if necessary
+                                if (!resendEnabled) {
+                                disableResendButton();
+                                }
+                            </script>
+                            <p>${message}</p>
+                            <p id="message"></p>
                         </div>
                     </div>
                 </div>

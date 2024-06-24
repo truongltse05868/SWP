@@ -27,6 +27,7 @@ import service.UserService;
  */
 public class ForgotPasswordController extends HttpServlet {
 //    SettingService settingService = new SettingService();
+
     UserService userService = new UserService();
 //    SubjectService subjectService = new SubjectService();
     /**
@@ -56,6 +57,9 @@ public class ForgotPasswordController extends HttpServlet {
                     break;
                 case "renewpass":
                     updatePassOTP(request, response);
+                    break;
+                case "reSentOTP":
+                    checkMail(request, response);
                     break;
                 default:
 //                    getUserProfle(request, response);
@@ -148,7 +152,6 @@ public class ForgotPasswordController extends HttpServlet {
 
     }
 
-
     private void updatePassOTP(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -204,9 +207,6 @@ public class ForgotPasswordController extends HttpServlet {
 //        }
 //        return false; // email không tồn tại
 //    }
-
-
-
     /**
      * Returns a short description of the servlet.
      *
