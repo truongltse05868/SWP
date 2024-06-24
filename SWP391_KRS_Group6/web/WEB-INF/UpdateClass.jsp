@@ -58,7 +58,7 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
         <script>
-            function sendPostRequest(action) {
+            function sendPostRequestClassList(action) {
                 // Tạo form ẩn
                 var form = document.createElement("form");
                 form.setAttribute("method", "post");
@@ -335,7 +335,8 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Update Class</button>
+                                            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-plus-circle"></i>Update Class</button>
+                                            <button type="button" onclick="sendPostRequestClassList('classList'); return false;" class="btn-secondry">Back</button>
                                         </div>
                                             <div> <span>${errorsMessage}</span></div>
                                     </div>

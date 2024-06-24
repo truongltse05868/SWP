@@ -106,6 +106,25 @@
                 document.body.appendChild(form);
                 form.submit();
             }
+            function sendPostRequestClassList(action) {
+                // Tạo form ẩn
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "ClassController");
+
+                // Tạo input ẩn cho action
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "action");
+                hiddenField.setAttribute("value", action);
+
+                // Thêm input ẩn vào form
+                form.appendChild(hiddenField);
+
+                // Thêm form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            }
         </script>
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
@@ -146,6 +165,7 @@
                                         <input type="hidden" name="classId" value="${classs.class_id}" />
                                         <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add User To Class</button>
                                     </form>
+                                    <button type="button" onclick="sendPostRequestClassList('classList'); return false;" class="btn-secondry">Back</button>
                                 </div>
                             </div>
                             <div class="widget-inner">
