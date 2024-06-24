@@ -93,10 +93,10 @@
                                     <table class="table table-striped my-3">
                                         <thead>
                                             <tr>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_id&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_name&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Name</a></th>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=type&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Type</a></th>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=description&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Description</a></th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_id&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_name&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Name</a></th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=type&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Type</a></th>
+                                                <th><a href="SettingController?service=listAllSetting&sortColumn=description&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Description</a></th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -136,38 +136,47 @@
                                         </tbody>
                                     </table>
                                     <div class="pagination-bx rounded-sm gray clearfix">
+                                        
                                         <ul class="pagination">
                                             <c:if test="${currentPage > 1}">
-                                                <li class="previous"><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                    <c:if test="${currentPage > 2}">
-                                                    <li><a href="SettingController?service=listAllSetting&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
-                                                    </c:if>
-                                                <li><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}">
+                                                        <i class="ti-arrow-left"></i>
+                                                    </a>
+                                                </li>
                                             </c:if>
-                                            <li class="active"><a href="SettingController?service=listAllSetting&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
-                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
-                                            <li class="next"><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                            <c:if test="${currentPage > 3}">
+                                                <li class="page-item">
+                                                    <a class="page-link" href="SettingController?service=listAllSetting&page=1&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}">1</a>
+                                                </li>
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                </c:if>
+
+                                            <c:forEach var="i" begin="${currentPage > 2 ? currentPage - 2 : 1}" end="${currentPage + 2 > maxPage ? maxPage : currentPage + 2}">
+                                                <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                                    <a class="page-link" href="SettingController?service=listAllSetting&page=${i}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}">${i}</a>
+                                                </li>
+                                            </c:forEach>
+
+                                            <c:if test="${currentPage < maxPage - 2}">
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="SettingController?service=listAllSetting&page=${maxPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}">${maxPage}</a>
+                                                </li>
+                                            </c:if>
+
+                                            <c:if test="${currentPage < maxPage}">
+                                                <li class="page-item">
+                                                    <a class="page-link" href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}">
+                                                        <i class="ti-arrow-right"></i>
+                                                    </a>
+                                                </li>
+                                            </c:if>
                                         </ul>
                                     </div>
                                 </c:if>
                                 <c:if test="${empty settings}">
                                     <p>No settings found.</p>
-                                    <div class="pagination-bx rounded-sm gray clearfix">
-                                        <ul class="pagination">
-                                            <c:if test="${currentPage > 1}">
-                                                <li class="previous"><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                    <c:if test="${currentPage > 2}">
-                                                    <li><a href="SettingController?service=listAllSetting&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
-                                                    </c:if>
-                                                <li><a href="SettingController?service=listAllSetting&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
-                                            </c:if>
-                                            <li class="active"><a href="SettingController?service=listAllSetting&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
-                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                            <li><a href="SettingController?service=listAllSetting&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
-                                            <li class="next"><a href="SettingController?service=listAllSetting&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
-                                        </ul>
-                                    </div>
                                 </c:if>
                             </div>
                         </div>
@@ -184,7 +193,7 @@
                 <div class="footer-inner">
                     <div class="footer-item">
                         <div class="footer-title">About Us</div>
-                        <p class="footer-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis varius nisl eget enim varius, a luctus velit facilisis.</p>
+                        <p class="footer-text">G6.</p>
                     </div>
                     <div class="footer-item">
                         <div class="footer-title">Quick Links</div>

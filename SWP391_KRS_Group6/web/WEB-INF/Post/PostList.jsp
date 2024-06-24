@@ -99,8 +99,8 @@
                                     <table class="table table-striped my-3">
                                         <thead>
                                             <tr>
-                                                <th><a href="PostController?service=ListAllPost&sortBy=post_id&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
-                                                <th><a href="PostController?service=ListAllPost&sortBy=title&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Title</a></th>
+                                                <th><a href="PostController?service=ListAllPost&page=${currentPage}&sortBy=post_id&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
+                                                <th><a href="PostController?service=ListAllPost&page=${currentPage}&sortBy=title&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Title</a></th>
                                                 <th>Thumbnail Url</th>
                                                 <th>Publish</th>
                                                 <th>Author</th>
@@ -157,49 +157,48 @@
                                     <div class="pagination-bx rounded-sm gray clearfix">
                                         <ul class="pagination">
                                             <c:if test="${currentPage > 1}">
-                                                <li class="previous"><a href="PostController?service=ListAllPost&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                    <c:if test="${currentPage > 2}">
-                                                    <li><a href="PostController?service=ListAllPost&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 2}</a></li>
-                                                    </c:if>
-                                                <li><a href="PostController?service=ListAllPost&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 1}</a></li>
-
+                                                <li class="page-item">
+                                                    <a class="page-link" href="PostController?service=ListAllPost&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">
+                                                        <i class="ti-arrow-left"></i>
+                                                    </a>
+                                                </li>
                                             </c:if>
-                                            <li class="active"><a href="PostController?service=ListAllPost&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage}</a></li>
-                                            <li><a href="PostController?service=ListAllPost&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage + 1}</a></li>
-                                            <li><a href="PostController?service=ListAllPost&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage+2}</a></li>
-                                            <li class="next"><a href="PostController?service=ListAllPost&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >Next<i class="ti-arrow-right"></i></a></li>
+                                            <c:if test="${currentPage > 3}">
+                                                <li class="page-item">
+                                                    <a class="page-link" href="PostController?service=ListAllPost&page=1&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">1</a>
+                                                </li>
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                </c:if>
+
+                                            <c:forEach var="i" begin="${currentPage > 2 ? currentPage - 2 : 1}" end="${currentPage + 2 > maxPage ? maxPage : currentPage + 2}">
+                                                <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                                    <a class="page-link" href="PostController?service=ListAllPost&page=${i}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">${i}</a>
+                                                </li>
+                                            </c:forEach>
+
+                                            <c:if test="${currentPage < maxPage - 2}">
+                                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                <li class="page-item">
+                                                    <a class="page-link" href="PostController?service=ListAllPost&page=${maxPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">${maxPage}</a>
+                                                </li>
+                                            </c:if>
+
+                                            <c:if test="${currentPage < maxPage}">
+                                                <li class="page-item">
+                                                    <a class="page-link" href="PostController?service=ListAllPost&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">
+                                                        <i class="ti-arrow-right"></i>
+                                                    </a>
+                                                </li>
+                                            </c:if>
                                         </ul>
                                     </div>
                                 </c:if>
                                 <c:if test="${empty posts}">
                                     <p>No posts found.</p>
-                                    <div class="pagination-bx rounded-sm gray clearfix">
-                                        <ul class="pagination">
-                                            <c:if test="${currentPage > 1}">
-                                                <li class="previous"><a href="PostController?service=ListAllPost&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                    <c:if test="${currentPage > 2}">
-                                                    <li><a href="PostController?service=ListAllPost&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 2}</a></li>
-                                                    </c:if>
-                                                <li><a href="PostController?service=ListAllPost&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage - 1}</a></li>
 
-                                            </c:if>
-                                            <li class="active"><a href="PostController?service=ListAllPost&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage}</a></li>
-                                            <li><a href="PostController?service=ListAllPost&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage + 1}</a></li>
-                                            <li><a href="PostController?service=ListAllPost&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >${currentPage+2}</a></li>
-                                            <li class="next"><a href="PostController?service=ListAllPost&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}" >Next<i class="ti-arrow-right"></i></a></li>
-                                        </ul>
-                                    </div>
                                 </c:if>
                                 <!-- Pagination Controls -->
-                                <nav aria-label="Page navigation">
-                                    <ul class="pagination">
-                                        <c:forEach begin="1" end="${totalPages}" var="i">
-                                            <li class="page-item ${i == param.currentPage ? 'active' : ''}">
-                                                <a class="page-link" href="?service=getAllPost&page=${i}&pageSize=${param.pageSize}&sortBy=${param.sortBy}&sortOrder=${param.sortOrder}&keyword=${param.keyword}">${i}</a>
-                                            </li>
-                                        </c:forEach>
-                                    </ul>
-                                </nav>
+                               
                             </div>
                         </div>
                     </div>

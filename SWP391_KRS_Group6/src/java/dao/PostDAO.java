@@ -17,11 +17,34 @@ public class PostDAO extends DBConnect {
 
     private static final Logger logger = Logger.getLogger(PostDAO.class.getName());
 
-    public List<Post> getAllPosts(int status) {
+    public List<Post> getAllBlog(int status) {
         List<Post> postList = new ArrayList<>();
         String query = "SELECT * FROM post where status = ?";
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setInt(1, status);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Post post = new Post(
+                        rs.getInt("post_id"),
+                        rs.getString("title"),
+                        rs.getString("summary"),
+                        rs.getString("thumbnail_url"),
+                        rs.getString("content"),
+                        rs.getBoolean("status"),
+                        rs.getInt("user_id")
+                );
+                postList.add(post);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all posts", e);
+        }
+        return postList;
+    }
+    public List<Post> getAllPosts() {
+        List<Post> postList = new ArrayList<>();
+        String query = "SELECT * FROM post";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Post post = new Post(

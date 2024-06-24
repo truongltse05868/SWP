@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.Vector;
 import dao.SettingDAO;
 import entity.User;
+import java.util.List;
 import service.SettingService;
 
 @WebServlet(name = "SettingController", urlPatterns = {"/SettingController"})
@@ -42,7 +43,7 @@ public class SettingController extends HttpServlet {
                 sortOrder = "asc";
             }
             int page = (pageParam != null) ? Integer.parseInt(pageParam) : 1;
-            int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 3;
+            int pageSize = (pageSizeParam != null) ? Integer.parseInt(pageSizeParam) : 4;
 
             User currentUser = (User) session.getAttribute("account");
             Setting settingSer = settingService.getSettingById(currentUser.getRole_id());
@@ -59,11 +60,17 @@ public class SettingController extends HttpServlet {
                             message = "";
                         }
                         Vector<Setting> settings;
+                        List<Setting> subjec;
                         if (search != null && !search.isEmpty()) {
                             settings = dao.searchSettings(search, sortColumn, sortOrder, page, pageSize);
+                            subjec = dao.getAllSettings();
                         } else {
                             settings = dao.getAllSettingsSortedBy(sortColumn, sortOrder, page, pageSize);
+                            subjec = dao.getAllSettings();
                         }
+
+                        int maxPage = (int) Math.ceil((double) subjec.size() / pageSize);
+                        request.setAttribute("maxPage", maxPage);
                         request.setAttribute("settings", settings);
                         request.setAttribute("currentPage", page);
                         request.setAttribute("pageSize", pageSize);

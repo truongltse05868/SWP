@@ -4,11 +4,11 @@
  */
 package dao;
 
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import entity.Setting;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -55,6 +55,27 @@ public class SettingDAO extends DBConnect {
             Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return null;
+    }
+
+    public List<Setting> getAllSettings() {
+        List<Setting> postList = new ArrayList<>();
+        String query = "SELECT * FROM setting";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Setting post = new Setting(
+                        rs.getInt("setting_id"),
+                        rs.getString("setting_name"),
+                        rs.getString("type"),
+                        rs.getString("description"),
+                        rs.getBoolean("status")
+                );
+                postList.add(post);
+            }
+        } catch (SQLException ex) {
+             Logger.getLogger(SettingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return postList;
     }
 
     // Update
@@ -178,7 +199,8 @@ public class SettingDAO extends DBConnect {
         }
         return settings;
     }
-    public List<Setting> getALlContactType(){
+
+    public List<Setting> getALlContactType() {
         List<Setting> settings = new ArrayList<>();
         String query = "SELECT * FROM setting where type = 'Contact Type';"; // Ensure table name matches the one in your database
         try (PreparedStatement ps = connection.prepareStatement(query); ResultSet rs = ps.executeQuery()) {

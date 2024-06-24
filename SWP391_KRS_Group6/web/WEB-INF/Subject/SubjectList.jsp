@@ -97,7 +97,7 @@
                                                 <div class="input-group">
                                                     <label for="keyword">Search Courses</label>
                                                     <input type="hidden" name="service" value="ListAllSubject">
-                                                    <input type="text" id="keyword" name="keyword" class="form-control" style="width: 300px;" value="${param.searchSetting}">
+                                                    <input type="text" id="keyword" name="keyword" class="form-control" style="width: 300px;" value="${param.keyword}">
                                                     <button type="submit" class="btn">Search</button>
                                                 </div>
                                             </form>
@@ -198,38 +198,44 @@
                                         <div class="pagination-bx rounded-sm gray clearfix">
                                             <ul class="pagination">
                                                 <c:if test="${currentPage > 1}">
-                                                    <li class="previous"><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                        <c:if test="${currentPage > 2}">
-                                                        <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
-                                                        </c:if>
-                                                    <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
-
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">
+                                                            <i class="ti-arrow-left"></i>
+                                                        </a>
+                                                    </li>
                                                 </c:if>
-                                                <li class="active"><a href="SubjectController?service=ListAllSubject&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
-                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
-                                                <li class="next"><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
+                                                <c:if test="${currentPage > 3}">
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="SubjectController?service=ListAllSubject&page=1&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">1</a>
+                                                    </li>
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                    </c:if>
+
+                                                <c:forEach var="i" begin="${currentPage > 2 ? currentPage - 2 : 1}" end="${currentPage + 2 > maxPage ? maxPage : currentPage + 2}">
+                                                    <li class="page-item ${currentPage == i ? 'active' : ''}">
+                                                        <a class="page-link" href="SubjectController?service=ListAllSubject&page=${i}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">${i}</a>
+                                                    </li>
+                                                </c:forEach>
+
+                                                <c:if test="${currentPage < maxPage - 2}">
+                                                    <li class="page-item disabled"><span class="page-link">...</span></li>
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="SubjectController?service=ListAllSubject&page=${maxPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">${maxPage}</a>
+                                                    </li>
+                                                </c:if>
+
+                                                <c:if test="${currentPage < maxPage}">
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&keyword=${param.keyword}">
+                                                            <i class="ti-arrow-right"></i>
+                                                        </a>
+                                                    </li>
+                                                </c:if>
                                             </ul>
                                         </div>
                                     </c:if>
                                     <c:if test="${empty subjectList}">
                                         <p>No subject found.</p>
-                                        <div class="pagination-bx rounded-sm gray clearfix">
-                                            <ul class="pagination">
-                                                <c:if test="${currentPage > 1}">
-                                                    <li class="previous"><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}"><i class="ti-arrow-left"></i> Prev</a></li>
-                                                        <c:if test="${currentPage > 2}">
-                                                        <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 2}</a></li>
-                                                        </c:if>
-                                                    <li><a href="SubjectController?service=ListAllSubject&page=${currentPage - 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage - 1}</a></li>
-
-                                                </c:if>
-                                                <li class="active"><a href="SubjectController?service=ListAllSubject&page=${currentPage}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage}</a></li>
-                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage + 1}</a></li>
-                                                <li><a href="SubjectController?service=ListAllSubject&page=${currentPage+2}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >${currentPage+2}</a></li>
-                                                <li class="next"><a href="SubjectController?service=ListAllSubject&page=${currentPage + 1}&sortColumn=${sortColumn}&sortOrder=${sortOrder}&searchSetting=${param.searchSetting}" >Next<i class="ti-arrow-right"></i></a></li>
-                                            </ul>
-                                        </div>
                                     </c:if>
                                 </div>
                             </div>

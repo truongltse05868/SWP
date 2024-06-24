@@ -71,8 +71,8 @@ public class Dashboard extends HttpServlet {
             List<Subject> subjectUnactive = SubjectDAO.getAllSubjectsForDash(0);
             List<Class> classesActive = ClassDAO.getAllClassForDash(1);
             List<Class> classesInactive = ClassDAO.getAllClassForDash(0);
-            List<Post> postPubLised = postDAO.getAllPosts(1);
-            List<Post> postPending = postDAO.getAllPosts(0);
+            List<Post> postPubLised = postDAO.getAllBlog(1);
+            List<Post> postPending = postDAO.getAllBlog(0);
             
             int numerOfPost = postPubLised.size() + postPending.size();
             int publishPercent = (postPubLised.size() * 100) / numerOfPost;

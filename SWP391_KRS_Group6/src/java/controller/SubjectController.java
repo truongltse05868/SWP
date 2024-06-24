@@ -186,21 +186,30 @@ public class SubjectController extends HttpServlet {
             String keyword = request.getParameter("keyword");
 
             List<Subject> subjects;
+            List<Subject> subjec;
+            
 
             if (roleId == 1) {
                 if (keyword != null && !keyword.isEmpty()) {
                     subjects = subjectDAO.searchSubjects(keyword, sortBy, sortOrder, page, pageSize);
+                    subjec = subjectDAO.getAllSubjects();
                 } else {
                     subjects = subjectDAO.getAllSubjectsSortedBy(sortBy, sortOrder, page, pageSize);
+                    subjec = subjectDAO.getAllSubjects();
                 }
             } else {
                 if (keyword != null && !keyword.isEmpty()) {
                     subjects = subjectDAO.searchCourse(keyword, sortBy, sortOrder, page, pageSize);
+                    subjec = subjectDAO.getAllSubjectsForDash(1);
                 } else {
-                     subjects = subjectDAO.getAllCourseSortedBy(sortBy, sortOrder, page, pageSize);
+                    subjects = subjectDAO.getAllCourseSortedBy(sortBy, sortOrder, page, pageSize);
+                    subjec = subjectDAO.getAllSubjectsForDash(1);
                 }
             }
 
+            int maxPage = (int) Math.ceil((double) subjec.size() / pageSize);
+            request.setAttribute("maxPage", maxPage);
+            
             request.setAttribute("subjectList", subjects);
             request.setAttribute("currentPage", page);
             request.setAttribute("pageSize", pageSize);

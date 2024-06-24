@@ -3,6 +3,7 @@ package controller;
 import dao.PostDAO;
 import dao.UserDAO;
 import entity.Post;
+import entity.Subject;
 import entity.User;
 import service.BaseService;
 import jakarta.servlet.RequestDispatcher;
@@ -142,15 +143,20 @@ public class PostController extends HttpServlet {
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
             String keyword = request.getParameter("keyword");
+            List<Post> subjec;
 
             List<Post> posts;
             if (keyword != null && !keyword.trim().isEmpty()) {
                 posts = postDAO.searchPosts(keyword, sortBy, sortOrder, page, pageSize);
+                subjec = postDAO.getAllPosts();
             } else {
                 posts = postDAO.getAllPostsSortedBy(sortBy, sortOrder, page, pageSize);
+                subjec = postDAO.getAllPosts();
             }
             List<User> users = userDAO.getAllUsers();
 
+            int maxPage = (int) Math.ceil((double) subjec.size() / pageSize);
+            request.setAttribute("maxPage", maxPage);
             request.setAttribute("posts", posts);
             request.setAttribute("users", users);
             request.setAttribute("currentPage", page);
@@ -178,14 +184,20 @@ public class PostController extends HttpServlet {
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "DESC";
             String keyword = request.getParameter("keyword");
+            List<Post> subjec;
 
             List<Post> posts;
             if (keyword != null && !keyword.trim().isEmpty()) {
                 posts = postDAO.searchBlog(keyword, sortBy, sortOrder, page, pageSize);
+                subjec = postDAO.getAllBlog(1);
             } else {
                 posts = postDAO.getAllBlogsSortedBy(sortBy, sortOrder, page, pageSize);
+                subjec = postDAO.getAllBlog(1);
             }
             List<User> users = userDAO.getAllUsers();
+
+            int maxPage = (int) Math.ceil((double) subjec.size() / pageSize);
+            request.setAttribute("maxPage", maxPage);
 
             request.setAttribute("posts", posts);
             request.setAttribute("user", users);
@@ -299,7 +311,7 @@ public class PostController extends HttpServlet {
                 request.setAttribute("successMessage", successMessage);
 
                 // Fetch and set the list of posts
-                List<Post> posts = dao.getAllPosts(1);
+                List<Post> posts = dao.getAllBlog(1);
                 request.setAttribute("postList", posts);
 
                 if (author == 1) {
@@ -341,7 +353,7 @@ public class PostController extends HttpServlet {
                     request.getRequestDispatcher("WEB-INF/Post/BlogDisplay.jsp").forward(request, response);
                 }
             } else {
-                List<Post> posts = dao.getAllPosts(1);
+                List<Post> posts = dao.getAllBlog(1);
                 request.setAttribute("postList", posts);
                 request.getRequestDispatcher("WEB-INF/Post/insertPost.jsp").forward(request, response);
             }
