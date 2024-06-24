@@ -17,8 +17,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import service.ClassService;
@@ -214,8 +212,9 @@ public class ClassController extends HttpServlet {
             request.setAttribute("users", users);
             request.setAttribute("roles", role);
             request.setAttribute("classs", classs);
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
-            dispatcher.forward(request, response);
+            getClassDetailAdmin2(request, response);
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/ClassDetailAdmin.jsp");
+//            dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get list Class", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while get list class.");
@@ -329,7 +328,7 @@ public class ClassController extends HttpServlet {
             if ((searchUserName != null && !searchUserName.isEmpty()) || (searchRoleId != null && !searchRoleId.isEmpty())) {
                 if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
                     // Search, sort, and paginate
-                    useres = userService.searchAndSortUsersInClass(classId, searchUserName, sortField, sortOrder, page, size);
+                    useres = userService.searchAndSortUsersInClass(classId, searchUserName,searchRoleId, sortField, sortOrder, page, size);
                 } else {
                     // Search and paginate
                     useres = userService.searchUsersInClass(classId, searchUserName, searchRoleId, page, size);

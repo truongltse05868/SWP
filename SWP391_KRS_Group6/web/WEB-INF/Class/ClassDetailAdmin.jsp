@@ -126,7 +126,7 @@
                 document.body.appendChild(form);
                 form.submit();
             }
-            function sendPostRequestSort2(classId,sortField, searchUsername, searchRoleId, sortOrder) {
+            function sendPostRequestSort3(sortField, searchUsername, searchRoleId, sortOrder) {
                 const form = document.createElement('form');
                 form.method = 'post';
                 form.action = 'ClassController';
@@ -152,7 +152,7 @@
                 const sortOrderInput = document.createElement('input');
                 sortOrderInput.type = 'hidden';
                 sortOrderInput.name = 'classId';
-                sortOrderInput.value = classId;
+                sortOrderInput.value = classs.class_id;
                 form.appendChild(sortOrderInput);
 
                 const searchClassnameInput = document.createElement('input');
@@ -251,10 +251,10 @@
                                 <c:if test="${not empty users}">
                                     <table >
                                         <tr>
-                                            <th><a href="SortByUserName" onclick="sendPostRequestSort2('user_name', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Username</a></th>
-                                            <th><a href="SortByEmail" onclick="sendPostRequestSort2('email', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Email</a></th>
-                                            <th><a href="SortByFullName" onclick="sendPostRequestSort2('full_name', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Full Name</a></th>
-                                            <th><a href="SortByPhone" onclick="sendPostRequestSort2('phone', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Phone</a></th>
+                                            <th><a href="ClassController?action=searchUserInClass&page=${currentPage}&classId=${classs.class_id}&size=3&searchClassname=${fn:escapeXml(searchUsername)}&roleId=${searchRoleId}&sortField='user_name'&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Username</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort3('email', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Email</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort3('full_name', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Full Name</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort3('phone', '${searchClassname}', '${searchRoleId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Phone</a></th>
                                             <th>Gender</th>
                                             <th>Role</th>
                                             <th><a href="?sortField=status">Status</a></th>
