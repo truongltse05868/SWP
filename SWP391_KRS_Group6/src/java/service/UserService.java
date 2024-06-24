@@ -63,8 +63,8 @@ public class UserService extends BaseService {
     public List<User> getAllUserInClass(int classId, int page, int size) {
         return userDAO.getAllUserInClass(classId, page, size);
     }
-    public List<User> searchAndSortUsersInClass(int classId, String searchUserName, String sortField, String sortOrder, int page, int size) {
-        return userDAO.searchAndSortUsersInClass(classId, searchUserName, sortField, sortOrder, page, size);
+    public List<User> searchAndSortUsersInClass(int classId, String searchUserName, String searchRoleId, String sortField, String sortOrder, int page, int size) {
+        return userDAO.searchAndSortUsersInClass(classId, searchUserName,searchRoleId, sortField, sortOrder, page, size);
     }
 
     public List<User> getAllUsers() {

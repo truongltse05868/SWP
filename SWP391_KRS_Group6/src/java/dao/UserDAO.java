@@ -855,7 +855,7 @@ public class UserDAO extends DBConnect {
         return false;
     }
 
-    public List<User> searchAndSortUsersInClass(int classId, String searchUserName, String sortField, String sortOrder, int page, int size) {
+    public List<User> searchAndSortUsersInClass(int classId, String searchUserName,String searchRoleId, String sortField, String sortOrder, int page, int size) {
         String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.age, u.status, u.role_id, u.otp, u.otp_expiry "
                 + "FROM class_user cu "
                 + "JOIN user u ON cu.user_id = u.user_id "
@@ -863,6 +863,9 @@ public class UserDAO extends DBConnect {
 
         if (searchUserName != null && !searchUserName.isEmpty()) {
             query += " AND u.user_name LIKE ?";
+        }
+        if (searchRoleId != null && !searchRoleId.isEmpty()) {
+            query += " AND u.role_id = ?";
         }
         query += " ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
 
