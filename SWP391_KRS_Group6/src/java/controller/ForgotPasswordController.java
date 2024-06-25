@@ -104,10 +104,12 @@ public class ForgotPasswordController extends HttpServlet {
         try {
 
             String email = request.getParameter("email");
+            String userName = request.getParameter("email");
             String subjectEmail = "KRS_G6 Reset Password";
             // Kiểm tra email có tồn tại trong database
             boolean emailExists = userService.checkEmailExists(email);
-
+            boolean userNameExists = userService.checkUserNameExists(email);
+            
             if (emailExists) {
                 // Tạo mã OTP và lưu vào database
                 String otp = userService.generateOTP();
@@ -127,9 +129,28 @@ public class ForgotPasswordController extends HttpServlet {
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
                 }
 
-            } else {
+            }else if(userNameExists){
+                // Tạo mã OTP và lưu vào database
+                String otp = userService.generateOTP();
+                User user = userService.getUserByUserName(userName);
+                boolean saveSuccess = userService.saveOtpToDatabase(user.getEmail(), otp);
+                if (saveSuccess) {
+                    // Gửi email OTP
+                    userService.sendOtpToEmail(user.getEmail(), otp, subjectEmail);
+
+                    // Chuyển hướng đến trang resetPassword.jsp với email
+                    request.setAttribute("email", user.getEmail());
+                    request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
+                    dispatcher.forward(request, response);
+                } else {
+                    request.setAttribute("message", "Lỗi hệ thống OTP");
+                    RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
+                }
+            }
+            else {
                 // Email không tồn tại
-                request.setAttribute("message", "Email không tồn tại.");
+                request.setAttribute("message", "Email hoặc UserName không tồn tại.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
                 dispatcher.forward(request, response);
             }

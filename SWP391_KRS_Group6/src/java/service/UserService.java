@@ -177,4 +177,7 @@ public class UserService extends BaseService {
     public boolean isEmailExists(String email, int userId) {
         return userDAO.isEmailExists(email, userId);
     }
+    public User getUserByUserName(String userName) {
+        return userDAO.getUserByUserName(userName);
+    }
 }

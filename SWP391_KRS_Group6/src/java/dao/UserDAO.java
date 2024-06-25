@@ -444,6 +444,34 @@ public class UserDAO extends DBConnect {
         return user;
     }
 
+    public User getUserByUserName(String userName) {
+        User user = null;
+        String query = "SELECT * FROM user WHERE user_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, userName);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            //                            rs.getInt("age"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by user_name", e);
+        }
+        return user;
+    }
+
     public boolean addUserRegister(User user) {
         String query = "INSERT INTO user (user_name, password,full_name, email, status, role_id, otp, otp_expiry) "
                 + "VALUES (?, ?, ? , ?, ?, ?, ?, ?)";
@@ -855,7 +883,7 @@ public class UserDAO extends DBConnect {
         return false;
     }
 
-    public List<User> searchAndSortUsersInClass(int classId, String searchUserName,String searchRoleId, String sortField, String sortOrder, int page, int size) {
+    public List<User> searchAndSortUsersInClass(int classId, String searchUserName, String searchRoleId, String sortField, String sortOrder, int page, int size) {
         String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.age, u.status, u.role_id, u.otp, u.otp_expiry "
                 + "FROM class_user cu "
                 + "JOIN user u ON cu.user_id = u.user_id "

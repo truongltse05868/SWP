@@ -85,9 +85,9 @@
                                     <div class="col-lg-12">
                                         <div class="form-group">
                                             <div class="input-group">
-                                                <label for="email">Your Email:</label>
+                                                <label for="email">Your Email or User Name:</label>
 <!--                                                <input type="email" id="email" name="email" required>-->
-                                                <input id="email" name="email" type="email" required="" class="form-control">
+                                                <input id="email" name="email" type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
