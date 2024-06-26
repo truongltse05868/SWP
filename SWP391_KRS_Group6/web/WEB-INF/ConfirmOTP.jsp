@@ -46,8 +46,39 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 80px; /* Điều chỉnh giá trị top để đặt vị trí thấp hơn */
+                right: 20px;
+                z-index: 1050;
+            }
+            .toast {
+                opacity: 0.9;
+                font-size: 1.5em; /* Tăng kích thước của toast */
+                /*background-color: #28a745;  Nền màu xanh lá cây */
+                /*color: white;  Màu chữ trắng */
+                border: 2px solid #218838; /* Viền màu xanh đậm */
+                border-radius: 10px; /* Đường viền cong */
+            }
+            .toast-header {
+                font-size: 1.75em; /* Tăng kích thước tiêu đề của toast */
+                background-color: #218838; /* Nền màu xanh đậm cho tiêu đề */
+                color: white; /* Màu chữ trắng */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
+                border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
+                border-top-right-radius: 10px; /* Đường viền cong góc trên bên phải */
+            }
+            .toast-body {
+                font-size: 1.5em; /* Tăng kích thước nội dung của toast */
+            }
+        </style>
     </head>
     <body id="bg">
+        <%
+        String email = (String) session.getAttribute("email");
+        
+        %>
         <div class="page-wraper">
             <div id="loading-icon-bx"></div>
             <div class="account-form">
@@ -69,7 +100,7 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <label for="email">OTP:</label>
-                                                <input type="text" id="otp" name="otp" required class="form-control">
+                                                <input type="text" id="otp" name="otp" value="${otp}" required class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -96,7 +127,23 @@
                                 <button id="resendBtn" name="submit" type="submit" value="Submit" class="btn button-md">Re-send OTP</button>
                             </form>
                             <p id="countdown"></p>
-                            <p>${message}</p>
+                            <!--<p>${message}</p>-->
+                            <!--hiển thị thông báo-->
+                            <c:if test="${not empty message}">
+                                <div class="toast-container">
+                                    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
+                                        <div class="toast-header">
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                            ${message} 
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
                             <p id="message"></p>
                         </div>
                     </div>
@@ -119,6 +166,22 @@
         <script src="assets/js/functions.js"></script>
         <script src="assets/js/contact.js"></script>
         <script src='assets/vendors/switcher/switcher.js'></script>
+        <!-- jQuery and Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                                var successMessage = "${message}";
+                if (successMessage) {
+                    $('#successToast').toast({
+                        delay: 5000
+                    });
+                    $('#successToast').toast('show');
+                }
+            });
+        </script>
         <script>
             let resendTimeout = 60000; // 1 minute in milliseconds
             let countdownElement = document.getElementById('countdown');
@@ -148,23 +211,23 @@
                 startCountdown(resendTimeout / 1000);
             }
 
-            function sendOTPRequest(event) {
-                event.preventDefault(); // Prevent form submission
-                $.ajax({
-                    url: $("#otpForm").attr("action"),
-                    type: "POST",
-                    data: $("#otpForm").serialize(),
-                    success: function (response) {
-                        // Handle success
-                        disableResendButton();
-                        countdownElement.textContent = "OTP sent successfully!";
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error
-                        countdownElement.textContent = "Error in sending OTP. Please try again.";
-                    }
-                });
-            }
+//            function sendOTPRequest(event) {
+//                event.preventDefault(); // Prevent form submission
+//                $.ajax({
+//                    url: $("#otpForm").attr("action"),
+//                    type: "POST",
+//                    data: $("#otpForm").serialize(),
+//                    success: function (response) {
+//                        // Handle success
+//                        disableResendButton();
+//                        countdownElement.textContent = "OTP sent successfully!";
+//                    },
+//                    error: function (xhr, status, error) {
+//                        // Handle error
+//                        countdownElement.textContent = "Error in sending OTP. Please try again.";
+//                    }
+//                });
+//            }
 
             resendButton.addEventListener('click', function (event) {
                 if (!resendButton.disabled) {
