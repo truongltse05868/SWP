@@ -623,7 +623,7 @@ public class ClassController extends HttpServlet {
             int classId = Integer.parseInt(request.getParameter("classId"));
             int subjectId = Integer.parseInt(request.getParameter("subjectId"));
             String className = request.getParameter("className");
-            boolean status = request.getParameter("status") != null;
+            boolean status = "1".equals(request.getParameter("status")); // Updated to get status from radio button
 
             classUpdate.setClass_id(classId);
             classUpdate.setClass_name(className);
@@ -641,18 +641,19 @@ public class ClassController extends HttpServlet {
             }
             boolean isUpdate = classService.updateClass(classUpdate);
             if (isUpdate) {
-                List<Class> classList = classService.getAllClasses();
-                Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-                List<Subject> subjectList = subjectService.getAllSubjects();
-
-                request.setAttribute("classes", classList);
-                request.setAttribute("userCountMap", userCountMap);
-                request.setAttribute("subjectList", subjectList);
-                request.setAttribute("successMessage", "Cập nhật lớp thành công");
-                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+//                List<Class> classList = classService.getAllClasses();
+//                Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+//                List<Subject> subjectList = subjectService.getAllSubjects();
+//
+//                request.setAttribute("classes", classList);
+//                request.setAttribute("userCountMap", userCountMap);
+//                request.setAttribute("subjectList", subjectList);
+//                request.setAttribute("successMessage", "Cập nhật lớp thành công");
+//                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+                 searchClassByName2(request, response);
             } else {
                 request.setAttribute("successMessage", "Cập nhật lớp không thành công");
-                request.getRequestDispatcher("WEB-INF/UpdateAdmin.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating class", e);
