@@ -83,6 +83,33 @@
                 form.submit();
             }
         </script>
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 80px; /* Điều chỉnh giá trị top để đặt vị trí thấp hơn */
+                right: 20px;
+                z-index: 1050;
+            }
+            .toast {
+                opacity: 0.9;
+                font-size: 1.5em; /* Tăng kích thước của toast */
+                /*background-color: #28a745;  Nền màu xanh lá cây */
+                /*color: white;  Màu chữ trắng */
+                border: 2px solid #218838; /* Viền màu xanh đậm */
+                border-radius: 10px; /* Đường viền cong */
+            }
+            .toast-header {
+                font-size: 1.75em; /* Tăng kích thước tiêu đề của toast */
+                background-color: #218838; /* Nền màu xanh đậm cho tiêu đề */
+                color: white; /* Màu chữ trắng */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
+                border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
+                border-top-right-radius: 10px; /* Đường viền cong góc trên bên phải */
+            }
+            .toast-body {
+                font-size: 1.5em; /* Tăng kích thước nội dung của toast */
+            }
+        </style>
     </head>
     <body id="bg">
         <div class="page-wraper">
@@ -119,12 +146,12 @@
                             <div class="row">
                                 <div class="col-lg-3 col-md-4 col-sm-12 m-b30">
                                     <div class="widget courses-search-bx placeani">
-<!--                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <label>Search Courses</label>
-                                                <input name="dzName" type="text" required class="form-control">
-                                            </div>
-                                        </div>-->
+                                        <!--                                        <div class="form-group">
+                                                                                    <div class="input-group">
+                                                                                        <label>Search Courses</label>
+                                                                                        <input name="dzName" type="text" required class="form-control">
+                                                                                    </div>
+                                                                                </div>-->
                                     </div>
                                     <div class="widget widget_archive">
                                         <h5 class="widget-title style-1">All Courses</h5>
@@ -277,7 +304,22 @@
                                         <c:if test="${empty users}">
                                             <p>No users found.</p>
                                         </c:if>
-                                        <div class="alert alert-info mt-3">${successMessage}</div>
+                                            <!--hiển thị thông báo-->
+                                            <c:if test="${not empty successMessage}">
+                                                <div class="toast-container">
+                                                    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
+                                                        <div class="toast-header">
+                                                            <strong class="mr-auto">Thông báo</strong>
+                                                            <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                                                <span aria-hidden="true">&times;</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="toast-body">
+                                                            ${successMessage} 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </c:if>
                                     </div>
                                 </div>
 
@@ -305,6 +347,22 @@
                         <script src="assets/js/functions.js"></script>
                         <script src="assets/js/contact.js"></script>
                         <script src='assets/vendors/switcher/switcher.js'></script>
+                        <!-- jQuery and Bootstrap JS -->
+                        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+                        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+                        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+                        <script>
+            $(document).ready(function () {
+                var successMessage = "${successMessage}";
+                if (successMessage) {
+                    $('#successToast').toast({
+                        delay: 5000
+                    });
+                    $('#successToast').toast('show');
+                }
+            });
+                        </script>
                         </body>
 
                         </html>

@@ -580,10 +580,11 @@ public class ClassController extends HttpServlet {
 
             if (isSuccess) {
                 request.setAttribute("successMessage", message);
-                List<Class> classes = classService.getAllClasses();
-                request.setAttribute("classes", classes);
-                request.setAttribute("subjectList", subjects);
-                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+//                List<Class> classes = classService.getAllClasses();
+//                request.setAttribute("classes", classes);
+//                request.setAttribute("subjectList", subjects);
+//                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+                searchClassByName2(request, response);
             } else {
                 request.setAttribute("roles", roles);
                 request.setAttribute("class_name", className);
@@ -650,7 +651,7 @@ public class ClassController extends HttpServlet {
 //                request.setAttribute("subjectList", subjectList);
 //                request.setAttribute("successMessage", "Cập nhật lớp thành công");
 //                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
-                 searchClassByName2(request, response);
+                searchClassByName2(request, response);
             } else {
                 request.setAttribute("successMessage", "Cập nhật lớp không thành công");
                 request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
