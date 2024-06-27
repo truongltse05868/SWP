@@ -32,6 +32,9 @@ public class ClassService extends BaseService {
 
         return errors;
     }
+    public String getSuccessMessageAddClass(boolean isSuccess, String className) {
+        return isSuccess ? "Thêm lớp "+ className + " thành công." : "Thêm lớp " + className + " không thành công.";
+    }
 
     private boolean isClassNameExists(String className, int classId) {
         return classDAO.isClassNameExists(className, classId);

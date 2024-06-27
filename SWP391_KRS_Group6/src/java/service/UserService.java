@@ -45,9 +45,7 @@ public class UserService extends BaseService {
 //    public int getUserCountInClass(int classId, String searchQuery) {
 //        return userDAO.getUserCountInClass(classId, searchQuery);
 //    }
-    
     // Method to search users in a specific class by userName and roleId
-
     public List<User> searchUsersInClass(int classId, String searchUserName, String searchRoleId, int page, int size) {
         return userDAO.searchUsersInClass(classId, searchUserName, searchRoleId, page, size);
     }
@@ -56,15 +54,17 @@ public class UserService extends BaseService {
     public int countUsersInClass(int classId, String searchUserName, String searchRoleId) {
         return userDAO.countUsersInClass(classId, searchUserName, searchRoleId);
     }
-    
+
     public List<User> sortUsersInClass(int classId, String sortField, String sortOrder, int page, int size) {
         return userDAO.sortUsersInClass(classId, sortField, sortOrder, page, size);
     }
+
     public List<User> getAllUserInClass(int classId, int page, int size) {
         return userDAO.getAllUserInClass(classId, page, size);
     }
+
     public List<User> searchAndSortUsersInClass(int classId, String searchUserName, String searchRoleId, String sortField, String sortOrder, int page, int size) {
-        return userDAO.searchAndSortUsersInClass(classId, searchUserName,searchRoleId, sortField, sortOrder, page, size);
+        return userDAO.searchAndSortUsersInClass(classId, searchUserName, searchRoleId, sortField, sortOrder, page, size);
     }
 
     public List<User> getAllUsers() {
@@ -131,8 +131,23 @@ public class UserService extends BaseService {
         return userDAO.getUsersByRole(role);
     }
 
-    public List<User> getAllUsersNotInClass(int class_id) {
-        return userDAO.getAllUsersNotInClass(class_id);
+    public List<User> getAllUsersNotInClass(int classId, int page, int pageSize) {
+        return userDAO.getAllUsersNotInClass(classId, page, pageSize);
+    }
+
+    public List<User> sortUsersNotInClass(int classId, int page, int pageSize, String sortField, String sortOrder) {
+        return userDAO.sortUsersNotInClass(classId, page, pageSize, sortField, sortOrder);
+    }
+
+    public List<User> searchUsersNotInClass(int classId, int page, int pageSize, String searchQuery) {
+        return userDAO.searchUsersNotInClass(classId, page, pageSize, searchQuery);
+    }
+    public List<User> searchAndSortUsersNotInClass(int classId, int page, int pageSize, String searchQuery, String sortField, String sortOrder) {
+        return userDAO.searchAndSortUsersNotInClass(classId, page, pageSize,searchQuery, sortField, sortOrder);
+    }
+
+    public int countUsersNotInClass(int classId, String searchQuery) {
+        return userDAO.countUsersNotInClass(classId, searchQuery);
     }
 
     public boolean confirmUser(String email, String otp) {
@@ -177,6 +192,7 @@ public class UserService extends BaseService {
     public boolean isEmailExists(String email, int userId) {
         return userDAO.isEmailExists(email, userId);
     }
+
     public User getUserByUserName(String userName) {
         return userDAO.getUserByUserName(userName);
     }

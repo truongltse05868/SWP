@@ -58,15 +58,170 @@ public class UserDAO extends DBConnect {
         return users;
     }
 
-    public List<User> getAllUsersNotInClass(int classId) {
+    public List<User> searchAndSortUsersNotInClass(int classId, int page, int pageSize, String searchQuery, String sortField, String sortOrder) {
+        List<User> users = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.status, u.role_id, u.otp ")
+                .append("FROM user u ")
+                .append("LEFT JOIN class_user cu ON u.user_id = cu.user_id AND cu.class_id = ? ")
+                .append("WHERE (cu.class_id IS NULL OR cu.status = false) ")
+                .append("AND u.role_id <> 1 ");
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            query.append("AND (u.user_name LIKE ? OR u.full_name LIKE ? OR u.email LIKE ?) ");
+        }
+        query.append("ORDER BY ").append(sortField).append(" ").append(sortOrder).append(" ");
+        query.append("LIMIT ? OFFSET ?;");
+
+        int offset = (page - 1) * pageSize;
+
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, classId);
+
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                String searchPattern = "%" + searchQuery + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+
+            ps.setInt(paramIndex++, pageSize);    // Limit
+            ps.setInt(paramIndex++, offset);      // Offset
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
+                    );
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error searching and sorting users not in class with ID " + classId, e);
+        }
+
+        return users;
+    }
+
+    public List<User> searchUsersNotInClass(int classId, int page, int pageSize, String searchQuery) {
+        List<User> users = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.status, u.role_id, u.otp ")
+                .append("FROM user u ")
+                .append("LEFT JOIN class_user cu ON u.user_id = cu.user_id AND cu.class_id = ? ")
+                .append("WHERE (cu.class_id IS NULL OR cu.status = false) ")
+                .append("AND u.role_id <> 1 ");
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            query.append("AND (u.user_name LIKE ? OR u.full_name LIKE ? OR u.email LIKE ?) ");
+        }
+        query.append("LIMIT ? OFFSET ?;");
+
+        int offset = (page - 1) * pageSize;
+
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, classId);
+
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                String searchPattern = "%" + searchQuery + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+
+            ps.setInt(paramIndex++, pageSize);    // Limit
+            ps.setInt(paramIndex++, offset);      // Offset
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
+                    );
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error searching users not in class with ID " + classId, e);
+        }
+
+        return users;
+    }
+
+    public List<User> sortUsersNotInClass(int classId, int page, int pageSize, String sortField, String sortOrder) {
         List<User> users = new ArrayList<>();
         String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.status, u.role_id, u.otp "
                 + "FROM user u "
                 + "LEFT JOIN class_user cu ON u.user_id = cu.user_id AND cu.class_id = ? "
-                + "WHERE cu.class_id IS NULL AND u.role_id <> 1 AND u.status = TRUE";
+                + "WHERE (cu.class_id IS NULL OR cu.status = false) "
+                + "AND u.role_id <> 1 "
+                + "ORDER BY " + sortField + " " + sortOrder + " "
+                + "LIMIT ? OFFSET ?;";
+
+        int offset = (page - 1) * pageSize;
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, classId); // Setting the class ID parameter
+            ps.setInt(1, classId);
+            ps.setInt(2, pageSize);    // Limit
+            ps.setInt(3, offset);      // Offset
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    User user = new User(
+                            rs.getInt("user_id"),
+                            rs.getString("user_name"),
+                            rs.getString("password"),
+                            rs.getString("email"),
+                            rs.getString("full_name"),
+                            rs.getString("phone"),
+                            rs.getString("gender"),
+                            rs.getBoolean("status"),
+                            rs.getInt("role_id"),
+                            rs.getString("otp")
+                    );
+                    users.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error sorting users not in class with ID " + classId, e);
+        }
+
+        return users;
+    }
+
+    public List<User> getAllUsersNotInClass(int classId, int page, int pageSize) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT u.user_id, u.user_name, u.password, u.email, u.full_name, u.phone, u.gender, u.status, u.role_id, u.otp "
+                + "FROM user u "
+                + "LEFT JOIN class_user cu ON u.user_id = cu.user_id AND cu.class_id = ? "
+                + "WHERE (cu.class_id IS NULL OR cu.status = false) "
+                + "AND u.role_id <> 1 "
+                + "LIMIT ? OFFSET ?;";
+
+        int offset = (page - 1) * pageSize;
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, classId);
+            ps.setInt(2, pageSize);    // Limit
+            ps.setInt(3, offset);      // Offset
+
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     User user = new User(
@@ -89,6 +244,40 @@ public class UserDAO extends DBConnect {
         }
 
         return users;
+    }
+
+    public int countUsersNotInClass(int classId, String searchQuery) {
+        StringBuilder query = new StringBuilder("SELECT COUNT(*) ")
+                .append("FROM user u ")
+                .append("LEFT JOIN class_user cu ON u.user_id = cu.user_id AND cu.class_id = ? ")
+                .append("WHERE (cu.class_id IS NULL OR cu.status = false) ")
+                .append("AND u.role_id <> 1 ");
+
+        if (searchQuery != null && !searchQuery.isEmpty()) {
+            query.append("AND (u.user_name LIKE ? OR u.full_name LIKE ? OR u.email LIKE ?) ");
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+            ps.setInt(paramIndex++, classId);
+
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                String searchPattern = "%" + searchQuery + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error counting users not in class with ID " + classId, e);
+        }
+
+        return 0;
     }
 
     public List<User> getAllUsers() {

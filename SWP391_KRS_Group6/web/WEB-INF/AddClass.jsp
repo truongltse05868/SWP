@@ -89,25 +89,43 @@
                 z-index: 1050;
             }
             .toast {
-                opacity: 0.9;
-                font-size: 1.5em; /* Tăng kích thước của toast */
-                /*background-color: #28a745;  Nền màu xanh lá cây */
-                /*color: white;  Màu chữ trắng */
-                border: 2px solid #218838; /* Viền màu xanh đậm */
+                opacity: 0.95;
+                font-size: 1.2em; /* Kích thước hợp lý cho toast */
+                background-color: #4CAF50; /* Nền màu xanh lá cây tươi */
+                color: white; /* Màu chữ trắng */
+                border: none; /* Loại bỏ viền */
                 border-radius: 10px; /* Đường viền cong */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+                padding: 0;
             }
             .toast-header {
-                font-size: 1.75em; /* Tăng kích thước tiêu đề của toast */
-                background-color: #218838; /* Nền màu xanh đậm cho tiêu đề */
+                font-size: 1.4em; /* Tăng kích thước tiêu đề của toast */
+                background-color: #388E3C; /* Nền màu xanh đậm cho tiêu đề */
                 color: white; /* Màu chữ trắng */
                 border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
                 border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
                 border-top-right-radius: 10px; /* Đường viền cong góc trên bên phải */
+                padding: 10px 15px; /* Thêm khoảng cách bên trong */
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
             }
             .toast-body {
-                font-size: 1.5em; /* Tăng kích thước nội dung của toast */
+                font-size: 1.2em; /* Tăng kích thước nội dung của toast */
+                padding: 15px; /* Thêm khoảng cách bên trong */
+                border-bottom-left-radius: 10px; /* Đường viền cong góc dưới bên trái */
+                border-bottom-right-radius: 10px; /* Đường viền cong góc dưới bên phải */
+            }
+            .toast .close {
+                color: white; /* Màu chữ trắng */
+                background: none; /* Loại bỏ nền */
+                border: none; /* Loại bỏ viền */
+                font-size: 1.5em; /* Kích thước nút đóng */
+                padding: 0;
+                margin: 0;
             }
         </style>
+
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
         <!-- header start -->
@@ -347,7 +365,12 @@
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
                                             <div class="col-sm-1">
-                                                <input class="form-control"  name="status" type="checkbox" ${status ? 'checked' : ''}>
+                                                <input class="form-check-input" id="activeStatus" name="status" type="radio" value="1" ${classes.status ? 'checked' : ''}>
+                                                <label class="form-check-label" for="activeStatus">Active</label>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <input class="form-check-input" id="inactiveStatus" name="status" type="radio" value="0" ${!classes.status ? 'checked' : ''}>
+                                                <label class="form-check-label" for="inactiveStatus">Inactive</label>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -356,7 +379,7 @@
                                             <div class="col-sm-2">
                                                 <select class="form-control" name="subjectId">
                                                     <c:forEach var="subject" items="${subject}">
-                                                        <option value="${subject.subject_id}"<c:if test="${role.subject_id == subject_id}">selected</c:if>>${subject.subject_name}</option>
+                                                        <option value="${subject.subject_id}"<c:if test="${setting.subject_id == subject_id}">selected</c:if>>${subject.subject_name}</option>
                                                     </c:forEach>
                                                 </select>
                                             </div>
@@ -370,7 +393,7 @@
                                                 <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
                                                     <div class="toast-header">
                                                         <strong class="mr-auto">Thông báo</strong>
-                                                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                                                        <button type="button" class="close" data-dismiss="toast" aria-label="Close">
                                                             <span aria-hidden="true">&times;</span>
                                                         </button>
                                                     </div>

@@ -157,22 +157,49 @@ public class ClassDAO extends DBConnect {
     }
 
     public boolean addUserToClass(User user, int classId) {
-        String query = "INSERT INTO class_user (user_id, class_id, status) "
-                + "VALUES (?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, user.getUser_id());
-            ps.setInt(2, classId);
-            ps.setBoolean(3, user.isStatus());
-            int rowsAffected = ps.executeUpdate();
-            if (rowsAffected > 0) {
-                logger.log(Level.INFO, "Add user to class successfully");
-                return true;
-            } else {
-                logger.log(Level.WARNING, "No rows affected");
-                return false;
+        String selectQuery = "SELECT COUNT(*) FROM class_user WHERE user_id = ? AND class_id = ?";
+        String insertQuery = "INSERT INTO class_user (user_id, class_id, status) VALUES (?, ?, ?)";
+        String updateQuery = "UPDATE class_user SET status = ? WHERE user_id = ? AND class_id = ?";
+
+        try (PreparedStatement selectStmt = connection.prepareStatement(selectQuery)) {
+            selectStmt.setInt(1, user.getUser_id());
+            selectStmt.setInt(2, classId);
+
+            try (ResultSet rs = selectStmt.executeQuery()) {
+                if (rs.next() && rs.getInt(1) > 0) {
+                    // Record exists, update the status
+                    try (PreparedStatement updateStmt = connection.prepareStatement(updateQuery)) {
+                        updateStmt.setBoolean(1, true); // Set status to true
+                        updateStmt.setInt(2, user.getUser_id());
+                        updateStmt.setInt(3, classId);
+                        int rowsAffected = updateStmt.executeUpdate();
+                        if (rowsAffected > 0) {
+                            logger.log(Level.INFO, "Updated user status in class successfully");
+                            return true;
+                        } else {
+                            logger.log(Level.WARNING, "No rows affected during update");
+                            return false;
+                        }
+                    }
+                } else {
+                    // Record does not exist, insert a new record
+                    try (PreparedStatement insertStmt = connection.prepareStatement(insertQuery)) {
+                        insertStmt.setInt(1, user.getUser_id());
+                        insertStmt.setInt(2, classId);
+                        insertStmt.setBoolean(3, true); // Set status to true
+                        int rowsAffected = insertStmt.executeUpdate();
+                        if (rowsAffected > 0) {
+                            logger.log(Level.INFO, "Inserted user into class successfully");
+                            return true;
+                        } else {
+                            logger.log(Level.WARNING, "No rows affected during insert");
+                            return false;
+                        }
+                    }
+                }
             }
         } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error adding user", e);
+            logger.log(Level.SEVERE, "Error adding or updating user in class", e);
             return false;
         }
     }
