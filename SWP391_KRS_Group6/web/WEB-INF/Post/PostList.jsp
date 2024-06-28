@@ -56,6 +56,8 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
 
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
@@ -99,8 +101,26 @@
                                     <table class="table table-striped my-3">
                                         <thead>
                                             <tr>
-                                                <th><a href="PostController?service=ListAllPost&page=${currentPage}&sortBy=post_id&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
-                                                <th><a href="PostController?service=ListAllPost&page=${currentPage}&sortBy=title&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Title</a></th>
+                                                <th>
+                                                    <a href="PostController?service=ListAllPost&page=${currentPage}&sortBy=post_id&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                        ID
+                                                        <c:choose>
+                                                            <c:when test="${sortBy == 'post_id'}">
+                                                                <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="PostController?service=ListAllPost&page=${currentPage}&sortBy=title&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                        Title
+                                                        <c:choose>
+                                                            <c:when test="${sortBy == 'title'}">
+                                                                <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </a>
+                                                </th>
                                                 <th>Thumbnail Url</th>
                                                 <th>Publish</th>
                                                 <th>Author</th>
@@ -198,7 +218,7 @@
 
                                 </c:if>
                                 <!-- Pagination Controls -->
-                               
+
                             </div>
                         </div>
                     </div>

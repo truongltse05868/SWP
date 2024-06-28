@@ -93,7 +93,7 @@
                         <div class="container">
                             <div class="row">
                                 <!-- Left part start -->
-                                <div class="col-lg-8 col-xl-8">
+                                <div class="col-lg-12 col-xl-12">
                                     <%
                                        Post s = (Post) request.getAttribute("post");
                                        List<User> users = (List<User>) request.getAttribute("user");
@@ -140,7 +140,7 @@
                                 </div>
                                 <!-- Left part END -->
                                 <!-- Side bar start -->
-                                <div class="col-lg-4 col-xl-4">
+<!--                                <div class="col-lg-4 col-xl-4">
                                     <aside  class="side-bar sticky-top">
                                         <div class="widget">
                                             <h6 class="widget-title">Search</h6>
@@ -158,7 +158,7 @@
 
 
                                     </aside>
-                                </div>
+                                </div>-->
                                 <!-- Side bar END -->
                             </div>
                         </div>
