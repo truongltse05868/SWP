@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import java.util.List;
 //import java.util.Properties;
 //import java.util.UUID;
@@ -102,53 +103,54 @@ public class ForgotPasswordController extends HttpServlet {
     private void checkMail(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-
+            HttpSession session = request.getSession();
             String email = request.getParameter("email");
             String userName = request.getParameter("email");
             String subjectEmail = "KRS_G6 Reset Password";
+            // Tạo mã OTP và lưu vào database
+            String otp = userService.generateOTP();
             // Kiểm tra email có tồn tại trong database
             boolean emailExists = userService.checkEmailExists(email);
             boolean userNameExists = userService.checkUserNameExists(email);
-            
+
             if (emailExists) {
-                // Tạo mã OTP và lưu vào database
-                String otp = userService.generateOTP();
 
                 boolean saveSuccess = userService.saveOtpToDatabase(email, otp);
                 if (saveSuccess) {
+
                     // Gửi email OTP
                     userService.sendOtpToEmail(email, otp, subjectEmail);
-
                     // Chuyển hướng đến trang resetPassword.jsp với email
-                    request.setAttribute("email", email);
+//                    request.setAttribute("email", email);
+                    session.setAttribute("email", email);
                     request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
                     dispatcher.forward(request, response);
                 } else {
                     request.setAttribute("message", "Lỗi hệ thống OTP");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
+                    dispatcher.forward(request, response);
                 }
 
-            }else if(userNameExists){
-                // Tạo mã OTP và lưu vào database
-                String otp = userService.generateOTP();
+            } else if (userNameExists) {
                 User user = userService.getUserByUserName(userName);
                 boolean saveSuccess = userService.saveOtpToDatabase(user.getEmail(), otp);
                 if (saveSuccess) {
                     // Gửi email OTP
                     userService.sendOtpToEmail(user.getEmail(), otp, subjectEmail);
-
                     // Chuyển hướng đến trang resetPassword.jsp với email
-                    request.setAttribute("email", user.getEmail());
+//                    request.setAttribute("email", user.getEmail());
+                    session.setAttribute("email", user.getEmail());
                     request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
                     dispatcher.forward(request, response);
+
                 } else {
                     request.setAttribute("message", "Lỗi hệ thống OTP");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
+                    dispatcher.forward(request, response);
                 }
-            }
-            else {
+            } else {
                 // Email không tồn tại
                 request.setAttribute("message", "Email hoặc UserName không tồn tại.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
@@ -174,14 +176,15 @@ public class ForgotPasswordController extends HttpServlet {
 
             boolean saveSuccess = userService.saveOtpToDatabase(email, otp);
             if (saveSuccess) {
-                // Gửi email OTP
-                userService.sendOtpToEmail(email, otp, subjectEmail);
 
                 // Chuyển hướng đến trang resetPassword.jsp với email
                 request.setAttribute("email", email);
                 request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
                 dispatcher.forward(request, response);
+                // Gửi email OTP
+                userService.sendOtpToEmail(email, otp, subjectEmail);
+
             } else {
                 request.setAttribute("message", "Lỗi hệ thống OTP");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ResetPassword.jsp");
@@ -208,13 +211,13 @@ public class ForgotPasswordController extends HttpServlet {
     private void updatePassOTP(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            HttpSession session = request.getSession();
             String email = request.getParameter("email");
             String pass = request.getParameter("newPassword");
             String repass = request.getParameter("reNewPassword");
+            String otp = request.getParameter("otp");
+            User user = userService.getUserByEmail(email);
             if (pass.equals(repass)) {
-                String otp = request.getParameter("otp");
-                User user = userService.getUserByEmail(email);
-
                 if (user != null && user.getOtp().equals(otp)) {
                     long currentTime = System.currentTimeMillis();
                     if (currentTime <= user.getOtp_expiry().getTime()) {
@@ -224,18 +227,22 @@ public class ForgotPasswordController extends HttpServlet {
                             request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                         } else {
                             request.setAttribute("message", "Cập nhật mật khẩu không thành công");
+                            request.setAttribute("otp", otp);
 //                            request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
                         }
                     } else {
                         request.setAttribute("message", "OTP đã hết hạn");
+                        request.setAttribute("otp", otp);
 //                        request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
                     }
                 } else {
                     request.setAttribute("message", "OTP không đúng");
+                    request.setAttribute("otp", otp);
 //                    request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
                 }
             } else {
                 request.setAttribute("message", "Mật khẩu không khớp");
+                request.setAttribute("otp", otp);
 //                request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
             }
         } catch (Exception e) {

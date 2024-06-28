@@ -46,8 +46,56 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 80px; /* Điều chỉnh giá trị top để đặt vị trí thấp hơn */
+                right: 20px;
+                z-index: 1050;
+            }
+            .toast {
+                opacity: 0.95;
+                font-size: 1.2em; /* Kích thước hợp lý cho toast */
+                background-color: #4CAF50; /* Nền màu xanh lá cây tươi */
+                color: white; /* Màu chữ trắng */
+                border: none; /* Loại bỏ viền */
+                border-radius: 10px; /* Đường viền cong */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+                padding: 0;
+            }
+            .toast-header {
+                font-size: 1.4em; /* Tăng kích thước tiêu đề của toast */
+                background-color: #388E3C; /* Nền màu xanh đậm cho tiêu đề */
+                color: white; /* Màu chữ trắng */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
+                border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
+                border-top-right-radius: 10px; /* Đường viền cong góc trên bên phải */
+                padding: 10px 15px; /* Thêm khoảng cách bên trong */
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .toast-body {
+                font-size: 1.2em; /* Tăng kích thước nội dung của toast */
+                padding: 15px; /* Thêm khoảng cách bên trong */
+                border-bottom-left-radius: 10px; /* Đường viền cong góc dưới bên trái */
+                border-bottom-right-radius: 10px; /* Đường viền cong góc dưới bên phải */
+            }
+            .toast .close {
+                color: white; /* Màu chữ trắng */
+                background: none; /* Loại bỏ nền */
+                border: none; /* Loại bỏ viền */
+                font-size: 1.5em; /* Kích thước nút đóng */
+                padding: 0;
+                margin: 0;
+            }
+        </style>
     </head>
     <body id="bg">
+        <%
+        String email = (String) session.getAttribute("email");
+        
+        %>
         <div class="page-wraper">
             <div id="loading-icon-bx"></div>
             <div class="account-form">
@@ -69,7 +117,7 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <label for="email">OTP:</label>
-                                                <input type="text" id="otp" name="otp" required class="form-control">
+                                                <input type="text" id="otp" name="otp" value="${otp}" required class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -96,7 +144,23 @@
                                 <button id="resendBtn" name="submit" type="submit" value="Submit" class="btn button-md">Re-send OTP</button>
                             </form>
                             <p id="countdown"></p>
-                            <p>${message}</p>
+                            <!--<p>${message}</p>-->
+                            <!--hiển thị thông báo-->
+                            <c:if test="${not empty message}">
+                                <div class="toast-container">
+                                    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
+                                        <div class="toast-header">
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <button type="button" class="close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                            ${message} 
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
                             <p id="message"></p>
                         </div>
                     </div>
@@ -119,6 +183,22 @@
         <script src="assets/js/functions.js"></script>
         <script src="assets/js/contact.js"></script>
         <script src='assets/vendors/switcher/switcher.js'></script>
+        <!-- jQuery and Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                var successMessage = "${message}";
+                if (successMessage) {
+                    $('#successToast').toast({
+                        delay: 5000
+                    });
+                    $('#successToast').toast('show');
+                }
+            });
+        </script>
         <script>
             let resendTimeout = 60000; // 1 minute in milliseconds
             let countdownElement = document.getElementById('countdown');
@@ -148,23 +228,23 @@
                 startCountdown(resendTimeout / 1000);
             }
 
-            function sendOTPRequest(event) {
-                event.preventDefault(); // Prevent form submission
-                $.ajax({
-                    url: $("#otpForm").attr("action"),
-                    type: "POST",
-                    data: $("#otpForm").serialize(),
-                    success: function (response) {
-                        // Handle success
-                        disableResendButton();
-                        countdownElement.textContent = "OTP sent successfully!";
-                    },
-                    error: function (xhr, status, error) {
-                        // Handle error
-                        countdownElement.textContent = "Error in sending OTP. Please try again.";
-                    }
-                });
-            }
+//            function sendOTPRequest(event) {
+//                event.preventDefault(); // Prevent form submission
+//                $.ajax({
+//                    url: $("#otpForm").attr("action"),
+//                    type: "POST",
+//                    data: $("#otpForm").serialize(),
+//                    success: function (response) {
+//                        // Handle success
+//                        disableResendButton();
+//                        countdownElement.textContent = "OTP sent successfully!";
+//                    },
+//                    error: function (xhr, status, error) {
+//                        // Handle error
+//                        countdownElement.textContent = "Error in sending OTP. Please try again.";
+//                    }
+//                });
+//            }
 
             resendButton.addEventListener('click', function (event) {
                 if (!resendButton.disabled) {

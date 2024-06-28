@@ -95,6 +95,9 @@ public class ClassController extends HttpServlet {
                     case "addUserToClassPage":
                         addUserToClassPage(request, response);
                         break;
+                    case "searchUserNotInClass":
+                        addUserToClassPage(request, response);
+                        break;
                     case "addUserToClass":
                         addUserToClass(request, response);
                         break;
@@ -380,21 +383,61 @@ public class ClassController extends HttpServlet {
         }
     }
 
+// Tìm kiếm, phân trang và sắp xếp người dùng không thuộc lớp
     private void addUserToClassPage(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
-//            List<User> user = userService.getUsersByRole(3);
-            int class_id = Integer.parseInt(request.getParameter("classId"));
-            Class classs = classService.getClassById(class_id);
-            List<User> user = userService.getAllUsersNotInClass(class_id);
-            List<Setting> role = settingService.getAllRoles();
-            request.setAttribute("users", user);
-            request.setAttribute("roles", role);
+            int classId = Integer.parseInt(request.getParameter("classId"));
+            List<Setting> roles = settingService.getAllRoles();
+            Class classs = new Class();
+            classs = classService.getClassById(classId);
+            // Lấy các tham số tìm kiếm, sắp xếp và phân trang
+            String searchQuery = request.getParameter("searchQuery");
+
+            String sortField = request.getParameter("sortField");
+            String sortOrder = request.getParameter("sortOrder");
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int pageSize = Integer.parseInt(request.getParameter("pageSize") != null ? request.getParameter("pageSize") : "3");
+
+            // Tính tổng số người dùng không thuộc lớp cho phân trang
+            int totalUsersNotInClass = userService.countUsersNotInClass(classId, searchQuery);
+
+            List<User> users;
+            if (searchQuery != null && !searchQuery.isEmpty()) {
+                if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                    // Tìm kiếm, sắp xếp và phân trang
+                    users = userService.searchAndSortUsersNotInClass(classId, page, pageSize, searchQuery, sortField, sortOrder);
+                } else {
+                    // Tìm kiếm và phân trang
+                    users = userService.searchUsersNotInClass(classId, page, pageSize, searchQuery);
+                }
+            } else if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                // Sắp xếp và phân trang
+                users = userService.sortUsersNotInClass(classId, page, pageSize, sortField, sortOrder);
+            } else {
+                // Mặc định: lấy tất cả người dùng với phân trang
+                users = userService.getAllUsersNotInClass(classId, page, pageSize);
+            }
+
+            int totalPages = (int) Math.ceil((double) totalUsersNotInClass / pageSize);
+
+            // Đặt danh sách người dùng và các thông tin khác làm thuộc tính yêu cầu
+            request.setAttribute("roles", roles);
+            request.setAttribute("users", users);
             request.setAttribute("classs", classs);
+            request.setAttribute("searchQuery", searchQuery);
+            request.setAttribute("sortField", sortField);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
+
+            // Chuyển tiếp yêu cầu đến trang JSP
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Error get add class page", e);
+            logger.log(Level.SEVERE, "Error getting users not in class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the users not in class.");
         }
     }
 
@@ -403,23 +446,34 @@ public class ClassController extends HttpServlet {
         try {
 //            List<User> user = userService.getUsersByRole(3);
             int class_id = Integer.parseInt(request.getParameter("classId"));
+            int page = Integer.parseInt(request.getParameter("page"));
+            int pageSize = Integer.parseInt(request.getParameter("pageSize"));
+
+            // Lấy các tham số tìm kiếm từ yêu cầu
+            String searchQuery = request.getParameter("searchQuery");
             int UserId = Integer.parseInt(request.getParameter("UserId"));
             Class classs = classService.getClassById(class_id);
-
+            // Get total number of users not in the class for pagination
+            int totalUsersNotInClass = userService.countUsersNotInClass(class_id, searchQuery);
+            int totalPages = (int) Math.ceil((double) totalUsersNotInClass / pageSize);
             User user = userService.getUserById(UserId);
-            List<Setting> role = settingService.getAllRoles();
+            List<Setting> roles = settingService.getAllRoles();
             boolean isAddSuccess = classService.addUserToClass(user, class_id);
-            List<User> users = userService.getAllUsersNotInClass(class_id);
+            List<User> users = userService.getAllUsersNotInClass(class_id, page, pageSize);
             if (isAddSuccess) {
-                request.setAttribute("successMessage", "Thêm thành công");
+                request.setAttribute("successMessage", "Thêm " + user.getFull_name() + " thành công");
             } else {
                 request.setAttribute("successMessage", "Thêm thất bại");
             }
 
             request.setAttribute("users", users);
-            request.setAttribute("roles", role);
             request.setAttribute("classs", classs);
-
+            request.setAttribute("roles", roles);
+            request.setAttribute("classs", classs);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+            request.setAttribute("pageSize", pageSize);
+            request.setAttribute("searchQuery", searchQuery);
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Class/AddUserToClass.jsp");
             dispatcher.forward(request, response);
 
@@ -555,7 +609,7 @@ public class ClassController extends HttpServlet {
             // Lấy thông tin từ form
             int subjectId = Integer.parseInt(request.getParameter("subjectId"));
             String className = request.getParameter("className");
-            boolean status = request.getParameter("status") != null;
+            boolean status = "1".equals(request.getParameter("status")); // Updated to get status from radio button
 
             // Validate các trường
             Map<String, String> errors = classService.validateClassData(className, 0);
@@ -563,7 +617,7 @@ public class ClassController extends HttpServlet {
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
                 request.setAttribute("class_name", className);
-                request.setAttribute("subjectList", subjects);
+                request.setAttribute("subject", subjects);
                 request.setAttribute("status", status);
                 request.setAttribute("successMessage", "Cập nhật không thành công.");
                 request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
@@ -576,18 +630,19 @@ public class ClassController extends HttpServlet {
             newClass.setStatus(status);
 
             boolean isSuccess = classService.addClass(newClass);
-            String message = classService.getSuccessMessage(isSuccess);
+            String message = classService.getSuccessMessageAddClass(isSuccess, className);
 
             if (isSuccess) {
                 request.setAttribute("successMessage", message);
-                List<Class> classes = classService.getAllClasses();
-                request.setAttribute("classes", classes);
-                request.setAttribute("subjectList", subjects);
-                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+//                List<Class> classes = classService.getAllClasses();
+//                request.setAttribute("classes", classes);
+//                request.setAttribute("subjectList", subjects);
+//                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+                searchClassByName2(request, response);
             } else {
                 request.setAttribute("roles", roles);
                 request.setAttribute("class_name", className);
-                request.setAttribute("subjectList", subjects);
+                request.setAttribute("subject", subjects);
                 request.setAttribute("status", status);
                 request.setAttribute("successMessage", message);
                 request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
@@ -623,7 +678,7 @@ public class ClassController extends HttpServlet {
             int classId = Integer.parseInt(request.getParameter("classId"));
             int subjectId = Integer.parseInt(request.getParameter("subjectId"));
             String className = request.getParameter("className");
-            boolean status = request.getParameter("status") != null;
+            boolean status = "1".equals(request.getParameter("status")); // Updated to get status from radio button
 
             classUpdate.setClass_id(classId);
             classUpdate.setClass_name(className);
@@ -641,18 +696,19 @@ public class ClassController extends HttpServlet {
             }
             boolean isUpdate = classService.updateClass(classUpdate);
             if (isUpdate) {
-                List<Class> classList = classService.getAllClasses();
-                Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
-                List<Subject> subjectList = subjectService.getAllSubjects();
-
-                request.setAttribute("classes", classList);
-                request.setAttribute("userCountMap", userCountMap);
-                request.setAttribute("subjectList", subjectList);
-                request.setAttribute("successMessage", "Cập nhật lớp thành công");
-                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+//                List<Class> classList = classService.getAllClasses();
+//                Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+//                List<Subject> subjectList = subjectService.getAllSubjects();
+//
+//                request.setAttribute("classes", classList);
+//                request.setAttribute("userCountMap", userCountMap);
+//                request.setAttribute("subjectList", subjectList);
+//                request.setAttribute("successMessage", "Cập nhật lớp thành công");
+//                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+                searchClassByName2(request, response);
             } else {
                 request.setAttribute("successMessage", "Cập nhật lớp không thành công");
-                request.getRequestDispatcher("WEB-INF/UpdateAdmin.jsp").forward(request, response);
+                request.getRequestDispatcher("WEB-INF/UpdateClass.jsp").forward(request, response);
             }
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error updating class", e);

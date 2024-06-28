@@ -154,6 +154,51 @@
             }
 
         </script>
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 80px; /* Điều chỉnh giá trị top để đặt vị trí thấp hơn */
+                right: 20px;
+                z-index: 1050;
+            }
+            .toast {
+                opacity: 0.95;
+                font-size: 1.2em; /* Kích thước hợp lý cho toast */
+                background-color: #4CAF50; /* Nền màu xanh lá cây tươi */
+                color: white; /* Màu chữ trắng */
+                border: none; /* Loại bỏ viền */
+                border-radius: 10px; /* Đường viền cong */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+                padding: 0;
+            }
+            .toast-header {
+                font-size: 1.4em; /* Tăng kích thước tiêu đề của toast */
+                background-color: #388E3C; /* Nền màu xanh đậm cho tiêu đề */
+                color: white; /* Màu chữ trắng */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
+                border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
+                border-top-right-radius: 10px; /* Đường viền cong góc trên bên phải */
+                padding: 10px 15px; /* Thêm khoảng cách bên trong */
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .toast-body {
+                font-size: 1.2em; /* Tăng kích thước nội dung của toast */
+                padding: 15px; /* Thêm khoảng cách bên trong */
+                border-bottom-left-radius: 10px; /* Đường viền cong góc dưới bên trái */
+                border-bottom-right-radius: 10px; /* Đường viền cong góc dưới bên phải */
+            }
+            .toast .close {
+                color: white; /* Màu chữ trắng */
+                background: none; /* Loại bỏ nền */
+                border: none; /* Loại bỏ viền */
+                font-size: 1.5em; /* Kích thước nút đóng */
+                padding: 0;
+                margin: 0;
+            }
+        </style>
+
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
@@ -271,18 +316,18 @@
                                             </tr>
                                         </c:forEach>
                                     </table>
-                                            <!-- Pagination -->
-                                            <div class="row mt-3">
-                                                <nav aria-label="Page navigation">
-                                                    <ul class="pagination">
-                                                        <c:forEach begin="1" end="${totalPages}" var="i">
-                                                            <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
-                                                                <a class="page-link" href="ClassController?action=searchClass&page=${i}&size=3&searchClassname=${fn:escapeXml(searchClassname)}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
-                                                            </li>
-                                                        </c:forEach>
-                                                    </ul>
-                                                </nav>
-                                            </div>
+                                    <!-- Pagination -->
+                                    <div class="row mt-3">
+                                        <nav aria-label="Page navigation">
+                                            <ul class="pagination">
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
+                                                        <a class="page-link" href="ClassController?action=searchClass&page=${i}&size=3&searchClassname=${fn:escapeXml(searchClassname)}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 </c:if>
                                 <c:if test="${empty classes}">
                                     <p>No classes found.</p>
@@ -290,9 +335,22 @@
 
 
                             </div>
-                            <div>
-                                <span>${successMessage}</span>
-                            </div>
+                            <!--hiển thị thông báo-->
+                            <c:if test="${not empty successMessage}">
+                                <div class="toast-container">
+                                    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
+                                        <div class="toast-header">
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <button type="button" class="close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                            ${successMessage} 
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
                         </div>
                     </div>
                 </div>
@@ -352,6 +410,22 @@
         <script src="admin/assets/vendors/calendar/moment.min.js"></script>
         <script src="admin/assets/vendors/calendar/fullcalendar.js"></script>
         <script src="admin/assets/vendors/switcher/switcher.js"></script>
+        <!-- jQuery and Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <script>
+                                                $(document).ready(function () {
+                                                    var successMessage = "${successMessage}";
+                                                    if (successMessage) {
+                                                        $('#successToast').toast({
+                                                            delay: 5000
+                                                        });
+                                                        $('#successToast').toast('show');
+                                                    }
+                                                });
+        </script>
     </body>
 
 </html>

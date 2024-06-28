@@ -316,13 +316,19 @@
                                                 <span class="error" style="font-size: smaller;">${errors['duplicateClassName']}</span>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Status</label>
                                             <div class="col-sm-1">
-                                                <input class="form-control"  name="status" type="checkbox" ${classes.status ? 'checked' : ''}>
+                                                <input class="form-check-input" id="activeStatus" name="status" type="radio" value="1" ${classes.status ? 'checked' : ''}>
+                                                <label class="form-check-label" for="activeStatus">Active</label>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <input class="form-check-input" id="inactiveStatus" name="status" type="radio" value="0" ${!classes.status ? 'checked' : ''}>
+                                                <label class="form-check-label" for="inactiveStatus">Inactive</label>
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
 
                                             <label class="col-sm-2 col-form-label">Subject</label>
@@ -338,7 +344,7 @@
                                             <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-plus-circle"></i>Update Class</button>
                                             <button type="button" onclick="sendPostRequestClassList('classList'); return false;" class="btn-secondry">Back</button>
                                         </div>
-                                            <div> <span>${errorsMessage}</span></div>
+                                        <div> <span>${errorsMessage}</span></div>
                                     </div>
                                 </form>
                             </div>
@@ -369,22 +375,22 @@
         <script src="admin/assets/js/admin.js"></script>
         <script src='admin/assets/vendors/switcher/switcher.js'></script>
         <script>
-                // Pricing add
-                function newMenuItem() {
-                    var newElem = $('tr.list-item').first().clone();
-                    newElem.find('input').val('');
-                    newElem.appendTo('table#item-add');
-                }
-                if ($("table#item-add").is('*')) {
-                    $('.add-item').on('click', function (e) {
-                        e.preventDefault();
-                        newMenuItem();
-                    });
-                    $(document).on("click", "#item-add .delete", function (e) {
-                        e.preventDefault();
-                        $(this).parent().parent().parent().parent().remove();
-                    });
-                }
+                                                // Pricing add
+                                                function newMenuItem() {
+                                                    var newElem = $('tr.list-item').first().clone();
+                                                    newElem.find('input').val('');
+                                                    newElem.appendTo('table#item-add');
+                                                }
+                                                if ($("table#item-add").is('*')) {
+                                                    $('.add-item').on('click', function (e) {
+                                                        e.preventDefault();
+                                                        newMenuItem();
+                                                    });
+                                                    $(document).on("click", "#item-add .delete", function (e) {
+                                                        e.preventDefault();
+                                                        $(this).parent().parent().parent().parent().remove();
+                                                    });
+                                                }
         </script>
     </body>
 
