@@ -119,29 +119,34 @@ public class RegisterController extends HttpServlet {
 
             // Validate các trường
             if (!userService.validateEmail(email)) {
-                errors.put("emailError", "Email không hợp lệ.");
+                errors.put("emailError", "Invalid email.");
             }
 
             if (!userService.validatePassword(pass)) {
-                errors.put("passError", "Password phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số.");
+                errors.put("passError", "Password must be at least 8 characters, contain at least one uppercase letter, one lowercase letter and one number.");
             }
 
             if (!userService.validateUsername(userName)) {
-                errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
+                errors.put("usernameError", "Username must be 3 to 20 characters long, contain only letters and numbers, no spaces.");
             }
 
-            if (userService.checkEmailExists(email) || userService.checkUserNameExists(userName)) {
-                errors.put("existsError", "Email hoặc Username đã tồn tại.");
+            if (userService.checkEmailExists(email)) {
+                errors.put("emailExist", "Email already exists.");
+            }
+            if (userService.checkUserNameExists(userName)) {
+                errors.put("userNameExist", "Username already exists.");
             }
 
             if (!pass.equals(repass)) {
-                errors.put("repassError", "Password và Repassword không trùng khớp.");
+                errors.put("repassError", "Password do not match.");
             }
 
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
                 request.setAttribute("username", userName);
                 request.setAttribute("email", email);
+                request.setAttribute("pass", pass);
+                request.setAttribute("repass", repass);
                 request.getRequestDispatcher("WEB-INF/Register.jsp").forward(request, response);
                 return;
             }

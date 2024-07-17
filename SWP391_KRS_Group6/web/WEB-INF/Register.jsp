@@ -82,7 +82,7 @@
                                             <input name="username" type="text" required="" class="form-control" value="${username}">
                                             <span class="error" style="font-size: smaller;">${errors['usernameError']}</span>
                                             
-                                            <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['userNameExist']}</span>
                                         </div>
 
                                     </div>
@@ -93,7 +93,7 @@
                                             <label>Your Email Address</label>
                                             <input name="email" type="email" required="" class="form-control" value="${email}">
                                             <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
-                                            <span class="error" style="font-size: smaller;">${errors['existsError']}</span>
+                                            <span class="error" style="font-size: smaller;">${errors['emailExist']}</span>
                                         </div>
 
                                     </div>
@@ -102,7 +102,7 @@
                                     <div class="form-group">
                                         <div class="input-group"> 
                                             <label>Your Password</label>
-                                            <input name="password" type="password" class="form-control" required="">
+                                            <input name="password" type="password" class="form-control" value="${pass}">
                                             <span class="error" style="font-size: smaller;">${errors['passError']}</span>
                                         </div>
 
@@ -112,7 +112,7 @@
                                     <div class="form-group">
                                         <div class="input-group"> 
                                             <label>Re Your Password</label>
-                                            <input name="repassword" type="password" class="form-control" required="">
+                                            <input name="repassword" type="password" class="form-control" value="${repass}">
                                             <span class="error" style="font-size: smaller;">${errors['repassError']}</span>
                                         </div>
 
@@ -134,13 +134,13 @@
         }
                                     %>
                                 </div>-->
-                                <div class="col-lg-12">
+<!--                                <div class="col-lg-12">
                                     <h6>Sign Up with Social media</h6>
                                     <div class="d-flex">
-                                        <!--<a class="btn flex-fill m-r5 facebook" href="#"><i class="fa fa-facebook"></i>Facebook</a>-->
+                                        <a class="btn flex-fill m-r5 facebook" href="#"><i class="fa fa-facebook"></i>Facebook</a>
                                         <a class="btn flex-fill m-l5 google-plus" href="#"><i class="fa fa-google-plus"></i>Google</a>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </form>
 
