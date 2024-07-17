@@ -217,8 +217,8 @@
                         <c:if test="${sessionScope['account'].getRole_id() == null}">
                             <li><a id="loginLink" href="Login" >Login</a></li>
                             <li><a id="registerLink" href="RegisterController">Register</a></li>
-                            <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
-                                    return false;">ForgotPassword</a></li>
+<!--                            <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage'); 
+                                    return false;">ForgotPassword</a></li>-->
                             </c:if>
                             <c:if test="${sessionScope['account'].getRole_id() != null}">
                             <li> 
@@ -371,8 +371,8 @@
                                             <c:if test="${sessionScope['account'].getRole_id() == null}">
                                                 <li><a id="loginLink" href="Login" >Login</a></li>
                                                 <li><a id="registerLink" href="RegisterController">Register</a></li>
-                                                <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
-                                                        return false;">ForgotPassword</a></li>
+<!--                                                <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
+                                                        return false;">ForgotPassword</a></li>-->
                                                 </c:if>
                                                 <c:if test="${sessionScope['account'].getRole_id() != null}">
                                                 <li> 

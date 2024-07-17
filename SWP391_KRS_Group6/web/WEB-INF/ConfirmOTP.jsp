@@ -46,6 +46,50 @@
         <!-- STYLESHEETS ============================================= -->
         <link rel="stylesheet" type="text/css" href="assets/css/style.css">
         <link class="skin" rel="stylesheet" type="text/css" href="assets/css/color/color-1.css">
+        <!--        <style>
+                    .toast-container {
+                        position: fixed;
+                        top: 80px; /* Điều chỉnh giá trị top để đặt vị trí thấp hơn */
+                        right: 20px;
+                        z-index: 1050;
+                    }
+                    .toast {
+                        opacity: 0.95;
+                        font-size: 1.2em; /* Kích thước hợp lý cho toast */
+                        background-color: #4CAF50; /* Nền màu xanh lá cây tươi */
+                        color: white; /* Màu chữ trắng */
+                        border: none; /* Loại bỏ viền */
+                        border-radius: 10px; /* Đường viền cong */
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+                        padding: 0;
+                    }
+                    .toast-header {
+                        font-size: 1.4em; /* Tăng kích thước tiêu đề của toast */
+                        background-color: #388E3C; /* Nền màu xanh đậm cho tiêu đề */
+                        color: white; /* Màu chữ trắng */
+                        border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
+                        border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
+                        border-top-right-radius: 10px; /* Đường viền cong góc trên bên phải */
+                        padding: 10px 15px; /* Thêm khoảng cách bên trong */
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                    }
+                    .toast-body {
+                        font-size: 1.2em; /* Tăng kích thước nội dung của toast */
+                        padding: 15px; /* Thêm khoảng cách bên trong */
+                        border-bottom-left-radius: 10px; /* Đường viền cong góc dưới bên trái */
+                        border-bottom-right-radius: 10px; /* Đường viền cong góc dưới bên phải */
+                    }
+                    .toast .close {
+                        color: white; /* Màu chữ trắng */
+                        background: none; /* Loại bỏ nền */
+                        border: none; /* Loại bỏ viền */
+                        font-size: 1.5em; /* Kích thước nút đóng */
+                        padding: 0;
+                        margin: 0;
+                    }
+                </style>-->
         <style>
             .toast-container {
                 position: fixed;
@@ -56,7 +100,6 @@
             .toast {
                 opacity: 0.95;
                 font-size: 1.2em; /* Kích thước hợp lý cho toast */
-                background-color: #4CAF50; /* Nền màu xanh lá cây tươi */
                 color: white; /* Màu chữ trắng */
                 border: none; /* Loại bỏ viền */
                 border-radius: 10px; /* Đường viền cong */
@@ -65,7 +108,6 @@
             }
             .toast-header {
                 font-size: 1.4em; /* Tăng kích thước tiêu đề của toast */
-                background-color: #388E3C; /* Nền màu xanh đậm cho tiêu đề */
                 color: white; /* Màu chữ trắng */
                 border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
                 border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
@@ -89,7 +131,24 @@
                 padding: 0;
                 margin: 0;
             }
+
+            /* Style for error toast */
+            .error-toast {
+                background-color: #f44336; /* Nền màu đỏ tươi */
+            }
+            .error-toast-header {
+                background-color: #d32f2f; /* Nền màu đỏ đậm cho tiêu đề */
+            }
+
+            /* Style for success toast */
+            .success-toast {
+                background-color: #4CAF50; /* Nền màu xanh lá cây tươi */
+            }
+            .success-toast-header {
+                background-color: #388E3C; /* Nền màu xanh đậm cho tiêu đề */
+            }
         </style>
+
     </head>
     <body id="bg">
         <%
@@ -123,13 +182,13 @@
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <label for="newPassword">New Password:</label>
-                                                <input type="password" id="newPassword" name="newPassword" required class="form-control">
+                                                <input type="password" id="newPassword" name="newPassword" value="${newPassword}" required class="form-control">
                                             </div>
                                         </div>
                                         <div class="form-group">
                                             <div class="input-group">
                                                 <label for="reNewPassword">Re-enter New Password:</label>
-                                                <input type="password" id="reNewPassword" name="reNewPassword" required class="form-control">
+                                                <input type="password" id="reNewPassword" name="reNewPassword" value="${reNewPassword}" required class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -148,8 +207,8 @@
                             <!--hiển thị thông báo-->
                             <c:if test="${not empty message}">
                                 <div class="toast-container">
-                                    <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
-                                        <div class="toast-header">
+                                    <div id="errorsToast" class="toast error-toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
+                                        <div class="toast-header error-toast-header">
                                             <strong class="mr-auto">Thông báo</strong>
                                             <button type="button" class="close" data-dismiss="toast" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
@@ -161,6 +220,23 @@
                                     </div>
                                 </div>
                             </c:if>
+
+                            <c:if test="${not empty SuccessMessage}">
+                                <div class="toast-container">
+                                    <div id="successToast" class="toast success-toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
+                                        <div class="toast-header success-toast-header">
+                                            <strong class="mr-auto">Thông báo</strong>
+                                            <button type="button" class="close" data-dismiss="toast" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="toast-body">
+                                            ${SuccessMessage} 
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:if>
+
                             <p id="message"></p>
                         </div>
                     </div>
@@ -190,7 +266,18 @@
 
         <script>
             $(document).ready(function () {
-                var successMessage = "${message}";
+                var errorsMessage = "${message}";
+                if (errorsMessage) {
+                    $('#errorsToast').toast({
+                        delay: 5000
+                    });
+                    $('#errorsToast').toast('show');
+                }
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                var successMessage = "${SuccessMessage}";
                 if (successMessage) {
                     $('#successToast').toast({
                         delay: 5000
@@ -203,18 +290,18 @@
             let resendTimeout = 60000; // 1 minute in milliseconds
             let countdownElement = document.getElementById('countdown');
             let resendButton = document.getElementById('resendBtn');
-
+        
             function startCountdown(duration) {
                 let timer = duration, minutes, seconds;
                 let countdownInterval = setInterval(function () {
                     minutes = parseInt(timer / 60, 10);
                     seconds = parseInt(timer % 60, 10);
-
+        
                     minutes = minutes < 10 ? "0" + minutes : minutes;
                     seconds = seconds < 10 ? "0" + seconds : seconds;
-
+        
                     countdownElement.textContent = "Resend OTP in " + minutes + ":" + seconds;
-
+        
                     if (--timer < 0) {
                         clearInterval(countdownInterval);
                         countdownElement.textContent = "";
@@ -222,30 +309,12 @@
                     }
                 }, 1000);
             }
-
+        
             function disableResendButton() {
                 resendButton.disabled = true;
                 startCountdown(resendTimeout / 1000);
             }
-
-//            function sendOTPRequest(event) {
-//                event.preventDefault(); // Prevent form submission
-//                $.ajax({
-//                    url: $("#otpForm").attr("action"),
-//                    type: "POST",
-//                    data: $("#otpForm").serialize(),
-//                    success: function (response) {
-//                        // Handle success
-//                        disableResendButton();
-//                        countdownElement.textContent = "OTP sent successfully!";
-//                    },
-//                    error: function (xhr, status, error) {
-//                        // Handle error
-//                        countdownElement.textContent = "Error in sending OTP. Please try again.";
-//                    }
-//                });
-//            }
-
+        
             resendButton.addEventListener('click', function (event) {
                 if (!resendButton.disabled) {
                     sendOTPRequest(event);
@@ -253,7 +322,7 @@
                     event.preventDefault();
                 }
             });
-
+        
             // Initial setup: disable resend button and start countdown
             disableResendButton();
         </script>

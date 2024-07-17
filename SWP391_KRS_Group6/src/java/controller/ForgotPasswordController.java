@@ -123,7 +123,7 @@ public class ForgotPasswordController extends HttpServlet {
                     // Chuyển hướng đến trang resetPassword.jsp với email
 //                    request.setAttribute("email", email);
                     session.setAttribute("email", email);
-                    request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
+                    request.setAttribute("successMessage", "OTP đã được gửi đến email của bạn.");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
                     dispatcher.forward(request, response);
                 } else {
@@ -141,7 +141,7 @@ public class ForgotPasswordController extends HttpServlet {
                     // Chuyển hướng đến trang resetPassword.jsp với email
 //                    request.setAttribute("email", user.getEmail());
                     session.setAttribute("email", user.getEmail());
-                    request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
+                    request.setAttribute("SuccessMessage", "OTP đã được gửi đến email của bạn.");
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
                     dispatcher.forward(request, response);
 
@@ -179,7 +179,7 @@ public class ForgotPasswordController extends HttpServlet {
 
                 // Chuyển hướng đến trang resetPassword.jsp với email
                 request.setAttribute("email", email);
-                request.setAttribute("message", "OTP đã được gửi đến email của bạn.");
+                request.setAttribute("SuccessMessage", "OTP đã được gửi đến email của bạn.");
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp");
                 dispatcher.forward(request, response);
                 // Gửi email OTP
@@ -243,6 +243,8 @@ public class ForgotPasswordController extends HttpServlet {
             } else {
                 request.setAttribute("message", "Mật khẩu không khớp");
                 request.setAttribute("otp", otp);
+                request.setAttribute("newPassword", pass);
+                request.setAttribute("reNewPassword", repass);
 //                request.getRequestDispatcher("WEB-INF/ConfirmOTP.jsp").forward(request, response);
             }
         } catch (Exception e) {
