@@ -324,8 +324,9 @@
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-3 col-md-3 col-lg-2 col-form-label">User Name</label>
                                                             <div class="col-12 col-sm-9 col-md-9 col-lg-7">
-                                                                <input class="form-control" type="text" readonly="" name="username" value="${user.user_name}">
-
+                                                                <input class="form-control" type="text" name="username" value="${user.user_name}">
+                                                                <span class="error" style="font-size: smaller;">${errors['userNameError']}</span>
+                                                                <span class="error" style="font-size: smaller;">${errors['userNameDup']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">

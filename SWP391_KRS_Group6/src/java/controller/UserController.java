@@ -154,7 +154,7 @@ public class UserController extends HttpServlet {
             String sortBy = request.getParameter("sortBy") != null ? request.getParameter("sortBy") : "post_id";
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "ASC";
             String keyword = request.getParameter("keyword");
-             String tab = request.getParameter("Tab");
+            String tab = request.getParameter("Tab");
             int userId = Integer.parseInt(request.getParameter("userId"));
 
             List<Post> totalPost = postDAO.getPostByUser(userId);
@@ -453,6 +453,7 @@ public class UserController extends HttpServlet {
             Map<String, String> errors = new HashMap<>();
             List<Setting> roles = settingService.getAllRoles();
             int userId = Integer.parseInt(request.getParameter("userId"));
+            String userName = request.getParameter("username");
             String phone = request.getParameter("phone");
             String fullName = request.getParameter("fullname");
             String newEmail = request.getParameter("email");
@@ -460,12 +461,18 @@ public class UserController extends HttpServlet {
             User currentUser = userService.getUserById(userId);
 
             boolean emailChanged = !newEmail.equals(currentUser.getEmail());
-
-            User user = new User(userId, currentUser.getUser_name(), currentUser.getPassword(), newEmail, fullName, phone, gender, currentUser.isStatus(), currentUser.getRole_id(), null);
+            boolean userNameChanged = !userName.equals(currentUser.getUser_name());
+            User user = new User(userId, userName, currentUser.getPassword(), newEmail, fullName, phone, gender, currentUser.isStatus(), currentUser.getRole_id(), null);
             //
 
-//            boolean usernameExists = userDAO.checkUsernameExists(userName);
+//            boolean usernameExists = userService.validateUsername(userName);
+            boolean userNameExists = userService.checkUserNameExists(userName);
+            
             // Validate các trường
+
+            if (userName == null || userName.trim().isEmpty() || !userService.validateUsername(userName)) {
+                errors.put("userNameError", "User Name không hợp lệ hoặc không được bỏ trống");
+            }
             if (newEmail == null || newEmail.trim().isEmpty() || !userService.validateEmail(newEmail)) {
                 errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
             }
@@ -475,6 +482,13 @@ public class UserController extends HttpServlet {
             if (!userService.isValidFullName(fullName)) {
                 errors.put("fullnameError", "Độ dài không quá 100");
             }
+            //check username ton tai chua
+            if (userNameChanged) {
+                if (userNameExists) {
+                    errors.put("userNameDup", "UserName đã tồn tại");
+                }
+
+            }
             if (!errors.isEmpty()) {
                 request.setAttribute("errors", errors);
                 request.setAttribute("user", user);
@@ -483,6 +497,7 @@ public class UserController extends HttpServlet {
                 request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
                 return;
             }
+            
 
             if (emailChanged) {
                 boolean emailExists = userService.checkEmailExists(newEmail);
@@ -504,6 +519,7 @@ public class UserController extends HttpServlet {
 
                     // Redirect to an OTP confirmation page
                     request.getSession().setAttribute("userId", userId);
+                    request.getSession().setAttribute("username", userName);
                     request.getSession().setAttribute("newEmail", newEmail);
                     request.getSession().setAttribute("fullname", fullName);
                     request.getSession().setAttribute("phone", phone);
