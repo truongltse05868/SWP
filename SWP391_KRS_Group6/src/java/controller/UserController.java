@@ -348,11 +348,11 @@ public class UserController extends HttpServlet {
                             request.setAttribute("successMessage", message);
                             request.getRequestDispatcher("Login").forward(request, response);
                             return;
-                        }else{
+                        } else {
                             message = "Cập nhật mật khẩu thất bại";
-                        errors.put("errorsUpdate", message);
+                            errors.put("errorsUpdate", message);
                         }
-                        
+
                     }
                 } else {
                     message = "Mật khẩu cũ không đúng";
@@ -675,35 +675,83 @@ public class UserController extends HttpServlet {
     }
 
     //sort and search
+//    private void getListUser2(HttpServletRequest request, HttpServletResponse response)
+//            throws ServletException, IOException {
+//        try {
+//            List<User> users;
+//            List<Setting> roles = settingService.getAllRoles();
+//
+//            // Get search and sort parameters
+//            String searchUsername = request.getParameter("searchUsername");
+//            String sortField = request.getParameter("sortField");
+//
+//            if (searchUsername != null && !searchUsername.isEmpty() && sortField != null && !sortField.isEmpty()) {
+//                // Sort and search
+//                users = userService.getUsersSortedSearchBy(sortField, searchUsername);
+//            } else if (searchUsername != null && !searchUsername.isEmpty()) {
+//                // Search only
+//                users = userService.searchUsersByUsername(searchUsername);
+//            } else if (sortField != null && !sortField.isEmpty()) {
+//                // Sort only
+//                users = userService.getUsersSortedBy(sortField);
+//            } else {
+//                // Default: get all users
+//                users = userService.getAllUsers();
+//            }
+//
+//            // Set the list of users as a request attribute
+//            request.setAttribute("users", users);
+//            request.setAttribute("roles", roles);
+//            request.setAttribute("searchUsername", searchUsername);
+//            request.setAttribute("sortField", sortField);
+//
+//            // Forward the request to the JSP page
+//            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserList.jsp");
+//            dispatcher.forward(request, response);
+//        } catch (Exception e) {
+//            logger.log(Level.SEVERE, "Error getting user list", e);
+//            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
+//        }
+//    }
     private void getListUser2(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             List<User> users;
             List<Setting> roles = settingService.getAllRoles();
 
-            // Get search and sort parameters
+            // Get search, sort, and pagination parameters
             String searchUsername = request.getParameter("searchUsername");
             String sortField = request.getParameter("sortField");
+            String sortOrder = request.getParameter("sortOrder");
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
 
-            if (searchUsername != null && !searchUsername.isEmpty() && sortField != null && !sortField.isEmpty()) {
-                // Sort and search
-                users = userService.getUsersSortedSearchBy(sortField, searchUsername);
+            int totalUsers = userService.countUsers(searchUsername);
+
+            if (searchUsername != null && !searchUsername.isEmpty() && sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                // Sort, search, and paginate
+                users = userService.getUsersSortedSearchBy(sortField, sortOrder, searchUsername, page, size);
             } else if (searchUsername != null && !searchUsername.isEmpty()) {
-                // Search only
-                users = userService.searchUsersByUsername(searchUsername);
-            } else if (sortField != null && !sortField.isEmpty()) {
-                // Sort only
-                users = userService.getUsersSortedBy(sortField);
+                // Search and paginate
+                users = userService.searchUsersByUsername(searchUsername, page, size);
+            } else if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                // Sort and paginate
+                users = userService.getUsersSortedBy(sortField, sortOrder, page, size);
             } else {
-                // Default: get all users
-                users = userService.getAllUsers();
+                // Default: get all users with pagination
+                users = userService.getAllUsers(page, size);
             }
+
+            int totalPages = (int) Math.ceil((double) totalUsers / size);
 
             // Set the list of users as a request attribute
             request.setAttribute("users", users);
             request.setAttribute("roles", roles);
             request.setAttribute("searchUsername", searchUsername);
             request.setAttribute("sortField", sortField);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
 
             // Forward the request to the JSP page
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserList.jsp");

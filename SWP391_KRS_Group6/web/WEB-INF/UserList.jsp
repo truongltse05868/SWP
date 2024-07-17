@@ -136,7 +136,7 @@
                                                 <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
                                             </div>
                                             <div class="col-auto">
-                                                <input type="hidden" name="action" value="searchUsername">
+                                                <input type="hidden" name="action" value="userList">
                                                 <button class="btn btn-primary btn-sm" type="submit">Search</button>
                                             </div>
                                         </div>
@@ -149,14 +149,34 @@
                             </div>
                             <div class="widget-inner">
                                 <c:if test="${not empty users}">
-                                    <table >
+                                    <table>
                                         <tr>
-                                            <th><a href="SortByUserName" onclick="sendPostRequestSort('user_name', '${searchUsername}');return false;">Username</a></th>
-                                            <th><a href="SortByEmail" onclick="sendPostRequestSort('email', '${searchUsername}');return false;">Email</a></th>
-                                            <th><a href="SortByFullName" onclick="sendPostRequestSort('full_name', '${searchUsername}');return false;">Full Name</a></th>
-                                            <th><a href="SortByPhone" onclick="sendPostRequestSort('phone', '${searchUsername}');return false;">Phone</a></th>
+                                            <th>
+                                                <a href="userController?action=userList&sortField=user_name&sortOrder=${sortField == 'user_name' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                    Username
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="userController?action=userList&sortField=email&sortOrder=${sortField == 'email' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                    Email
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="userController?action=userList&sortField=full_name&sortOrder=${sortField == 'full_name' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                    Full Name
+                                                </a>
+                                            </th>
+                                            <th>
+                                                <a href="userController?action=userList&sortField=phone&sortOrder=${sortField == 'phone' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                    Phone
+                                                </a>
+                                            </th>
                                             <th>Gender</th>
-                                            <th><a href="?sortField=status">Status</a></th>
+                                            <th>
+                                                <a href="userController?action=userList&sortField=status&sortOrder=${sortField == 'status' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                    Status
+                                                </a>
+                                            </th>
                                             <th>Role</th>
                                             <th>Update</th>
                                         </tr>
@@ -167,7 +187,6 @@
                                                 <td>${user.full_name}</td>
                                                 <td>${user.phone}</td>
                                                 <td>${user.gender}</td>
-
                                                 <td>
                                                     <c:choose>
                                                         <c:when test="${user.status}">
@@ -198,18 +217,29 @@
                                                         <input type="hidden" name="action" value="editUserProfile">
                                                         <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                                                     </form>
-
                                                 </td>
                                             </tr>
                                         </c:forEach>
                                     </table>
+                                    <!-- Pagination controls -->
+                                    <div class="row mt-3">
+                                        <nav aria-label="Page navigation" class="col-12">
+                                            <ul class="pagination justify-content-center">
+                                                <c:forEach begin="1" end="${totalPages}" var="i">
+                                                    <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
+                                                        <a class="page-link" href="userController?action=userList&userId=${userId}&page=${i}&size=3">${i}</a>
+                                                    </li>
+                                                </c:forEach>
+                                            </ul>
+                                        </nav>
+                                    </div>
                                 </c:if>
                                 <c:if test="${empty users}">
                                     <p>No users found.</p>
                                 </c:if>
                                 <div><span>${successMessage}</span></div>
-
                             </div>
+
                         </div>
                     </div>
                 </div>

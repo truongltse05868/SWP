@@ -1293,4 +1293,138 @@ public class UserDAO extends DBConnect {
         return Collections.emptyList();
     }
 
+    public int countUsers(String searchUsername) {
+        String query = "SELECT COUNT(*) FROM user";
+        if (searchUsername != null && !searchUsername.isEmpty()) {
+            query += " WHERE username LIKE ?";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            if (searchUsername != null && !searchUsername.isEmpty()) {
+                ps.setString(1, "%" + searchUsername + "%");
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error counting users", e);
+        }
+        return 0;
+    }
+
+    public List<User> getUsersSortedSearchBy(String sortField, String sortOrder, String searchUsername, int page, int size) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE username LIKE ? ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, "%" + searchUsername + "%");
+            ps.setInt(2, size);
+            ps.setInt(3, (page - 1) * size);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error getting sorted and searched users", e);
+        }
+        return users;
+    }
+
+    public List<User> searchUsersByUsername(String searchUsername, int page, int size) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user WHERE username LIKE ? LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, "%" + searchUsername + "%");
+            ps.setInt(2, size);
+            ps.setInt(3, (page - 1) * size);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error searching users by username", e);
+        }
+        return users;
+    }
+
+    public List<User> getUsersSortedBy(String sortField, String sortOrder, int page, int size) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error getting sorted users", e);
+        }
+        return users;
+    }
+
+    public List<User> getAllUsers(int page, int size) {
+        List<User> users = new ArrayList<>();
+        String query = "SELECT * FROM user LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                User user = new User(
+                        rs.getInt("user_id"),
+                        rs.getString("user_name"),
+                        rs.getString("password"),
+                        rs.getString("email"),
+                        rs.getString("full_name"),
+                        rs.getString("phone"),
+                        rs.getString("gender"),
+                        rs.getBoolean("status"),
+                        rs.getInt("role_id"),
+                        rs.getString("otp"));
+                users.add(user);
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error getting all users with pagination", e);
+        }
+        return users;
+    }
+
 }

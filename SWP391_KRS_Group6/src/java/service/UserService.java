@@ -115,9 +115,9 @@ public class UserService extends BaseService {
         return userDAO.addUser(user);
     }
 
-    public List<User> getUsersSortedSearchBy(String field, String search) {
-        return userDAO.getUsersSortedSearchBy(field, search);
-    }
+//    public List<User> getUsersSortedSearchBy(String field, String search) {
+//        return userDAO.getUsersSortedSearchBy(field, search);
+//    }
 
     public List<User> searchUsersByUsername(String username) {
         return userDAO.searchUsersByUsername(username);
@@ -142,8 +142,9 @@ public class UserService extends BaseService {
     public List<User> searchUsersNotInClass(int classId, int page, int pageSize, String searchQuery) {
         return userDAO.searchUsersNotInClass(classId, page, pageSize, searchQuery);
     }
+
     public List<User> searchAndSortUsersNotInClass(int classId, int page, int pageSize, String searchQuery, String sortField, String sortOrder) {
-        return userDAO.searchAndSortUsersNotInClass(classId, page, pageSize,searchQuery, sortField, sortOrder);
+        return userDAO.searchAndSortUsersNotInClass(classId, page, pageSize, searchQuery, sortField, sortOrder);
     }
 
     public int countUsersNotInClass(int classId, String searchQuery) {
@@ -195,5 +196,22 @@ public class UserService extends BaseService {
 
     public User getUserByUserName(String userName) {
         return userDAO.getUserByUserName(userName);
+    }
+
+    public int countUsers(String searchUsername) {
+        return userDAO.countUsers(searchUsername);
+    }
+
+    public List<User> getUsersSortedSearchBy(String sortField, String sortOrder, String searchUsername, int page, int size) {
+        return userDAO.getUsersSortedSearchBy(sortField, sortOrder, searchUsername, page, size);
+    }
+    public List<User> searchUsersByUsername(String searchUsername, int page, int size) {
+        return userDAO.searchUsersByUsername(searchUsername, page, size);
+    }
+    public List<User> getUsersSortedBy(String sortField, String sortOrder, int page, int size) {
+        return userDAO.getUsersSortedBy(sortField, sortOrder, page, size);
+    }
+    public List<User> getAllUsers(int page, int size) {
+        return userDAO.getAllUsers(page, size);
     }
 }
