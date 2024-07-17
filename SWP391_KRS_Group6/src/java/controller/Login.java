@@ -49,8 +49,10 @@ public class Login extends HttpServlet {
                     request.setAttribute("errorMessage", mess);
                     request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
                 }
-            } else {
+            } else if (identifier != null || password != null) { //có người nhập vào thì mới bắn mess lỗi khi login
                 request.setAttribute("errorMessage", mess);
+                request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
+            } else { //cái này là khi cái khác gọi đến thì không bị hiện check lỗi login 
                 request.getRequestDispatcher("WEB-INF/login.jsp").forward(request, response);
             }
         } catch (Exception e) {
