@@ -334,14 +334,25 @@ public class UserController extends HttpServlet {
             if (user != null) {
                 boolean isCurrentPass = userService.checkCurrentPassword(user, currentPassword);
                 if (isCurrentPass) {
-                    if (!newPassword.equals(reNewPassword) || !userService.validatePassword(newPassword) || !userService.validatePassword(reNewPassword)) {
-                        message = "Mật khẩu không khớp và phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số";
+                    if (!userService.validatePassword(newPassword) || !userService.validatePassword(reNewPassword)) {
+                        message = "Mật khẩu phải có ít nhất 8 ký tự, chứa ít nhất một chữ cái viết hoa, một chữ cái viết thường và một chữ số";
+                        errors.put("errorsSamePass", message);
+                    } else if (!newPassword.equals(reNewPassword)) {
+                        message = "Mật khẩu không khớp";
                         errors.put("errorsSamePass", message);
                     } else {
 //                        user.setPassword(newPassword);
                         boolean isUpdated = userService.changePassword(user, newPassword);
-                        message = isUpdated ? "Cập nhật mật khẩu thành công" : "Cập nhật mật khẩu thất bại";
+                        if (isUpdated) {
+                            message = "Cập nhật mật khẩu thành công";
+                            request.setAttribute("successMessage", message);
+                            request.getRequestDispatcher("Login").forward(request, response);
+                            return;
+                        }else{
+                            message = "Cập nhật mật khẩu thất bại";
                         errors.put("errorsUpdate", message);
+                        }
+                        
                     }
                 } else {
                     message = "Mật khẩu cũ không đúng";
@@ -352,19 +363,12 @@ public class UserController extends HttpServlet {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
                 return;
             }
-            if (!errors.isEmpty()) {
-                request.setAttribute("successMessage", message);
-//                request.setAttribute("errors", errors);
-//                request.setAttribute("user", user);
-//                request.setAttribute("roles", roles);
-//                request.setAttribute("tab", "change-password");
-//                request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
-                request.getRequestDispatcher("Login").forward(request, response);
-                return;
-            }
             request.setAttribute("errors", errors);
             request.setAttribute("user", user);
             request.setAttribute("roles", roles);
+            request.setAttribute("passold", currentPassword);
+            request.setAttribute("newpass", newPassword);
+            request.setAttribute("renewpass", reNewPassword);
             request.setAttribute("tab", "change-password");
             RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/ProfileUser.jsp?tab=change-password");
             dispatcher.forward(request, response);
@@ -467,9 +471,8 @@ public class UserController extends HttpServlet {
 
 //            boolean usernameExists = userService.validateUsername(userName);
             boolean userNameExists = userService.checkUserNameExists(userName);
-            
-            // Validate các trường
 
+            // Validate các trường
             if (userName == null || userName.trim().isEmpty() || !userService.validateUsername(userName)) {
                 errors.put("userNameError", "User Name không hợp lệ hoặc không được bỏ trống");
             }
@@ -497,7 +500,6 @@ public class UserController extends HttpServlet {
                 request.getRequestDispatcher("WEB-INF/ProfileUser.jsp").forward(request, response);
                 return;
             }
-            
 
             if (emailChanged) {
                 boolean emailExists = userService.checkEmailExists(newEmail);

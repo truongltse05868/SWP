@@ -396,8 +396,8 @@
                                                                     <button type="submit" class="btn">Save changes</button>
                                                                     <!--<button type="reset" class="btn-secondry">Cancel</button>-->
                                                                 </div>
-                                                                <div><span class="error" style="font-size: smaller;">${errors['Success']}</span></div>
-                                                                <div><span class="error" style="font-size: smaller;">${errors['Errors']}</span></div>
+                                                                <div><span class="error" style="font-size: smaller; color: green;">${errors['Success']}</span></div>
+                                                                <div><span class="error" style="font-size: smaller; color: red;">${errors['Errors']}</span></div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -419,22 +419,22 @@
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">Current Password</label>
                                                             <div class="col-12 col-sm-8 col-md-8 col-lg-7">
-                                                                <input class="form-control" type="password" name="currentPassword" value="">
-                                                                <span class="error" style="font-size: smaller;">${errors['errosOldPass']}</span>
+                                                                <input class="form-control" type="password" name="currentPassword" value="${passold}">
+                                                                <span class="error" style="font-size: smaller; color: red;">${errors['errosOldPass']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">New Password</label>
                                                             <div class="col-12 col-sm-8 col-md-8 col-lg-7">
-                                                                <input class="form-control" type="password" name="newPassword" value="">
-                                                                <span class="error" style="font-size: smaller;">${errors['errorsSamePass']}</span>
+                                                                <input class="form-control" type="password" name="newPassword" value="${newpass}">
+                                                                <span class="error" style="font-size: smaller; color: red;">${errors['errorsSamePass']}</span>
                                                             </div>
                                                         </div>
                                                         <div class="form-group row">
                                                             <label class="col-12 col-sm-4 col-md-4 col-lg-3 col-form-label">Re Type New Password</label>
                                                             <div class="col-12 col-sm-8 col-md-8 col-lg-7">
-                                                                <input class="form-control" type="password" name="renewPassword" value="">
-                                                                <span class="error" style="font-size: smaller;">${errors['errorsSamePass']}</span>
+                                                                <input class="form-control" type="password" name="renewPassword" value="${renewpass}">
+                                                                <span class="error" style="font-size: smaller; color: red;">${errors['errorsSamePass']}</span>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -446,7 +446,7 @@
                                                             <button type="reset" class="btn-secondry">Cancel</button>
                                                         </div>
                                                         <div>
-                                                            <span class="error" style="font-size: smaller;">${errors['errorsUpdate']}</span>
+                                                            <span class="error" style="font-size: smaller; color: red;">${errors['errorsUpdate']}</span>
                                                         </div>
                                                     </div>
 
