@@ -644,7 +644,7 @@ public class UserController extends HttpServlet {
 
             // Thêm người dùng vào cơ sở dữ liệu
             boolean isSuccess = userService.addUser(user);
-            String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
+            String message = isSuccess ? "Thêm người dùng thành công." : "Cập nhật không thành công.";
             if (isSuccess) {
                 String subjectEmail = "Bạn đã được tạo tài khoản thành công";
                 userService.sendPassToEmail(email, userName, password, subjectEmail);
