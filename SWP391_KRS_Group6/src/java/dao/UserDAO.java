@@ -1293,15 +1293,29 @@ public class UserDAO extends DBConnect {
         return Collections.emptyList();
     }
 
-    public int countUsers(String searchUsername) {
-        String query = "SELECT COUNT(*) FROM user";
-        if (searchUsername != null && !searchUsername.isEmpty()) {
-            query += " WHERE username LIKE ?";
+    public int countUsers(String searchUsername, String gender, String status, String role) {
+        String query = "SELECT COUNT(*) FROM user WHERE user_name LIKE ?";
+        if (gender != null && !gender.isEmpty()) {
+            query += " AND gender = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND status = ?";
+        }
+        if (role != null && !role.isEmpty()) {
+            query += " AND role_id = ?";
         }
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            if (searchUsername != null && !searchUsername.isEmpty()) {
-                ps.setString(1, "%" + searchUsername + "%");
+            int paramIndex = 1;
+            ps.setString(paramIndex++, "%" + searchUsername + "%");
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(paramIndex++, gender);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(paramIndex++, Boolean.parseBoolean(status));
+            }
+            if (role != null && !role.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(role));
             }
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -1313,14 +1327,34 @@ public class UserDAO extends DBConnect {
         return 0;
     }
 
-    public List<User> getUsersSortedSearchBy(String sortField, String sortOrder, String searchUsername, int page, int size) {
+    public List<User> getUsersSortedSearchBy(String sortField, String sortOrder, String searchUsername, String gender, String status, String role, int page, int size) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE username LIKE ? ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+        String query = "SELECT * FROM user WHERE user_name LIKE ?";
+        if (gender != null && !gender.isEmpty()) {
+            query += " AND gender = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND status = ?";
+        }
+        if (role != null && !role.isEmpty()) {
+            query += " AND role_id = ?";
+        }
+        query += " ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, "%" + searchUsername + "%");
-            ps.setInt(2, size);
-            ps.setInt(3, (page - 1) * size);
+            int paramIndex = 1;
+            ps.setString(paramIndex++, "%" + searchUsername + "%");
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(paramIndex++, gender);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(paramIndex++, Boolean.parseBoolean(status));
+            }
+            if (role != null && !role.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(role));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, (page - 1) * size);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User(
@@ -1342,14 +1376,34 @@ public class UserDAO extends DBConnect {
         return users;
     }
 
-    public List<User> searchUsersByUsername(String searchUsername, int page, int size) {
+    public List<User> searchUsersByUsername(String searchUsername, String gender, String status, String role, int page, int size) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user WHERE username LIKE ? LIMIT ? OFFSET ?";
+        String query = "SELECT * FROM user WHERE user_name LIKE ?";
+        if (gender != null && !gender.isEmpty()) {
+            query += " AND gender = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND status = ?";
+        }
+        if (role != null && !role.isEmpty()) {
+            query += " AND role_id = ?";
+        }
+        query += " LIMIT ? OFFSET ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setString(1, "%" + searchUsername + "%");
-            ps.setInt(2, size);
-            ps.setInt(3, (page - 1) * size);
+            int paramIndex = 1;
+            ps.setString(paramIndex++, "%" + searchUsername + "%");
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(paramIndex++, gender);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(paramIndex++, Boolean.parseBoolean(status));
+            }
+            if (role != null && !role.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(role));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, (page - 1) * size);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User(
@@ -1371,13 +1425,33 @@ public class UserDAO extends DBConnect {
         return users;
     }
 
-    public List<User> getUsersSortedBy(String sortField, String sortOrder, int page, int size) {
+    public List<User> getUsersSortedBy(String sortField, String sortOrder, String gender, String status, String role, int page, int size) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+        String query = "SELECT * FROM user WHERE 1=1";
+        if (gender != null && !gender.isEmpty()) {
+            query += " AND gender = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND status = ?";
+        }
+        if (role != null && !role.isEmpty()) {
+            query += " AND role_id = ?";
+        }
+        query += " ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, size);
-            ps.setInt(2, (page - 1) * size);
+            int paramIndex = 1;
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(paramIndex++, gender);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(paramIndex++, Boolean.parseBoolean(status));
+            }
+            if (role != null && !role.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(role));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, (page - 1) * size);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User(
@@ -1399,13 +1473,39 @@ public class UserDAO extends DBConnect {
         return users;
     }
 
-    public List<User> getAllUsers(int page, int size) {
+    public List<User> getAllUsers(String searchUsername, String gender, String status, String role, int page, int size) {
         List<User> users = new ArrayList<>();
-        String query = "SELECT * FROM user LIMIT ? OFFSET ?";
+        String query = "SELECT * FROM user WHERE 1=1";
+        if (searchUsername != null && !searchUsername.isEmpty()) {
+            query += " AND user_name LIKE ?";
+        }
+        if (gender != null && !gender.isEmpty()) {
+            query += " AND gender = ?";
+        }
+        if (status != null && !status.isEmpty()) {
+            query += " AND status = ?";
+        }
+        if (role != null && !role.isEmpty()) {
+            query += " AND role_id = ?";
+        }
+        query += " LIMIT ? OFFSET ?";
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, size);
-            ps.setInt(2, (page - 1) * size);
+            int paramIndex = 1;
+            if (searchUsername != null && !searchUsername.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchUsername + "%");
+            }
+            if (gender != null && !gender.isEmpty()) {
+                ps.setString(paramIndex++, gender);
+            }
+            if (status != null && !status.isEmpty()) {
+                ps.setBoolean(paramIndex++, Boolean.parseBoolean(status));
+            }
+            if (role != null && !role.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(role));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, (page - 1) * size);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 User user = new User(

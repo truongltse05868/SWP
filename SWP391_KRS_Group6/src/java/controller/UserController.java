@@ -719,35 +719,35 @@ public class UserController extends HttpServlet {
             List<User> users;
             List<Setting> roles = settingService.getAllRoles();
 
-            // Get search, sort, and pagination parameters
+            // Get search, sort, and filter parameters
             String searchUsername = request.getParameter("searchUsername");
+            String gender = request.getParameter("gender");
+            String status = request.getParameter("status");
+            String role = request.getParameter("role");
             String sortField = request.getParameter("sortField");
             String sortOrder = request.getParameter("sortOrder");
             int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
             int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
 
-            int totalUsers = userService.countUsers(searchUsername);
+            int totalUsers = userService.countUsers(searchUsername, gender, status, role);
 
-            if (searchUsername != null && !searchUsername.isEmpty() && sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
-                // Sort, search, and paginate
-                users = userService.getUsersSortedSearchBy(sortField, sortOrder, searchUsername, page, size);
+            if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                users = userService.getUsersSortedSearchBy(sortField, sortOrder, searchUsername, gender, status, role, page, size);
             } else if (searchUsername != null && !searchUsername.isEmpty()) {
-                // Search and paginate
-                users = userService.searchUsersByUsername(searchUsername, page, size);
-            } else if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
-                // Sort and paginate
-                users = userService.getUsersSortedBy(sortField, sortOrder, page, size);
+                users = userService.searchUsersByUsername(searchUsername, gender, status, role, page, size);
             } else {
-                // Default: get all users with pagination
-                users = userService.getAllUsers(page, size);
+                users = userService.getAllUsers(searchUsername, gender, status, role, page, size);
             }
 
             int totalPages = (int) Math.ceil((double) totalUsers / size);
 
-            // Set the list of users as a request attribute
+            // Set the list of users and other attributes as request attributes
             request.setAttribute("users", users);
             request.setAttribute("roles", roles);
             request.setAttribute("searchUsername", searchUsername);
+            request.setAttribute("gender", gender);
+            request.setAttribute("status", status);
+            request.setAttribute("role", role);
             request.setAttribute("sortField", sortField);
             request.setAttribute("sortOrder", sortOrder);
             request.setAttribute("currentPage", page);

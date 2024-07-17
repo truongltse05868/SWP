@@ -130,50 +130,92 @@
                         <div class="widget-box">
                             <div class="widget-inner">
                                 <div class="row">
-                                    <form class="col-sm-3" method="post" action="userController">
+                                    <!--                                    <form class="col-sm-3" method="post" action="userController">
+                                                                            <div class="row">
+                                                                                <div class="col">
+                                                                                    <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
+                                                                                </div>
+                                                                                <div class="col-auto">
+                                                                                    <input type="hidden" name="action" value="userList">
+                                                                                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                                                                </div>
+                                                                            </div>
+                                                                        </form>-->
+                                    <form method="post" action="userController">
+                                        <input type="hidden" name="action" value="userList">
                                         <div class="row">
-                                            <div class="col">
+                                            <div class="col-sm-4">
                                                 <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">
                                             </div>
-                                            <div class="col-auto">
-                                                <input type="hidden" name="action" value="userList">
-                                                <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                            <div class="col-sm-2">
+                                                <select class="form-control" name="gender">
+                                                    <option value="">All Genders</option>
+                                                    <option value="male" ${gender == 'male' ? 'selected' : ''}>Male</option>
+                                                    <option value="female" ${gender == 'female' ? 'selected' : ''}>Female</option>
+                                                </select>
                                             </div>
+                                            <div class="col-sm-2">
+                                                <select class="form-control" name="status">
+                                                    <option value="">All Statuses</option>
+                                                    <option value="active" ${status == 'active' ? 'selected' : ''}>Active</option>
+                                                    <option value="inactive" ${status == 'inactive' ? 'selected' : ''}>Inactive</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <select class="form-control" name="role">
+                                                    <option value="">All Roles</option>
+                                                    <c:forEach var="role" items="${roles}">
+                                                        <option value="${role.settingId}" ${role.settingId == param.role ? 'selected' : ''}>${role.settingName}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <button class="btn btn-primary" type="submit">Search</button>
+                                            </div>
+
+                                            
+
+
                                         </div>
+
                                     </form>
-                                    <form class="col-sm-7 text-right" action="userController" method="post">
+
+                                    <form class="col-sm-3 text-right" action="userController" method="post">
                                         <input type="hidden" name="action" value="addUserPage">
                                         <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
                                     </form>
                                 </div>
                             </div>
                             <div class="widget-inner">
+                                <!-- Filter section -->
+
+
                                 <c:if test="${not empty users}">
-                                    <table>
+                                    <table class="table table-bordered mt-3">
                                         <tr>
                                             <th>
-                                                <a href="userController?action=userList&sortField=user_name&sortOrder=${sortField == 'user_name' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                <a href="userController?action=userList&sortField=user_name&sortOrder=${sortField == 'user_name' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}&gender=${gender}&status=${status}&role=${role}">
                                                     Username
                                                 </a>
                                             </th>
                                             <th>
-                                                <a href="userController?action=userList&sortField=email&sortOrder=${sortField == 'email' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                <a href="userController?action=userList&sortField=email&sortOrder=${sortField == 'email' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}&gender=${gender}&status=${status}&role=${role}">
                                                     Email
                                                 </a>
                                             </th>
                                             <th>
-                                                <a href="userController?action=userList&sortField=full_name&sortOrder=${sortField == 'full_name' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                <a href="userController?action=userList&sortField=full_name&sortOrder=${sortField == 'full_name' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}&gender=${gender}&status=${status}&role=${role}">
                                                     Full Name
                                                 </a>
                                             </th>
                                             <th>
-                                                <a href="userController?action=userList&sortField=phone&sortOrder=${sortField == 'phone' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                <a href="userController?action=userList&sortField=phone&sortOrder=${sortField == 'phone' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}&gender=${gender}&status=${status}&role=${role}">
                                                     Phone
                                                 </a>
                                             </th>
                                             <th>Gender</th>
                                             <th>
-                                                <a href="userController?action=userList&sortField=status&sortOrder=${sortField == 'status' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}">
+                                                <a href="userController?action=userList&sortField=status&sortOrder=${sortField == 'status' && sortOrder == 'asc' ? 'desc' : 'asc'}&page=${currentPage}&size=3&searchUsername=${searchUsername}&gender=${gender}&status=${status}&role=${role}">
                                                     Status
                                                 </a>
                                             </th>
@@ -227,7 +269,7 @@
                                             <ul class="pagination justify-content-center">
                                                 <c:forEach begin="1" end="${totalPages}" var="i">
                                                     <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
-                                                        <a class="page-link" href="userController?action=userList&userId=${userId}&page=${i}&size=3">${i}</a>
+                                                        <a class="page-link" href="userController?action=userList&page=${i}&size=3&searchUsername=${searchUsername}&gender=${gender}&status=${status}&role=${role}">${i}</a>
                                                     </li>
                                                 </c:forEach>
                                             </ul>
@@ -239,6 +281,7 @@
                                 </c:if>
                                 <div><span>${successMessage}</span></div>
                             </div>
+
 
                         </div>
                     </div>

@@ -198,20 +198,20 @@ public class UserService extends BaseService {
         return userDAO.getUserByUserName(userName);
     }
 
-    public int countUsers(String searchUsername) {
-        return userDAO.countUsers(searchUsername);
+    public int countUsers(String searchUsername, String gender, String status, String role) {
+        return userDAO.countUsers(searchUsername, gender, status, role);
     }
 
-    public List<User> getUsersSortedSearchBy(String sortField, String sortOrder, String searchUsername, int page, int size) {
-        return userDAO.getUsersSortedSearchBy(sortField, sortOrder, searchUsername, page, size);
+    public List<User> getUsersSortedSearchBy(String sortField, String sortOrder, String searchUsername, String gender, String status, String role, int page, int size) {
+        return userDAO.getUsersSortedSearchBy(sortField, sortOrder, searchUsername, gender, status, role, page, size);
     }
-    public List<User> searchUsersByUsername(String searchUsername, int page, int size) {
-        return userDAO.searchUsersByUsername(searchUsername, page, size);
+    public List<User> searchUsersByUsername(String searchUsername, String gender, String status, String role, int page, int size) {
+        return userDAO.searchUsersByUsername(searchUsername, gender, status, role, page, size);
     }
-    public List<User> getUsersSortedBy(String sortField, String sortOrder, int page, int size) {
-        return userDAO.getUsersSortedBy(sortField, sortOrder, page, size);
+    public List<User> getUsersSortedBy(String sortField, String sortOrder, String gender, String status, String role, int page, int size) {
+        return userDAO.getUsersSortedBy(sortField, sortOrder, gender, status, role, page, size);
     }
-    public List<User> getAllUsers(int page, int size) {
-        return userDAO.getAllUsers(page, size);
+    public List<User> getAllUsers(String searchUsername, String gender, String status, String role, int page, int size) {
+        return userDAO.getAllUsers(searchUsername, gender, status, role, page, size);
     }
 }
