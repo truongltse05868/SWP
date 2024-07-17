@@ -187,6 +187,7 @@
                                                                         </form>-->
                                     <form method="post" action="userController">
                                         <input type="hidden" name="action" value="userList">
+                                        <input type="hidden" name="page" value="${currentPage}">
                                         <div class="row">
                                             <div class="col-sm-4">
                                                 <input class="form-control" type="text" name="searchUsername" placeholder="Search by username" value="${searchUsername}">

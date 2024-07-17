@@ -1294,7 +1294,10 @@ public class UserDAO extends DBConnect {
     }
 
     public int countUsers(String searchUsername, String gender, String status, String role) {
-        String query = "SELECT COUNT(*) FROM user WHERE user_name LIKE ?";
+        String query = "SELECT COUNT(*) FROM user WHERE 1=1";
+        if (searchUsername != null && !searchUsername.isEmpty()) {
+            query += " AND user_name like ?";
+        }
         if (gender != null && !gender.isEmpty()) {
             query += " AND gender = ?";
         }
@@ -1307,7 +1310,9 @@ public class UserDAO extends DBConnect {
 
         try (PreparedStatement ps = connection.prepareStatement(query)) {
             int paramIndex = 1;
-            ps.setString(paramIndex++, "%" + searchUsername + "%");
+            if (searchUsername != null && !searchUsername.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchUsername + "%");
+            }
             if (gender != null && !gender.isEmpty()) {
                 ps.setString(paramIndex++, gender);
             }
