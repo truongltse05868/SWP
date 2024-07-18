@@ -17,6 +17,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import service.LessonService;
@@ -35,6 +36,7 @@ public class LessonController extends HttpServlet {
     UserService userService = new UserService();
     LessonService lessonService = new LessonService();
     SubjectService subjectService = new SubjectService();
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
@@ -58,13 +60,25 @@ public class LessonController extends HttpServlet {
 //                        getAllLessonList(request, response);
                         searchLessonByName2(request, response);
                         break;
+                    case "addLessonPage":
+                        addLessonPage(request, response);
+                        break;
+                    case "addLesson":
+                        addLessonByAdmin(request, response);
+                        break;
+                    case "updateLessonPage":
+                        updateLessonByAdminPage(request, response);
+                        break;
+                    case "updateLesson":
+                        updateLessonByAdmin(request, response);
+                        break;
                     case "lessonListBySubject":
                         getAllLessonListBySubject(request, response);
                         break;
                     default:
                         break;
                 }
-            }else{
+            } else {
                 switch (action) {
                     case "lessonList":
                         getAllLessonList(request, response);
@@ -113,6 +127,136 @@ public class LessonController extends HttpServlet {
             throws ServletException, IOException {
         processRequest(request, response);
     }
+    
+    private void addLessonPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<Subject> subjects = subjectService.getAllSubjects();
+            request.setAttribute("subject", subjects);
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/lesson/AddLesson.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error get add lesson page", e);
+        }
+    }
+    
+    private void addLessonByAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+
+            List<Setting> roles = settingService.getAllRoles();
+            List<Subject> subjects = subjectService.getAllSubjects();
+
+            // Lấy thông tin từ form
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+            String lessonName = request.getParameter("lessonName");
+            boolean status = "1".equals(request.getParameter("status")); // Updated to get status from radio button
+
+            // Validate các trường
+            Map<String, String> errors = lessonService.validateLessonData(lessonName, 0);
+
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                request.setAttribute("title", lessonName);
+                request.setAttribute("subject", subjects);
+                request.setAttribute("status", status);
+                request.setAttribute("successMessage", "Cập nhật không thành công.");
+                request.getRequestDispatcher("WEB-INF/lesson/AddLesson.jsp").forward(request, response);
+                return;
+            }
+
+            Lesson newLesson = new Lesson();
+            newLesson.setTitle(lessonName);
+            newLesson.setSubject_id(subjectId);
+            newLesson.setStatus(status);
+
+            boolean isSuccess = lessonService.addLesson(newLesson);
+            String message = lessonService.getSuccessMessageAddLesson(isSuccess, lessonName);
+
+            if (isSuccess) {
+                request.setAttribute("successMessage", message);
+//                List<Class> classes = classService.getAllClasses();
+//                request.setAttribute("classes", classes);
+//                request.setAttribute("subjectList", subjects);
+//                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+                searchLessonByName2(request, response);
+            } else {
+//                request.setAttribute("roles", roles);
+                    
+                request.setAttribute("title", lessonName);
+                request.setAttribute("subject", subjects);
+                request.setAttribute("status", status);
+                request.setAttribute("successMessage", message);
+                request.getRequestDispatcher("WEB-INF/lesson/AddLesson.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            // Xử lý ngoại lệ nếu có
+            request.setAttribute("existsError", "An error occurred: " + e.getMessage());
+            request.getRequestDispatcher("WEB-INF/AddClass.jsp").forward(request, response);
+        }
+    }
+
+    //update class
+    private void updateLessonByAdminPage(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            int lessonId = Integer.parseInt(request.getParameter("lessonId"));
+            Lesson lessons = lessonService.getLessonById(lessonId);
+            List<Subject> subjectList = subjectService.getAllSubjects();
+            request.setAttribute("lessons", lessons);
+            request.setAttribute("subject", subjectList);
+            request.getRequestDispatcher("WEB-INF/lesson/UpdateLesson.jsp").forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error getting lesson by lessonId", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting lesson.");
+        }
+    }
+
+    private void updateLessonByAdmin(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            Lesson lessonUpdate = new Lesson();
+
+            int lessonId = Integer.parseInt(request.getParameter("lessonId"));
+            int subjectId = Integer.parseInt(request.getParameter("subjectId"));
+            String lessonName = request.getParameter("lessonName");
+            boolean status = "1".equals(request.getParameter("status")); // Updated to get status from radio button
+
+            lessonUpdate.setLesson_id(lessonId);
+            lessonUpdate.setTitle(lessonName);
+            lessonUpdate.setSubject_id(subjectId);
+            lessonUpdate.setStatus(status);
+
+            Map<String, String> errors = lessonService.validateLessonData(lessonName, lessonId);
+            if (!errors.isEmpty()) {
+                request.setAttribute("errors", errors);
+                List<Subject> subjectList = subjectService.getAllSubjects();
+                request.setAttribute("lessons", lessonUpdate);
+                request.setAttribute("subject", subjectList);
+                request.getRequestDispatcher("WEB-INF/lesson/UpdateLesson.jsp").forward(request, response);
+                return;
+            }
+            boolean isUpdate = lessonService.updateLesson(lessonUpdate);
+            if (isUpdate) {
+//                List<Class> classList = classService.getAllClasses();
+//                Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+//                List<Subject> subjectList = subjectService.getAllSubjects();
+//
+//                request.setAttribute("classes", classList);
+//                request.setAttribute("userCountMap", userCountMap);
+//                request.setAttribute("subjectList", subjectList);
+                request.setAttribute("successMessage", "Cập nhật bài thành công");
+//                request.getRequestDispatcher("WEB-INF/ClassListAdmin.jsp").forward(request, response);
+                searchLessonByName2(request, response);
+            } else {
+                request.setAttribute("successMessage", "Cập nhật bài không thành công");
+                request.getRequestDispatcher("WEB-INF/lesson/UpdateLesson.jsp").forward(request, response);
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error updating class", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while updating the class.");
+        }
+    }
 
     private void getAllLessonList(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -132,6 +276,7 @@ public class LessonController extends HttpServlet {
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the less list.");
         }
     }
+
     //search and phân trang
     private void searchLessonByName2(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {

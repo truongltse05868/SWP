@@ -57,6 +57,7 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
         <script>
             function sendPostRequest(action) {
                 // Tạo form ẩn
@@ -261,9 +262,26 @@
                                     <table class="table table-bordered">
 
                                         <tr>
-                                            <th><a href="#" onclick="sendPostRequestSort2('class_name', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Class Name</a></th>
-                                            <th><a href="#" onclick="sendPostRequestSort2('subject_id', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Subject</a></th>
-                                            <th><a href="#" onclick="sendPostRequestSort2('status', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Status</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('class_name', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Class Name</a>
+                                                <c:choose>
+                                                    <c:when test="${sortField == 'class_name'}">
+                                                        <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                    </c:when>
+                                                </c:choose>
+                                            </th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('subject_id', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Subject</a>
+                                                <c:choose>
+                                                    <c:when test="${sortField == 'subject_id'}">
+                                                        <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                    </c:when>
+                                                </c:choose>
+                                            </th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('status', '${searchClassname}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Status</a>
+                                                <c:choose>
+                                                    <c:when test="${sortField == 'status'}">
+                                                        <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                    </c:when>
+                                                </c:choose></th>
                                             <th>User In Class</th>
                                             <th>Update</th>
                                             <th>Detail</th>
@@ -309,7 +327,7 @@
                                                     <form action="${pageContext.request.contextPath}/ClassController" method="post">
                                                         <input type="hidden" name="classId" value="${classList.class_id}" />
                                                         <input type="hidden" name="action" value="classDetail">
-                                                        <!--<input type="hidden" name="page" value="${currentPage}">-->
+                                                        <input type="hidden" name="page" value="${currentPage}">
                                                         <button class="btn btn-primary btn-sm" type="submit">Detail</button>
                                                     </form>
                                                 </td>
