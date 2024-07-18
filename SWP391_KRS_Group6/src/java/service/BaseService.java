@@ -141,5 +141,12 @@ public abstract class BaseService {
         String content = "Dear " + userName + "\n\n Please click the following link to confirm your email address: " + confirmationLink;
         sendEmail(recipientEmail, "Email Confirmation", content);
     }
+    public boolean sendEmailContact(String fullName,String emailAdmin, String emailUser, String type, String subject, String mess){
+        String content = "Dear admin, My name is " + fullName + "\n\n." 
+                + " my email : " + emailUser +"\n\n" 
+                + " i need support " + type +"\n\n" 
+                + "This is problem: " + mess + ". Thanks and best regard.";
+        return sendEmail(emailAdmin, subject, content);
+    }
 
 }

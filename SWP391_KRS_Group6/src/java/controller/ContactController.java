@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import service.ContactService;
 import service.SettingService;
 import service.SubjectService;
 import service.UserService;
@@ -38,17 +39,18 @@ public class ContactController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+//        response.setContentType("text/html;charset=UTF-8");
         try {
             String action = request.getParameter("action");
             switch (action) {
-                case "contactPage":
+                case "":
                     getContactPage(request, response);
                     break;
                 case "sentContact":
                     sentContact(request, response);
                     break;
                 default:
+                    getContactPage(request, response);
                     break;
             }
         } catch (NumberFormatException e) {
@@ -72,7 +74,8 @@ public class ContactController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        getContactPage(request, response);
+       
     }
 
     /**
@@ -103,19 +106,27 @@ public class ContactController extends HttpServlet {
             logger.log(Level.SEVERE, "Error get add user page", e);
         }
     }
+
     private void sentContact(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
             String userName = request.getParameter("name");
             String subject = request.getParameter("subject");
             String setting = request.getParameter("settingId");
-            String email = request.getParameter("email");
+            String emailUser = request.getParameter("email");
             String message = request.getParameter("message");
-            
+            String emailAdmin = "ladykillah041098@gmail.com";
+            String type = request.getParameter("contactTypeId");
+            //validate
+            //sent email
+            ContactService contactService = new ContactService();
+            boolean isSentEmail = contactService.sendEmailContact(userName, emailAdmin, emailUser, type, subject, message);
+            if (isSentEmail) {
+                request.setAttribute("mess", "Gửi thành công");
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Contact/Contact.jsp");
+                dispatcher.forward(request, response);
+            }
 
-            request.setAttribute("mess", "gửi thành công");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Contact/Contact.jsp");
-            dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get add user page", e);
         }
