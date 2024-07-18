@@ -129,6 +129,8 @@
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="userName" type="text" value="${user.user_name}">
                                                 <span class="error" style="color: red; font-size: smaller;">${errorUserName}</span>
+                                                
+                                                <span class="error" style="font-size: smaller;">${errors['usernameError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -136,18 +138,22 @@
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="email" type="email" value="${user.email}">
                                                 <span class="error" style="color: red; font-size: smaller;">${errorEmail}</span>
+                                                
+                                                <span class="error" style="font-size: smaller;">${errors['emailError']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Full Name</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="fullName" type="text" value="${user.full_name}">
+                                                <span class="error" style="color: red; font-size: smaller;">${errors['fullnameValidate']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">
                                             <label class="col-sm-2 col-form-label">Phone</label>
                                             <div class="col-sm-4">
                                                 <input class="form-control" name="phone" type="tel" value="${user.phone}">
+                                                <span class="error" style="color: red; font-size: smaller;">${errors['phoneValidate']}</span>
                                             </div>
                                         </div>
                                         <div class="form-group row">

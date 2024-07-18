@@ -244,7 +244,10 @@ public class UserController extends HttpServlet {
     private void updateUser(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            Map<String, String> errors = new HashMap<>();
             int userId = Integer.parseInt(request.getParameter("id"));
+            int page = 1;
+            int size = 3;
             String userName = request.getParameter("userName");
             String email = request.getParameter("email");
             String fullName = request.getParameter("fullName");
@@ -253,8 +256,38 @@ public class UserController extends HttpServlet {
             String statusParam = request.getParameter("status");
             boolean status = (statusParam != null && statusParam.equals("on"));
             int roleId = Integer.parseInt(request.getParameter("roleId"));
+            List<Setting> roles = settingService.getAllRoles();
 
             User user = userService.getUserById(userId);
+            // Validate các trường
+            if (email == null || email.trim().isEmpty() || !userService.validateEmail(email)) {
+                errors.put("emailError", "Email không hợp lệ hoặc không được bỏ trống");
+            }
+
+            if (userName == null || userName.trim().isEmpty() || !userService.validateUsername(userName)) {
+                errors.put("usernameError", "Username phải có độ dài từ 3 đến 20 ký tự, chỉ chứa chữ cái và số, không chứa khoảng trắng.");
+            }
+            if (fullName == null || fullName.trim().isEmpty() || !userService.isValidFullName(fullName)) {
+                errors.put("fullnameValidate", "Tên phải có độ dài từ 3 đến 20 ký tự");
+            }
+            if (userService.isValidPhone(phone)) {
+                errors.put("phoneValidate", "Tên phải có độ dài từ 3 đến 20 ký tự");
+            }
+            if (!errors.isEmpty()) {
+                user.setUser_name(userName);
+                user.setEmail(email);
+                user.setFull_name(fullName);
+                user.setPhone(phone);
+                user.setGender(gender);
+                user.setStatus(status);
+                user.setRole_id(roleId);
+                request.setAttribute("errors", errors);
+                request.setAttribute("user", user);
+                request.setAttribute("roles", roles);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserProfile.jsp");
+                dispatcher.forward(request, response);
+
+            }
 
             if (user != null) {
                 boolean userNameExists = userService.isUserNameExists(userName, userId);
@@ -279,7 +312,6 @@ public class UserController extends HttpServlet {
                     user.setGender(gender);
                     user.setStatus(status);
                     user.setRole_id(roleId);
-                    List<Setting> roles = settingService.getAllRoles();
                     request.setAttribute("user", user);
                     request.setAttribute("roles", roles);
                     RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserProfile.jsp");
@@ -295,18 +327,22 @@ public class UserController extends HttpServlet {
                 user.setRole_id(roleId);
                 boolean isUpdated = userService.updateUser(user);
 
-                String message = isUpdated ? "Lưu thành công." : "Cập nhật không thành công.";
+                String message = isUpdated ? "Cập nhật " + userName + " thành công." : "Cập nhật không thành công.";
                 request.setAttribute("successMessage", message);
 //                response.sendRedirect(request.getContextPath() + "/userController?id=" + userId);
                 // save xong lấy các thông tin vừa lưu để đẩy về jsp(vẫn giữ nguyên data của page không có mất hết data khi call jsp)
                 // call cách khác thì truyền id vào không bảo mật tí nào
-                List<Setting> roles = settingService.getAllRoles();
-                List<User> users = userService.getAllUsers();
+//                List<Setting> roles = settingService.getAllRoles();
+                List<User> users = userService.getAllUsers("", "", "", "", page, size);
+                int totalUsers = userService.countUsers("", "", "", "");
+                int totalPages = (int) Math.ceil((double) totalUsers / size);
                 request.setAttribute("users", users);
                 request.setAttribute("roles", roles);
+                request.setAttribute("currentPage", page);
+                request.setAttribute("totalPages", totalPages);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserList.jsp");
                 dispatcher.forward(request, response);
-
+                  
             } else {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "User not found");
             }
@@ -644,7 +680,7 @@ public class UserController extends HttpServlet {
 
             // Thêm người dùng vào cơ sở dữ liệu
             boolean isSuccess = userService.addUser(user);
-            String message = isSuccess ? "Lưu thành công." : "Cập nhật không thành công.";
+            String message = isSuccess ? "Thêm người dùng thành công." : "Cập nhật không thành công.";
             if (isSuccess) {
                 String subjectEmail = "Bạn đã được tạo tài khoản thành công";
                 userService.sendPassToEmail(email, userName, password, subjectEmail);

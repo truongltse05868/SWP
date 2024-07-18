@@ -27,4 +27,19 @@ public class LessonService extends BaseService{
     public Lesson getLessonById(int lessonId){
         return lessonDAO.getLessonById(lessonId);
     }
+    public int countLessones(String searchLesson, String searchSubjectId) {
+        return lessonDAO.countClasses(searchLesson, searchSubjectId);
+    }
+    public List<Lesson> searchAndSortLesson(String searchLesson, String searchSubjectId, String sortField, String sortOrder, int page, int size) {
+        return lessonDAO.searchAndSortClasses(searchLesson, searchSubjectId, sortField, sortOrder, page, size);
+    }
+    public List<Lesson> searchLesson(String searchLesson, String searchSubjectId, int page, int size) {
+        return lessonDAO.searchClasses(searchLesson, searchSubjectId, page, size);
+    }
+    public List<Lesson> sortLesson(String sortField, String sortOrder, int page, int size) {
+        return lessonDAO.sortLesson(sortField, sortOrder, page, size);
+    }
+    public List<Lesson> getAllLesson(int page, int size) {
+        return lessonDAO.getAllLesson(page, size);
+    }
 }

@@ -31,6 +31,16 @@ public class Contact {
         this.type_id = type_id;
         this.status = status;
     }
+    public Contact(String full_name, String email, String phone, String subject, String message, int type_id, boolean status) {
+        
+        this.full_name = full_name;
+        this.email = email;
+        this.phone = phone;
+        this.subject = subject;
+        this.message = message;
+        this.type_id = type_id;
+        this.status = status;
+    }
 
     public int getContact_id() {
         return contact_id;

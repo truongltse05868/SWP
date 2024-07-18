@@ -55,7 +55,8 @@ public class LessonController extends HttpServlet {
             if (setting.getSettingName().toLowerCase().trim().equals("admin")) {
                 switch (action) {
                     case "lessonList":
-                        getAllLessonList(request, response);
+//                        getAllLessonList(request, response);
+                        searchLessonByName2(request, response);
                         break;
                     case "lessonListBySubject":
                         getAllLessonListBySubject(request, response);
@@ -124,11 +125,66 @@ public class LessonController extends HttpServlet {
             request.setAttribute("lessons", lessons);
             request.setAttribute("subjectList", subjects);
             // Forward the request to the JSP page
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/lesson/LessonList.jsp");
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/lesson/LessonListAdmin.jsp");
             dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error getting lesson list", e);
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the user list.");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the less list.");
+        }
+    }
+    //search and phân trang
+    private void searchLessonByName2(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        try {
+            List<Lesson> lessons;
+            List<Subject> subjects = subjectService.getAllSubjects();
+//            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
+
+            // Get search, sort, and pagination parameters
+            String searchTitle = request.getParameter("searchLesson");
+            String searchSubjectId = request.getParameter("subjectId");
+            String sortField = request.getParameter("sortField");
+            String sortOrder = request.getParameter("sortOrder");
+            int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
+            int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
+
+            int totalClasses = lessonService.countLessones(searchTitle, searchSubjectId);
+
+            if ((searchTitle != null && !searchTitle.isEmpty()) || (searchSubjectId != null && !searchSubjectId.isEmpty())) {
+                if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                    // Search, sort, and paginate
+                    lessons = lessonService.searchAndSortLesson(searchTitle, searchSubjectId, sortField, sortOrder, page, size);
+                } else {
+                    // Search and paginate
+                    lessons = lessonService.searchLesson(searchTitle, searchSubjectId, page, size);
+                }
+            } else if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
+                // Sort and paginate
+                lessons = lessonService.sortLesson(sortField, sortOrder, page, size);
+            } else {
+                // Default: get all classes with pagination
+                lessons = lessonService.getAllLesson(page, size);
+            }
+
+            int totalPages = (int) Math.ceil((double) totalClasses / size);
+
+            // Set the list of classes as a request attribute
+//            request.setAttribute("userCountMap", userCountMap);
+            request.setAttribute("lessons", lessons);
+            request.setAttribute("subjectList", subjects);
+            request.setAttribute("searchLesson", searchTitle);
+            request.setAttribute("searchSubjectId", searchSubjectId);
+            request.setAttribute("sortField", sortField);
+            request.setAttribute("sortOrder", sortOrder);
+            request.setAttribute("currentPage", page);
+            request.setAttribute("totalPages", totalPages);
+
+            // Forward the request to the JSP page
+            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/lesson/LessonListAdmin.jsp");
+            dispatcher.forward(request, response);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error getting lesson list", e);
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while getting the lesson list.");
         }
     }
 

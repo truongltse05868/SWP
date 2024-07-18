@@ -4,6 +4,7 @@
  */
 package controller;
 
+import entity.Contact;
 import java.io.IOException;
 import java.io.PrintWriter;
 import entity.Setting;
@@ -21,6 +22,7 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import service.ContactService;
 import service.SettingService;
 import service.SubjectService;
 import service.UserService;
@@ -38,17 +40,18 @@ public class ContactController extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
+//        response.setContentType("text/html;charset=UTF-8");
         try {
             String action = request.getParameter("action");
             switch (action) {
-                case "contactPage":
+                case "":
                     getContactPage(request, response);
                     break;
                 case "sentContact":
                     sentContact(request, response);
                     break;
                 default:
+                    getContactPage(request, response);
                     break;
             }
         } catch (NumberFormatException e) {
@@ -72,7 +75,8 @@ public class ContactController extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        getContactPage(request, response);
+       
     }
 
     /**
@@ -103,19 +107,35 @@ public class ContactController extends HttpServlet {
             logger.log(Level.SEVERE, "Error get add user page", e);
         }
     }
+
     private void sentContact(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            ContactService contactService = new ContactService();
             String userName = request.getParameter("name");
             String subject = request.getParameter("subject");
-            String setting = request.getParameter("settingId");
-            String email = request.getParameter("email");
+//            String setting = request.getParameter("settingId");
+            String emailUser = request.getParameter("email");
             String message = request.getParameter("message");
+            String emailAdmin = "ladykillah041098@gmail.com";
+            int type = Integer.parseInt(request.getParameter("contactTypeId")) ;
+            List<Setting> contactType = settingService.getAllContactType();
+            String phone =  "";
+            Setting setting = settingService.getSettingById(type);
+            String typeName = setting.getSettingName();
+            Contact contact = new Contact( userName, emailUser, phone, subject, message, type, true);
+            boolean isSaveContact = contactService.addContact(contact);
+            //validate
+            //sent email
             
+            boolean isSentEmail = contactService.sendEmailContact(userName, emailAdmin, emailUser, typeName, subject, message);
+            if (isSentEmail) {
+                request.setAttribute("successMessage", "Gửi thành công");
+                request.setAttribute("setting", contactType);
+                RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Contact/Contact.jsp");
+                dispatcher.forward(request, response);
+            }
 
-            request.setAttribute("mess", "gửi thành công");
-            RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Contact/Contact.jsp");
-            dispatcher.forward(request, response);
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error get add user page", e);
         }

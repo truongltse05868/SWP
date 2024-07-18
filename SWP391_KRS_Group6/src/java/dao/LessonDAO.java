@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -30,9 +31,9 @@ public class LessonDAO extends DBConnect {
 
             while (rs.next()) {
                 Lesson lesson = new Lesson(
-                        rs.getInt("class_id"),
+                        rs.getInt("lesson_id"),
                         rs.getInt("subject_id"),
-                        rs.getString("class_name"),
+                        rs.getString("title"),
                         rs.getBoolean("status")
                 );
                 lessones.add(lesson);
@@ -41,6 +42,169 @@ public class LessonDAO extends DBConnect {
             logger.log(Level.SEVERE, "Error fetching all class", e);
         }
         return lessones;
+    }
+
+    public int countClasses(String searchLesson, String searchSubjectId) {
+        String query = "SELECT COUNT(*) FROM lesson WHERE 1=1";
+        if (searchLesson != null && !searchLesson.isEmpty()) {
+            query += " AND title LIKE ?";
+        }
+        if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+            query += " AND subject_id = ?";
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            if (searchLesson != null && !searchLesson.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchLesson + "%");
+            }
+            if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(searchSubjectId));
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    //search lesson
+    public List<Lesson> searchAndSortClasses(String searchLesson, String searchSubjectId, String sortField, String sortOrder, int page, int size) {
+        String query = "SELECT * FROM lesson WHERE 1=1";
+        if (searchLesson != null && !searchLesson.isEmpty()) {
+            query += " AND title LIKE ?";
+        }
+        if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+            query += " AND subject_id = ?";
+        }
+        query += " ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            if (searchLesson != null && !searchLesson.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchLesson + "%");
+            }
+            if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(searchSubjectId));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex, (page - 1) * size);
+
+            ResultSet rs = ps.executeQuery();
+            List<Lesson> lessonList = new ArrayList<>();
+            while (rs.next()) {
+                Lesson lesson = new Lesson(
+                        rs.getInt("lesson_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("title"),
+                        rs.getBoolean("status")
+                );
+                lessonList.add(lesson);
+            }
+            return lessonList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Lesson> searchClasses(String searchLesson, String searchSubjectId, int page, int size) {
+        String query = "SELECT * FROM lesson WHERE 1=1";
+
+        if (searchLesson != null && !searchLesson.isEmpty()) {
+            query += " AND title LIKE ?";
+        }
+        if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+            query += " AND subject_id = ?";
+        }
+
+        query += " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            int paramIndex = 1;
+            if (searchLesson != null && !searchLesson.isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchLesson + "%");
+            }
+            if (searchSubjectId != null && !searchSubjectId.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(searchSubjectId));
+            }
+            ps.setInt(paramIndex++, size);
+            ps.setInt(paramIndex++, (page - 1) * size);
+
+            ResultSet rs = ps.executeQuery();
+            List<Lesson> lessonList = new ArrayList<>();
+            while (rs.next()) {
+                Lesson lesson = new Lesson(rs.getInt("lesson_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("title"),
+                        rs.getBoolean("status"));
+                // Populate class object with data from result set
+                lessonList.add(lesson);
+            }
+            return lessonList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
+    }
+
+    public List<Lesson> sortLesson(String sortField, String sortOrder, int page, int size) {
+        // Calculate the offset
+        int offset = (page - 1) * size;
+
+        // Update the query to include pagination
+        String query = "SELECT * FROM lesson ORDER BY " + sortField + " " + sortOrder + " LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            // Set the limit and offset parameters
+            ps.setInt(1, size);
+            ps.setInt(2, offset);
+
+            ResultSet rs = ps.executeQuery();
+            List<Lesson> lessonList = new ArrayList<>();
+
+            while (rs.next()) {
+                Lesson lesson = new Lesson(rs.getInt("lesson_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("title"),
+                        rs.getBoolean("status"));
+                // Populate class object with data from result set
+                lessonList.add(lesson);
+            }
+
+            return lessonList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return Collections.emptyList();
+    }
+
+    public List<Lesson> getAllLesson(int page, int size) {
+        String query = "SELECT * FROM lesson LIMIT ? OFFSET ?";
+
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, size);
+            ps.setInt(2, (page - 1) * size);
+            ResultSet rs = ps.executeQuery();
+            List<Lesson> lessonList = new ArrayList<>();
+            while (rs.next()) {
+                Lesson lesson = new Lesson(
+                        rs.getInt("lesson_id"),
+                        rs.getInt("subject_id"),
+                        rs.getString("title"),
+                        rs.getBoolean("status"));
+                // Populate class object with data from result set
+                lessonList.add(lesson);
+            }
+            return lessonList;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 
     public Lesson getLessonById(int lessonId) {
