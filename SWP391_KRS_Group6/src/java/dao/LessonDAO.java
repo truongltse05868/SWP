@@ -44,6 +44,79 @@ public class LessonDAO extends DBConnect {
         return lessones;
     }
 
+    public boolean isClassNameExists(String title, int lesson_id) {
+        String query = "SELECT COUNT(*) FROM lesson WHERE title = ? AND lesson_id <> ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, title);
+            ps.setInt(2, lesson_id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "loi roi!", e);
+        }
+        return false;
+    }
+
+    //add Lesson
+    public boolean addLesson(Lesson newLesson) {
+        String sql = "INSERT INTO lesson (title, subject_id, status) VALUES (?, ?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, newLesson.getTitle());
+            ps.setInt(2, newLesson.getSubject_id());
+            ps.setBoolean(3, newLesson.isStatus());
+//            statement.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.log(Level.INFO, "lesson added successfully");
+                return true;
+            } else {
+                logger.log(Level.WARNING, "No rows affected");
+                return false;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching all class", e);
+            return false;
+        }
+    }
+
+    public Lesson getLessonById(int lessonId) {
+        Lesson lessons = null;
+        String query = "SELECT * FROM lesson WHERE lesson_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, lessonId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    lessons = new Lesson(
+                            rs.getInt("lesson_id"),
+                            rs.getInt("subject_id"),
+                            rs.getString("title"),
+                            rs.getBoolean("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching lesson by ID", e);
+        }
+        return lessons;
+    }
+
+    public boolean updateLesson(Lesson newLesson) {
+        String query = "UPDATE lesson SET subject_id = ?,  status = ?, title = ? WHERE lesson_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, newLesson.getSubject_id());
+            ps.setBoolean(2, newLesson.isStatus());
+            ps.setString(3, newLesson.getTitle());
+            ps.setInt(4, newLesson.getLesson_id());
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error updating lesson", e);
+            return false;
+        }
+    }
+
     public int countClasses(String searchLesson, String searchSubjectId) {
         String query = "SELECT COUNT(*) FROM lesson WHERE 1=1";
         if (searchLesson != null && !searchLesson.isEmpty()) {
@@ -207,26 +280,26 @@ public class LessonDAO extends DBConnect {
         return Collections.emptyList();
     }
 
-    public Lesson getLessonById(int lessonId) {
-        Lesson lesson = null;
-        String query = "SELECT * FROM lesson WHERE lesson_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(query)) {
-            ps.setInt(1, lessonId);
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    lesson = new Lesson(
-                            rs.getInt("lesson_id"),
-                            rs.getInt("subject_id"),
-                            rs.getString("title"),
-                            rs.getBoolean("status")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            logger.log(Level.SEVERE, "Error fetching user by ID", e);
-        }
-        return lesson;
-    }
+//    public Lesson getLessonById(int lessonId) {
+//        Lesson lesson = null;
+//        String query = "SELECT * FROM lesson WHERE lesson_id = ?";
+//        try (PreparedStatement ps = connection.prepareStatement(query)) {
+//            ps.setInt(1, lessonId);
+//            try (ResultSet rs = ps.executeQuery()) {
+//                if (rs.next()) {
+//                    lesson = new Lesson(
+//                            rs.getInt("lesson_id"),
+//                            rs.getInt("subject_id"),
+//                            rs.getString("title"),
+//                            rs.getBoolean("status")
+//                    );
+//                }
+//            }
+//        } catch (SQLException e) {
+//            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+//        }
+//        return lesson;
+//    }
 
     public List<Lesson> getLessonBySubject(int subjectId) {
         Lesson lesson = null;

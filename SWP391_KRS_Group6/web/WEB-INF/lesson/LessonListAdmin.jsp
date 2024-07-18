@@ -51,6 +51,7 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
         <script>
             function sendPostRequestSort2(sortField, searchLesson, searchSubjectId, sortOrder) {
                 const form = document.createElement('form');
@@ -205,11 +206,29 @@
                                     <table class="table table-bordered">
 
                                         <tr>
-                                            <th><a href="#" onclick="sendPostRequestSort2('title', '${searchLesson}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Title</a></th>
-                                            <th><a href="#" onclick="sendPostRequestSort2('subject_id', '${searchLesson}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Subject</a></th>
-                                            <th><a href="#" onclick="sendPostRequestSort2('status', '${searchLesson}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Status</a></th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('title', '${searchLesson}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Title</a>
+                                                <c:choose>
+                                                    <c:when test="${sortField == 'title'}">
+                                                        <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                    </c:when>
+                                                </c:choose>
+                                            </th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('subject_id', '${searchLesson}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Subject</a>
+                                                <c:choose>
+                                                    <c:when test="${sortField == 'subject_id'}">
+                                                        <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                    </c:when>
+                                                </c:choose>
+                                            </th>
+                                            <th><a href="#" onclick="sendPostRequestSort2('status', '${searchLesson}', '${searchSubjectId}', '${sortOrder == 'asc' ? 'desc' : 'asc'}'); return false;">Status</a>
+                                                <c:choose>
+                                                    <c:when test="${sortField == 'status'}">
+                                                        <i class="bi bi-arrow-${sortOrder == 'asc' ? 'up' : 'down'}"></i>
+                                                    </c:when>
+                                                </c:choose>
+                                            </th>
                                             <th>Update</th>
-                                            <th>Detail</th>
+                                            <!--<th>Detail</th>-->
                                         </tr>
                                         <c:forEach var="lessonList" items="${lessons}">
                                             <tr>
@@ -240,19 +259,19 @@
                                                 </td>
                                                 <td>
                                                     <form action="${pageContext.request.contextPath}/LessonController" method="post">
-                                                        <input type="hidden" name="classId" value="${lessonList.lesson_id}" />
+                                                        <input type="hidden" name="lessonId" value="${lessonList.lesson_id}" />
                                                         <input type="hidden" name="action" value="updateLessonPage">
                                                         <button class="btn btn-primary btn-sm" type="submit">Edit</button>
                                                     </form>
                                                 </td>
-                                                <td>
-                                                    <form action="${pageContext.request.contextPath}/LessonController" method="post">
-                                                        <input type="hidden" name="classId" value="${lessonList.lesson_id}" />
-                                                        <input type="hidden" name="action" value="LessonDetail">
-                                                        <!--<input type="hidden" name="page" value="${currentPage}">-->
-                                                        <button class="btn btn-primary btn-sm" type="submit">Detail</button>
-                                                    </form>
-                                                </td>
+                                                <!--                                                <td>
+                                                                                                    <form action="${pageContext.request.contextPath}/LessonController" method="post">
+                                                                                                        <input type="hidden" name="classId" value="${lessonList.lesson_id}" />
+                                                                                                        <input type="hidden" name="action" value="LessonDetail">
+                                                                                                        <input type="hidden" name="page" value="${currentPage}">
+                                                                                                        <button class="btn btn-primary btn-sm" type="submit">Detail</button>
+                                                                                                    </form>
+                                                                                                </td>-->
                                             </tr>
                                         </c:forEach>
                                     </table>

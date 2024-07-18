@@ -1,0 +1,472 @@
+<%-- 
+    Document   : addUser
+    Created on : May 24, 2024, 12:14:43 AM
+    Author     : simon
+--%>
+
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<!DOCTYPE html>
+<html lang="en">
+
+    <!-- Mirrored from educhamp.themetrades.com/demo/admin/add-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:09:05 GMT -->
+    <head>
+
+        <!-- META ============================================= -->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="keywords" content="" />
+        <meta name="author" content="" />
+        <meta name="robots" content="" />
+
+        <!-- DESCRIPTION -->
+        <meta name="description" content="EduChamp : Education HTML Template" />
+
+        <!-- OG -->
+        <meta property="og:title" content="EduChamp : Education HTML Template" />
+        <meta property="og:description" content="EduChamp : Education HTML Template" />
+        <meta property="og:image" content="" />
+        <meta name="format-detection" content="telephone=no">
+
+        <!-- FAVICONS ICON ============================================= -->
+        <link rel="icon" href="../error-404.html" type="image/x-icon" />
+        <link rel="shortcut icon" type="image/x-icon" href="admin/assets/images/favicon.png" />
+
+        <!-- PAGE TITLE HERE ============================================= -->
+        <title>EduChamp : Add Class </title>
+
+        <!-- MOBILE SPECIFIC ============================================= -->
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!--[if lt IE 9]>
+        <script src="assets/js/html5shiv.min.js"></script>
+        <script src="assets/js/respond.min.js"></script>
+        <![endif]-->
+
+        <!-- All PLUGINS CSS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="admin/assets/css/assets.css">
+        <link rel="stylesheet" type="text/css" href="admin/assets/vendors/calendar/fullcalendar.css">
+
+        <!-- TYPOGRAPHY ============================================= -->
+        <link rel="stylesheet" type="text/css" href="admin/assets/css/typography.css">
+
+        <!-- SHORTCODES ============================================= -->
+        <link rel="stylesheet" type="text/css" href="admin/assets/css/shortcodes/shortcodes.css">
+
+        <!-- STYLESHEETS ============================================= -->
+        <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
+        <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
+        <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <script>
+            function sendPostRequest(action) {
+                // Tạo form ẩn
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", "userController");
+
+                // Tạo input ẩn cho action
+                var hiddenField = document.createElement("input");
+                hiddenField.setAttribute("type", "hidden");
+                hiddenField.setAttribute("name", "action");
+                hiddenField.setAttribute("value", action);
+
+                // Thêm input ẩn vào form
+                form.appendChild(hiddenField);
+
+                // Thêm form vào body và submit
+                document.body.appendChild(form);
+                form.submit();
+            }
+            function showAlert(message) {
+                alert(message);
+            }
+        </script>
+        <style>
+            .toast-container {
+                position: fixed;
+                top: 80px; /* Điều chỉnh giá trị top để đặt vị trí thấp hơn */
+                right: 20px;
+                z-index: 1050;
+            }
+            .toast {
+                opacity: 0.95;
+                font-size: 1.2em; /* Kích thước hợp lý cho toast */
+                background-color: #4CAF50; /* Nền màu xanh lá cây tươi */
+                color: white; /* Màu chữ trắng */
+                border: none; /* Loại bỏ viền */
+                border-radius: 10px; /* Đường viền cong */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Hiệu ứng đổ bóng */
+                padding: 0;
+            }
+            .toast-header {
+                font-size: 1.4em; /* Tăng kích thước tiêu đề của toast */
+                background-color: #388E3C; /* Nền màu xanh đậm cho tiêu đề */
+                color: white; /* Màu chữ trắng */
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Viền dưới tiêu đề */
+                border-top-left-radius: 10px; /* Đường viền cong góc trên bên trái */
+                border-top-right-radius: 10px; /* Đường viền cong góc trên bên phải */
+                padding: 10px 15px; /* Thêm khoảng cách bên trong */
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .toast-body {
+                font-size: 1.2em; /* Tăng kích thước nội dung của toast */
+                padding: 15px; /* Thêm khoảng cách bên trong */
+                border-bottom-left-radius: 10px; /* Đường viền cong góc dưới bên trái */
+                border-bottom-right-radius: 10px; /* Đường viền cong góc dưới bên phải */
+            }
+            .toast .close {
+                color: white; /* Màu chữ trắng */
+                background: none; /* Loại bỏ nền */
+                border: none; /* Loại bỏ viền */
+                font-size: 1.5em; /* Kích thước nút đóng */
+                padding: 0;
+                margin: 0;
+            }
+        </style>
+
+    </head>
+    <body class="ttr-opened-sidebar ttr-pinned-sidebar">
+        <!-- header start -->
+        <header class="ttr-header">
+            <div class="ttr-header-wrapper">
+                <!--sidebar menu toggler start -->
+                <div class="ttr-toggle-sidebar ttr-material-button">
+                    <i class="ti-close ttr-open-icon"></i>
+                    <i class="ti-menu ttr-close-icon"></i>
+                </div>
+                <!--sidebar menu toggler end -->
+                <!--logo start -->
+                <div class="ttr-logo-box">
+                    <div>
+                        <a href="Home" class="ttr-logo">
+                            <img alt="" class="ttr-logo-mobile" src="admin/assets/images/logo-mobile.png" width="30" height="30">
+                            <img alt="" class="ttr-logo-desktop" src="admin/assets/images/logo-white.png" width="160" height="27">
+                        </a>
+                    </div>
+                </div>
+                <!--logo end -->
+                <div class="ttr-header-menu">
+                    <!-- header left menu start -->
+                    <ul class="ttr-header-navigation">
+                        <li>
+                            <a href="Home" class="ttr-material-button ttr-submenu-toggle">HOME</a>
+                        </li>
+                        <li>
+                            <a href="#" class="ttr-material-button ttr-submenu-toggle">QUICK MENU <i class="fa fa-angle-down"></i></a>
+                            <div class="ttr-header-submenu">
+                                <ul>
+                                    <li><a href="../courses.html">Our Courses</a></li>
+                                    <li><a href="../event.html">New Event</a></li>
+                                    <li><a href="../membership.html">Membership</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- header left menu end -->
+                </div>
+                <div class="ttr-header-right ttr-with-seperator">
+                    <!-- header right menu start -->
+                    <ul class="ttr-header-navigation">
+                        <li>
+                            <a href="#" class="ttr-material-button ttr-search-toggle"><i class="fa fa-search"></i></a>
+                        </li>
+                        <li>
+                            <a href="#" class="ttr-material-button ttr-submenu-toggle"><i class="fa fa-bell"></i></a>
+                            <div class="ttr-header-submenu noti-menu">
+                                <div class="ttr-notify-header">
+                                    <span class="ttr-notify-text-top">9 New</span>
+                                    <span class="ttr-notify-text">User Notifications</span>
+                                </div>
+                                <div class="noti-box-list">
+                                    <ul>
+                                        <li>
+                                            <span class="notification-icon dashbg-gray">
+                                                <i class="fa fa-check"></i>
+                                            </span>
+                                            <span class="notification-text">
+                                                <span>Sneha Jogi</span> sent you a message.
+                                            </span>
+                                            <span class="notification-time">
+                                                <a href="#" class="fa fa-close"></a>
+                                                <span> 02:14</span>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="notification-icon dashbg-yellow">
+                                                <i class="fa fa-shopping-cart"></i>
+                                            </span>
+                                            <span class="notification-text">
+                                                <a href="#">Your order is placed</a> sent you a message.
+                                            </span>
+                                            <span class="notification-time">
+                                                <a href="#" class="fa fa-close"></a>
+                                                <span> 7 Min</span>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="notification-icon dashbg-red">
+                                                <i class="fa fa-bullhorn"></i>
+                                            </span>
+                                            <span class="notification-text">
+                                                <span>Your item is shipped</span> sent you a message.
+                                            </span>
+                                            <span class="notification-time">
+                                                <a href="#" class="fa fa-close"></a>
+                                                <span> 2 May</span>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="notification-icon dashbg-green">
+                                                <i class="fa fa-comments-o"></i>
+                                            </span>
+                                            <span class="notification-text">
+                                                <a href="#">Sneha Jogi</a> sent you a message.
+                                            </span>
+                                            <span class="notification-time">
+                                                <a href="#" class="fa fa-close"></a>
+                                                <span> 14 July</span>
+                                            </span>
+                                        </li>
+                                        <li>
+                                            <span class="notification-icon dashbg-primary">
+                                                <i class="fa fa-file-word-o"></i>
+                                            </span>
+                                            <span class="notification-text">
+                                                <span>Sneha Jogi</span> sent you a message.
+                                            </span>
+                                            <span class="notification-time">
+                                                <a href="#" class="fa fa-close"></a>
+                                                <span> 15 Min</span>
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+                            <div class="ttr-header-submenu">
+                                <ul>
+                                    <li><a href="user-profile.html">My profile</a></li>
+                                    <li><a href="list-view-calendar.html">Activity</a></li>
+                                    <li><a href="mailbox.html">Messages</a></li>
+                                    <li><a href="../login.html">Logout</a></li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="ttr-hide-on-mobile">
+                            <a href="#" class="ttr-material-button"><i class="ti-layout-grid3-alt"></i></a>
+                            <div class="ttr-header-submenu ttr-extra-menu">
+                                <a href="#">
+                                    <i class="fa fa-music"></i>
+                                    <span>Musics</span>
+                                </a>
+                                <a href="#">
+                                    <i class="fa fa-youtube-play"></i>
+                                    <span>Videos</span>
+                                </a>
+                                <a href="#">
+                                    <i class="fa fa-envelope"></i>
+                                    <span>Emails</span>
+                                </a>
+                                <a href="#">
+                                    <i class="fa fa-book"></i>
+                                    <span>Reports</span>
+                                </a>
+                                <a href="#">
+                                    <i class="fa fa-smile-o"></i>
+                                    <span>Persons</span>
+                                </a>
+                                <a href="#">
+                                    <i class="fa fa-picture-o"></i>
+                                    <span>Pictures</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- header right menu end -->
+                </div>
+                <!--header search panel start -->
+                <div class="ttr-search-bar">
+                    <form class="ttr-search-form">
+                        <div class="ttr-search-input-wrapper">
+                            <input type="text" name="qq" placeholder="search something..." class="ttr-search-input">
+                            <button type="submit" name="search" class="ttr-search-submit"><i class="ti-arrow-right"></i></button>
+                        </div>
+                        <span class="ttr-search-close ttr-search-toggle">
+                            <i class="ti-close"></i>
+                        </span>
+                    </form>
+                </div>
+                <!--header search panel end -->
+            </div>
+        </header>
+        <!-- header end -->
+        <!-- Left sidebar menu start -->
+        <div class="ttr-sidebar">
+            <div class="ttr-sidebar-wrapper content-scroll">
+                <!-- side menu logo start -->
+                <div class="ttr-sidebar-logo">
+                    <a href="#"><img alt="" src="admin/assets/images/logo.png" width="122" height="27"></a>
+                    <!-- <div class="ttr-sidebar-pin-button" title="Pin/Unpin Menu">
+                            <i class="material-icons ttr-fixed-icon">gps_fixed</i>
+                            <i class="material-icons ttr-not-fixed-icon">gps_not_fixed</i>
+                    </div> -->
+                    <div class="ttr-sidebar-toggle-button">
+                        <i class="ti-arrow-left"></i>
+                    </div>
+                </div>
+                <!-- side menu logo end -->
+                <!-- sidebar menu start -->
+                <jsp:include page="../DashboardNav.jsp"/>
+                <!-- sidebar menu end -->
+            </div>
+        </div>
+        <!-- Left sidebar menu end -->
+
+        <!--Main container start -->
+        <main class="ttr-wrapper">
+            <div class="container-fluid">
+                <div class="db-breadcrumb">
+                    <h4 class="breadcrumb-title">Add Lesson</h4>
+                    <ul class="db-breadcrumb-list">
+                        <li><a href="#"><i class="fa fa-home"></i>Home</a></li>
+                        <li>Add Lesson</li>
+                    </ul>
+                </div>	
+                <div class="row">
+                    <!-- Your Profile Views Chart -->
+                    <div class="col-lg-12 m-b30">
+                        <div class="widget-box">
+                            <div class="wc-title">
+                                <h4>Add Lesson</h4>
+                            </div>
+                            <div class="widget-inner">
+                                <form class="edit-profile m-b30" action="${pageContext.request.contextPath}/LessonController" method="post">
+                                    <input type="hidden" name="action" value="addLesson"> 
+                                    <div class="">
+                                        <div class="form-group row">
+                                            <div class="col-sm-10  ml-auto">
+                                                <h3>Lesson Info</h3>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Lesson Title</label>
+                                            <div class="col-sm-3">
+                                                <input class="form-control" name="lessonName" type="text" value="${title}">
+                                                <span class="error" style="font-size: smaller;">${errors['blankLessonName']}</span>
+                                                <span class="error" style="font-size: smaller;">${errors['duplicateLessonName']}</span>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <label class="col-sm-2 col-form-label">Status</label>
+                                            <div class="col-sm-1">
+                                                <input class="form-check-input" id="activeStatus" name="status" type="radio" value="1" ${lessons.status ? 'checked' : ''}>
+                                                <label class="form-check-label" for="activeStatus">Active</label>
+                                            </div>
+                                            <div class="col-sm-1">
+                                                <input class="form-check-input" id="inactiveStatus" name="status" type="radio" value="0" ${!lessons.status ? 'checked' : ''}>
+                                                <label class="form-check-label" for="inactiveStatus">Inactive</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+
+                                            <label class="col-sm-2 col-form-label">Subject</label>
+                                            <div class="col-sm-2">
+                                                <select class="form-control" name="subjectId">
+                                                    <c:forEach var="subject" items="${subject}">
+                                                        <option value="${subject.subject_id}"<c:if test="${setting.subject_id == subject_id}">selected</c:if>>${subject.subject_name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <button type="submit" class="btn-secondry add-item m-r5"><i class="fa fa-fw fa-plus-circle"></i>Add Lesson</button>
+                                        </div>
+                                        <!--hiển thị thông báo-->
+                                        <c:if test="${not empty errorMessage}">
+                                            <div class="toast-container">
+                                                <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
+                                                    <div class="toast-header">
+                                                        <strong class="mr-auto">Thông báo</strong>
+                                                        <button type="button" class="close" data-dismiss="toast" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="toast-body">
+                                                        ${errorMessage} 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </c:if>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Your Profile Views Chart END-->
+                </div>
+            </div>
+        </main>
+        <div class="ttr-overlay"></div>
+
+        <!-- External JavaScripts -->
+        <script src="admin/assets/js/jquery.min.js"></script>
+        <script src="admin/assets/vendors/bootstrap/js/popper.min.js"></script>
+        <script src="admin/assets/vendors/bootstrap/js/bootstrap.min.js"></script>
+        <script src="admin/assets/vendors/bootstrap-select/bootstrap-select.min.js"></script>
+        <script src="admin/assets/vendors/bootstrap-touchspin/jquery.bootstrap-touchspin.js"></script>
+        <script src="admin/assets/vendors/magnific-popup/magnific-popup.js"></script>
+        <script src="admin/assets/vendors/counter/waypoints-min.js"></script>
+        <script src="admin/assets/vendors/counter/counterup.min.js"></script>
+        <script src="admin/assets/vendors/imagesloaded/imagesloaded.js"></script>
+        <script src="admin/assets/vendors/masonry/masonry.js"></script>
+        <script src="admin/assets/vendors/masonry/filter.js"></script>
+        <script src="admin/assets/vendors/owl-carousel/owl.carousel.js"></script>
+        <script src='admin/assets/vendors/scroll/scrollbar.min.js'></script>
+        <script src="admin/assets/js/functions.js"></script>
+        <script src="admin/assets/vendors/chart/chart.min.js"></script>
+        <script src="admin/assets/js/admin.js"></script>
+        <script src='admin/assets/vendors/switcher/switcher.js'></script>
+        <script>
+            // Pricing add
+            function newMenuItem() {
+                var newElem = $('tr.list-item').first().clone();
+                newElem.find('input').val('');
+                newElem.appendTo('table#item-add');
+            }
+            if ($("table#item-add").is('*')) {
+                $('.add-item').on('click', function (e) {
+                    e.preventDefault();
+                    newMenuItem();
+                });
+                $(document).on("click", "#item-add .delete", function (e) {
+                    e.preventDefault();
+                    $(this).parent().parent().parent().parent().remove();
+                });
+            }
+        </script>
+        <!-- jQuery and Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                var successMessage = "${successMessage}";
+                if (successMessage) {
+                    $('#successToast').toast({
+                        delay: 5000
+                    });
+                    $('#successToast').toast('show');
+                }
+            });
+        </script>
+    </body>
+
+    <!-- Mirrored from educhamp.themetrades.com/demo/admin/add-listing.html by HTTrack Website Copier/3.x [XR&CO'2014], Fri, 22 Feb 2019 13:09:05 GMT -->
+</html>
