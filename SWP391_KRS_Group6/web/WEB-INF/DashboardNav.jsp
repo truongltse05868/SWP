@@ -72,6 +72,25 @@
             document.body.appendChild(form);
             form.submit();
         }
+        function sendPostRequestLesson(action) {
+            // Tạo form ẩn
+            var form = document.createElement("form");
+            form.setAttribute("method", "post");
+            form.setAttribute("action", "LessonController");
+
+            // Tạo input ẩn cho action
+            var hiddenField = document.createElement("input");
+            hiddenField.setAttribute("type", "hidden");
+            hiddenField.setAttribute("name", "action");
+            hiddenField.setAttribute("value", action);
+
+            // Thêm input ẩn vào form
+            form.appendChild(hiddenField);
+
+            // Thêm form vào body và submit
+            document.body.appendChild(form);
+            form.submit();
+        }
     </script>
     <!-- header start -->
     <header class="ttr-header">
@@ -281,12 +300,12 @@
                         <span class="ttr-label">Dashboard</span>
                     </a>
                 </li>
-                <li>
+<!--                <li>
                     <a href="courses.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-book"></i></span>
                         <span class="ttr-label">Courses</span>
                     </a>
-                </li>
+                </li>-->
                 <li>
                     <a href="event.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-calendar"></i></span>
@@ -324,27 +343,13 @@
                         </span>
                     </a>
                 </li>
-<!--                <li>
-                    <a href="user.html" class="ttr-material-button">
-                        <span class="ttr-icon"><i class="ti-layout-accordion-list"></i></span>
-                        <span class="ttr-label">Class</span>
-                        <span class="ttr-arrow-icon"><i class="fa fa-angle-right"></i></span>
+                <li>
+                    <a href="LessonController" class="ttr-material-button" onclick="sendPostRequestLesson('lessonList'); return false;">
+                        <span class="ttr-icon"><i class="ti-book"></i></span>
+                        <span class="ttr-label">Lesson
+                        </span>
                     </a>
-                    <ul>
-                        <li>
-                            <a href="UserList" class="ttr-material-button" onclick="sendPostRequestClass('classList'); return false;">
-                                <span class="ttr-label">Class List
-                                </span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="AddUser" class="ttr-material-button" onclick="sendPostRequestClass('addClassPage'); return false;">
-                                <span class="ttr-label">Add Class
-                                </span>
-                            </a>
-                        </li>
-                    </ul>
-                </li>-->
+                </li>
                 <li>
                     <a href="../login.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-lock"></i></span>
