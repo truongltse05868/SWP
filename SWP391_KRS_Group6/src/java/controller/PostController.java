@@ -185,13 +185,15 @@ public class PostController extends HttpServlet {
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "DESC";
             String keyword = request.getParameter("keyword");
             List<Post> subjec;
-
+List<Post> Recentposts;
             List<Post> posts;
             if (keyword != null && !keyword.trim().isEmpty()) {
                 posts = postDAO.searchBlog(keyword, sortBy, sortOrder, page, pageSize);
+                Recentposts = postDAO.getAllBlogsSortedBy("post_id", "DESC", 1, 5);
                 subjec = postDAO.getAllBlog(1);
             } else {
                 posts = postDAO.getAllBlogsSortedBy(sortBy, sortOrder, page, pageSize);
+                Recentposts = postDAO.getAllBlogsSortedBy("post_id", "DESC", 1,5);
                 subjec = postDAO.getAllBlog(1);
             }
             List<User> users = userDAO.getAllUsers();
@@ -200,6 +202,7 @@ public class PostController extends HttpServlet {
             request.setAttribute("maxPage", maxPage);
 
             request.setAttribute("posts", posts);
+             request.setAttribute("Recentposts", Recentposts);
             request.setAttribute("user", users);
             request.setAttribute("currentPage", page);
             request.setAttribute("pageSize", pageSize);
@@ -222,8 +225,10 @@ public class PostController extends HttpServlet {
             Post post = dao.getPostById(pid);
             UserDAO userDAO = new UserDAO();
             List<User> user = userDAO.getAllUsers();
+            List<Post> Recentposts = dao.getAllBlogsSortedBy("post_id", "DESC", 1, 5);
             request.setAttribute("user", user);
             request.setAttribute("post", post);
+            request.setAttribute("Recentposts", Recentposts);
 
             request.getRequestDispatcher("WEB-INF/Post/BlogDetail.jsp").forward(request, response);
 
@@ -312,7 +317,7 @@ public class PostController extends HttpServlet {
 
                 // Fetch and set the list of posts
                 List<Post> posts = dao.getAllBlog(1);
-                request.setAttribute("postList", posts);
+                request.setAttribute("posts", posts);
 
                 if (author == 1) {
                     request.getRequestDispatcher("WEB-INF/Post/PostList.jsp").forward(request, response);

@@ -55,6 +55,7 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/style.css">
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     </head>
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
@@ -93,10 +94,24 @@
                                     <table class="table table-striped my-3">
                                         <thead>
                                             <tr>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_id&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">ID</a></th>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=setting_name&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Name</a></th>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=type&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Type</a></th>
-                                                <th><a href="SettingController?service=listAllSetting&sortColumn=description&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">Description</a></th>
+                                                <th>
+                                                    <a href="SettingController?service=listAllSetting&sortColumn=setting_id&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                        ID
+                                                        <i class="fas fa-arrow-${sortColumn == 'setting_id' ? (sortOrder == 'asc' ? 'up' : 'down') : ''}"></i>
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="SettingController?service=listAllSetting&sortColumn=setting_name&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                        Name
+                                                        <i class="fas fa-arrow-${sortColumn == 'setting_name' ? (sortOrder == 'asc' ? 'up' : 'down') : ''}"></i>
+                                                    </a>
+                                                </th>
+                                                <th>
+                                                    <a href="SettingController?service=listAllSetting&sortColumn=type&page=${currentPage}&sortOrder=${sortOrder == 'asc' ? 'desc' : 'asc'}">
+                                                        Type
+                                                        <i class="fas fa-arrow-${sortColumn == 'type' ? (sortOrder == 'asc' ? 'up' : 'down') : ''}"></i>
+                                                    </a>
+                                                </th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -104,21 +119,20 @@
                                         <tbody>
                                             <c:forEach var="setting" items="${settings}">
                                                 <tr>
-                                                    <td>${setting.settingId}</td>
-                                                    <td>${setting.settingName}</td>
-                                                    <td>${setting.type}</td>
-                                                    <td>${setting.description}</td>
+                                                    <td><c:out value="${setting.settingId}"/></td>
+                                                    <td><c:out value="${setting.settingName}"/></td>
+                                                    <td><c:out value="${setting.type}"/></td>
                                                     <td>
                                                         <form method="post" action="SettingController" style="display:inline;">
                                                             <input type="hidden" name="service" value="toggleStatus">
                                                             <input type="hidden" name="settingId" value="${setting.settingId}">
-                                                            <button type="submit" class="btn btn-link p-0">
+                                                            <button type="submit" class=" btn-link p-0">
                                                                 <c:choose>
                                                                     <c:when test="${setting.status}">
-                                                                        Active
+                                                                        <span class="badge badge-success">Active</span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        Inactive
+                                                                        <span class="badge badge-danger">Inactive</span>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </button>
@@ -136,7 +150,7 @@
                                         </tbody>
                                     </table>
                                     <div class="pagination-bx rounded-sm gray clearfix">
-                                        
+
                                         <ul class="pagination">
                                             <c:if test="${currentPage > 1}">
                                                 <li class="page-item">

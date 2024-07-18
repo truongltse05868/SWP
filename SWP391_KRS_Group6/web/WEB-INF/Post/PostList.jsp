@@ -130,20 +130,24 @@
                                         <tbody>
                                             <c:forEach var="post" items="${posts}">
                                                 <tr>
-                                                    <td>${post.postId}</td>
-                                                    <td>${post.title}</td>
-                                                    <td>${post.thumbnailUrl}</td>
+                                                    <td><c:out value="${post.postId}"/></td>
+                                                    <td><c:out value="${post.title}"/></td>
+                                                    <td>  
+                                                        <c:if test="${not empty post.thumbnailUrl}">
+                                                            <img src="<c:out value='${post.thumbnailUrl}'/>" alt="Thumbnail" style="max-width: 100px; max-height: 100px;">
+                                                        </c:if>
+                                                    </td>
                                                     <td>
                                                         <form method="post" action="PostController" style="display:inline;">
                                                             <input type="hidden" name="service" value="toggleStatus">
                                                             <input type="hidden" name="postId" value="${post.postId}">
-                                                            <button type="submit" class="btn btn-link p-0">
+                                                            <button type="submit" class="btn-link p-0">
                                                                 <c:choose>
                                                                     <c:when test="${post.status}">
-                                                                        Published
+                                                                        <span class="badge badge-success">Published</span>
                                                                     </c:when>
                                                                     <c:otherwise>
-                                                                        Withdraw 
+                                                                        <span class="badge badge-danger">Unpublished</span>
                                                                     </c:otherwise>
                                                                 </c:choose>
                                                             </button>

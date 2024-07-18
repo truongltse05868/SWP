@@ -141,7 +141,7 @@
                                                                                 </div>
                                                                             </div>
                                                                         </form>-->
-                                    <form method="post" action="userController">
+                                    <form method="post" action="userController" class="col-sm-10">
                                         <input type="hidden" name="action" value="userList">
                                         <div class="row">
                                             <div class="col-sm-4">
@@ -172,15 +172,9 @@
                                             <div class="col-sm-2">
                                                 <button class="btn btn-primary" type="submit">Search</button>
                                             </div>
-
-                                            
-
-
                                         </div>
-
                                     </form>
-
-                                    <form class="col-sm-3 text-right" action="userController" method="post">
+                                    <form class="col-sm-2 text-right" action="userController" method="post">
                                         <input type="hidden" name="action" value="addUserPage">
                                         <button class="btn btn-primary btn-sm" type="submit" ><i class="fa fa-fw fa-plus-circle"></i>Add User</button>
                                     </form>

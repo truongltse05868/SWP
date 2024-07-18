@@ -210,6 +210,7 @@
                                                 </form>
                                             </div>
                                         </div>
+                                        <jsp:include page="/WEB-INF/Post/SideBar.jsp"/>
                                     </aside>
                                 </div>
                                 <!-- Side bar END -->

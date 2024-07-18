@@ -93,7 +93,7 @@
                         <div class="container">
                             <div class="row">
                                 <!-- Left part start -->
-                                <div class="col-lg-12 col-xl-12">
+                                <div class="col-lg-8 col-xl-8">
                                     <%
                                        Post s = (Post) request.getAttribute("post");
                                        List<User> users = (List<User>) request.getAttribute("user");
@@ -140,25 +140,13 @@
                                 </div>
                                 <!-- Left part END -->
                                 <!-- Side bar start -->
-<!--                                <div class="col-lg-4 col-xl-4">
+                                <div class="col-lg-4 col-xl-4">
                                     <aside  class="side-bar sticky-top">
                                         <div class="widget">
-                                            <h6 class="widget-title">Search</h6>
-                                            <div class="search-bx style-1">
-                                                <form role="search" method="post">
-                                                    <div class="input-group">
-                                                        <input name="text" class="form-control" placeholder="Enter your keywords..." type="text">
-                                                        <span class="input-group-btn">
-                                                            <button type="submit" class="fa fa-search text-primary"></button>
-                                                        </span> 
-                                                    </div>
-                                                </form>
-                                            </div>
+                                           <jsp:include page="/WEB-INF/Post/SideBar.jsp"/>
                                         </div>
-
-
                                     </aside>
-                                </div>-->
+                                </div>
                                 <!-- Side bar END -->
                             </div>
                         </div>
