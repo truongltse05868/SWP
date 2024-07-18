@@ -52,56 +52,6 @@
         <link rel="stylesheet" type="text/css" href="admin/assets/css/dashboard.css">
         <link class="skin" rel="stylesheet" type="text/css" href="admin/assets/css/color/color-1.css">
         <script>
-            function sendPostRequest(action) {
-                // Tạo form ẩn
-                var form = document.createElement("form");
-                form.setAttribute("method", "post");
-                form.setAttribute("action", "userController");
-
-                // Tạo input ẩn cho action
-                var hiddenField = document.createElement("input");
-                hiddenField.setAttribute("type", "hidden");
-                hiddenField.setAttribute("name", "action");
-                hiddenField.setAttribute("value", action);
-
-                // Thêm input ẩn vào form
-                form.appendChild(hiddenField);
-
-                // Thêm form vào body và submit
-                document.body.appendChild(form);
-                form.submit();
-            }
-            function sendPostRequestSort(sortField, searchUsername) {
-                const form = document.createElement("form");
-                form.method = "POST";
-                form.action = "ClassController";
-
-                // Create hidden input for action
-                const actionInput = document.createElement("input");
-                actionInput.type = "hidden";
-                actionInput.name = "action";
-                actionInput.value = "sort";
-                form.appendChild(actionInput);
-
-                // Create hidden input for sortField
-                const sortFieldInput = document.createElement("input");
-                sortFieldInput.type = "hidden";
-                sortFieldInput.name = "sortField";
-                sortFieldInput.value = sortField;
-                form.appendChild(sortFieldInput);
-
-                // Create hidden input for searchUsername if it exists
-                if (searchUsername) {
-                    const searchUsernameInput = document.createElement("input");
-                    searchUsernameInput.type = "hidden";
-                    searchUsernameInput.name = "searchClassname";
-                    searchUsernameInput.value = searchClassname;
-                    form.appendChild(searchUsernameInput);
-                }
-
-                document.body.appendChild(form);
-                form.submit();
-            }
             function sendPostRequestSort2(sortField, searchLesson, searchSubjectId, sortOrder) {
                 const form = document.createElement('form');
                 form.method = 'post';
@@ -110,7 +60,7 @@
                 const actionField = document.createElement('input');
                 actionField.type = 'hidden';
                 actionField.name = 'action';
-                actionField.value = 'searchLesson';
+                actionField.value = 'lessonList';
                 form.appendChild(actionField);
 
                 const sortFieldInput = document.createElement('input');
@@ -197,7 +147,7 @@
     <body class="ttr-opened-sidebar ttr-pinned-sidebar">
 
 
-        <jsp:include page="DashboardNav.jsp"/>
+        <jsp:include page="../DashboardNav.jsp"/>
 
 
         <!--Main container start -->
@@ -238,7 +188,7 @@
 
                                         </div>
                                         <div class="col-auto">
-                                            <input type="hidden" name="action" value="searchLesson">
+                                            <input type="hidden" name="action" value="lessonList">
                                             <input type="hidden" name="page" value="${currentPage}">
                                             <input type="hidden" name="size" value="3">
                                             <button class="btn btn-primary btn-sm" type="submit">Search</button>
@@ -312,7 +262,7 @@
                                             <ul class="pagination">
                                                 <c:forEach begin="1" end="${totalPages}" var="i">
                                                     <li class="page-item <c:if test='${i == currentPage}'>active</c:if>">
-                                                        <a class="page-link" href="ClassController?action=searchLesson&page=${i}&size=3&searchLesson=${fn:escapeXml(searchLesson)}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
+                                                        <a class="page-link" href="LessonController?action=lessonList&page=${i}&size=3&searchLesson=${fn:escapeXml(searchLesson)}&subjectId=${searchSubjectId}&sortField=${sortField}&sortOrder=${sortOrder}">${i}</a>
                                                     </li>
                                                 </c:forEach>
                                             </ul>

@@ -141,22 +141,22 @@ public class LessonController extends HttpServlet {
 //            Map<Integer, Integer> userCountMap = classService.getUserCountForClasses();
 
             // Get search, sort, and pagination parameters
-            String searchClassName = request.getParameter("searchLesson");
+            String searchTitle = request.getParameter("searchLesson");
             String searchSubjectId = request.getParameter("subjectId");
             String sortField = request.getParameter("sortField");
             String sortOrder = request.getParameter("sortOrder");
             int page = Integer.parseInt(request.getParameter("page") != null ? request.getParameter("page") : "1");
             int size = Integer.parseInt(request.getParameter("size") != null ? request.getParameter("size") : "3");
 
-            int totalClasses = lessonService.countLessones(searchClassName, searchSubjectId);
+            int totalClasses = lessonService.countLessones(searchTitle, searchSubjectId);
 
-            if ((searchClassName != null && !searchClassName.isEmpty()) || (searchSubjectId != null && !searchSubjectId.isEmpty())) {
+            if ((searchTitle != null && !searchTitle.isEmpty()) || (searchSubjectId != null && !searchSubjectId.isEmpty())) {
                 if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
                     // Search, sort, and paginate
-                    lessons = lessonService.searchAndSortLesson(searchClassName, searchSubjectId, sortField, sortOrder, page, size);
+                    lessons = lessonService.searchAndSortLesson(searchTitle, searchSubjectId, sortField, sortOrder, page, size);
                 } else {
                     // Search and paginate
-                    lessons = lessonService.searchLesson(searchClassName, searchSubjectId, page, size);
+                    lessons = lessonService.searchLesson(searchTitle, searchSubjectId, page, size);
                 }
             } else if (sortField != null && !sortField.isEmpty() && sortOrder != null && !sortOrder.isEmpty()) {
                 // Sort and paginate
@@ -172,7 +172,7 @@ public class LessonController extends HttpServlet {
 //            request.setAttribute("userCountMap", userCountMap);
             request.setAttribute("lessons", lessons);
             request.setAttribute("subjectList", subjects);
-            request.setAttribute("searchLesson", searchClassName);
+            request.setAttribute("searchLesson", searchTitle);
             request.setAttribute("searchSubjectId", searchSubjectId);
             request.setAttribute("sortField", sortField);
             request.setAttribute("sortOrder", sortOrder);
