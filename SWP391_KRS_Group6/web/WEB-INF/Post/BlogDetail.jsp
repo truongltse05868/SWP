@@ -122,8 +122,8 @@
                                                     </i></li>
                                             </ul>
                                             <h5 class="post-title"><a href="#"><%=s.getTitle()%></a></h5>
-                                            <p><%=s.getSummary()%></p>
-                                            <p><%=s.getContent()%></p>
+                                            <p style="font-size: 1em; font-style: italic;"><%=s.getSummary()%></p>
+                                            <p style="font-size: 1em;"><%=s.getContent()%></p>
 
                                             <div class="ttr-divider bg-gray"><i class="icon-dot c-square"></i></div>
                                             <h6>SHARE </h6>

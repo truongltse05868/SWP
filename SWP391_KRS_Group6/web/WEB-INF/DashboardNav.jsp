@@ -117,7 +117,7 @@
                     <li>
                         <a href="Home" class="ttr-material-button ttr-submenu-toggle">HOME</a>
                     </li>
-                    <li>
+<!--                    <li>
                         <a href="#" class="ttr-material-button ttr-submenu-toggle">QUICK MENU <i class="fa fa-angle-down"></i></a>
                         <div class="ttr-header-submenu">
                             <ul>
@@ -126,14 +126,14 @@
                                 <li><a href="../membership.html">Membership</a></li>
                             </ul>
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
                 <!-- header left menu end -->
             </div>
             <div class="ttr-header-right ttr-with-seperator">
                 <!-- header right menu start -->
                 <ul class="ttr-header-navigation">
-                    <li>
+<!--                    <li>
                         <a href="#" class="ttr-material-button ttr-search-toggle"><i class="fa fa-search"></i></a>
                     </li>
                     <li>
@@ -157,58 +157,11 @@
                                             <span> 02:14</span>
                                         </span>
                                     </li>
-                                    <li>
-                                        <span class="notification-icon dashbg-yellow">
-                                            <i class="fa fa-shopping-cart"></i>
-                                        </span>
-                                        <span class="notification-text">
-                                            <a href="#">Your order is placed</a> sent you a message.
-                                        </span>
-                                        <span class="notification-time">
-                                            <a href="#" class="fa fa-close"></a>
-                                            <span> 7 Min</span>
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="notification-icon dashbg-red">
-                                            <i class="fa fa-bullhorn"></i>
-                                        </span>
-                                        <span class="notification-text">
-                                            <span>Your item is shipped</span> sent you a message.
-                                        </span>
-                                        <span class="notification-time">
-                                            <a href="#" class="fa fa-close"></a>
-                                            <span> 2 May</span>
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="notification-icon dashbg-green">
-                                            <i class="fa fa-comments-o"></i>
-                                        </span>
-                                        <span class="notification-text">
-                                            <a href="#">Sneha Jogi</a> sent you a message.
-                                        </span>
-                                        <span class="notification-time">
-                                            <a href="#" class="fa fa-close"></a>
-                                            <span> 14 July</span>
-                                        </span>
-                                    </li>
-                                    <li>
-                                        <span class="notification-icon dashbg-primary">
-                                            <i class="fa fa-file-word-o"></i>
-                                        </span>
-                                        <span class="notification-text">
-                                            <span>Sneha Jogi</span> sent you a message.
-                                        </span>
-                                        <span class="notification-time">
-                                            <a href="#" class="fa fa-close"></a>
-                                            <span> 15 Min</span>
-                                        </span>
-                                    </li>
+                                    
                                 </ul>
                             </div>
                         </div>
-                    </li>
+                    </li>-->
                     <li>
                         <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="admin/assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
                         <div class="ttr-header-submenu">
@@ -257,7 +210,7 @@
                 <!-- header right menu end -->
             </div>
             <!--header search panel start -->
-            <div class="ttr-search-bar">
+<!--            <div class="ttr-search-bar">
                 <form class="ttr-search-form">
                     <div class="ttr-search-input-wrapper">
                         <input type="text" name="qq" placeholder="search something..." class="ttr-search-input">
@@ -265,7 +218,7 @@
                     </div>
                     <span class="ttr-search-close ttr-search-toggle"><i class="ti-close"></i></span>
                 </form>
-            </div>
+            </div>-->
             <!--header search panel end -->
         </div>
 
@@ -281,7 +234,7 @@
     <div class="ttr-sidebar-wrapper content-scroll">
         <!-- side menu logo start -->
         <div class="ttr-sidebar-logo">
-            <a href="#"><img alt="" src="admin/assets/images/logo.png" width="122" height="27"></a>
+            <a href="Home"><img alt="" src="admin/assets/images/logo.png" width="122" height="27"></a>
             <!-- <div class="ttr-sidebar-pin-button" title="Pin/Unpin Menu">
                 <i class="material-icons ttr-fixed-icon">gps_fixed</i>
                 <i class="material-icons ttr-not-fixed-icon">gps_not_fixed</i>

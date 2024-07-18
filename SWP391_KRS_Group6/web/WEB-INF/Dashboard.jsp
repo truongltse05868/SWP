@@ -113,7 +113,7 @@
                                     Total Blogs
                                 </h4>
                                 <span class="wc-des">
-                                    Customer Review
+                                    All post numbers
                                 </span>
                                 <span class="wc-stats counter">
                                     ${numerOfPost}
@@ -139,7 +139,7 @@
                                     Total Classes 
                                 </h4>
                                 <span class="wc-des">
-                                    Fresh Order Amount 
+                                    All classes  numbers
                                 </span>
                                 <span class="wc-stats counter">
                                     ${numerOfClass}

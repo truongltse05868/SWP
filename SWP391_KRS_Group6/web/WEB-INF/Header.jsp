@@ -127,7 +127,7 @@
                                         <li><a href="faq-2.html">FAQ's 2</a></li>
                                     </ul>
                                 </li>
-                                <li><a href="ContactController">Contact Us<i class="fa fa-angle-right"></i></a>
+                                <li><a href="ContactController">Contact Us</a>
                                 </li>
                                 <li><a href="portfolio.html">Portfolio</a></li>
                                     <c:if test="${sessionScope['account'] != null}">
@@ -176,10 +176,7 @@
                         <li><a href="javascript:;">Blog <i class="fa fa-chevron-down"></i></a>
                             <ul class="sub-menu">
                                 <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog</a></li>
-                                <li><a href="Pos">Blog Classic Sidebar</a></li>
-                                <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
-                                <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
-                                <li><a href="blog-details.html">Blog Details</a></li>
+                                
                             </ul>
                         </li>
                         <c:if test="${sessionScope['account'].getRole_id() == 1}">
