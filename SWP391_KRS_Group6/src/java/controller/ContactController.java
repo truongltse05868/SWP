@@ -4,6 +4,7 @@
  */
 package controller;
 
+import entity.Contact;
 import java.io.IOException;
 import java.io.PrintWriter;
 import entity.Setting;
@@ -110,19 +111,27 @@ public class ContactController extends HttpServlet {
     private void sentContact(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         try {
+            ContactService contactService = new ContactService();
             String userName = request.getParameter("name");
             String subject = request.getParameter("subject");
-            String setting = request.getParameter("settingId");
+//            String setting = request.getParameter("settingId");
             String emailUser = request.getParameter("email");
             String message = request.getParameter("message");
             String emailAdmin = "ladykillah041098@gmail.com";
-            String type = request.getParameter("contactTypeId");
+            int type = Integer.parseInt(request.getParameter("contactTypeId")) ;
+            List<Setting> contactType = settingService.getAllContactType();
+            String phone =  "";
+            Setting setting = settingService.getSettingById(type);
+            String typeName = setting.getSettingName();
+            Contact contact = new Contact( userName, emailUser, phone, subject, message, type, true);
+            boolean isSaveContact = contactService.addContact(contact);
             //validate
             //sent email
-            ContactService contactService = new ContactService();
-            boolean isSentEmail = contactService.sendEmailContact(userName, emailAdmin, emailUser, type, subject, message);
+            
+            boolean isSentEmail = contactService.sendEmailContact(userName, emailAdmin, emailUser, typeName, subject, message);
             if (isSentEmail) {
-                request.setAttribute("mess", "Gửi thành công");
+                request.setAttribute("successMessage", "Gửi thành công");
+                request.setAttribute("setting", contactType);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/Contact/Contact.jsp");
                 dispatcher.forward(request, response);
             }

@@ -5,6 +5,7 @@
 package service;
 
 import dao.ContactDAO;
+import entity.Contact;
 
 /**
  *
@@ -16,6 +17,12 @@ public class ContactService extends BaseService {
 
     public ContactService() {
         this.contactDAO = new ContactDAO();
+    }
+    public boolean addContact(Contact contact){
+        return contactDAO.addContact(contact);
+    }
+    public Contact getContactById(int contactId){
+        return contactDAO.getContactById(contactId);
     }
 
 }

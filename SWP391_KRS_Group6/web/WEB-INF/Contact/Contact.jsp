@@ -196,9 +196,8 @@
                                         <div class="col-lg-12">
                                             <button type="submit" class="btn button-md"> Send Message</button>
                                         </div>
-                                        <!--<div>${mess}</div>-->
                                         <!--hiển thị thông báo-->
-                                        <c:if test="${not empty mess}">
+                                        <c:if test="${not empty successMessage}">
                                             <div class="toast-container">
                                                 <div id="successToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="true">
                                                     <div class="toast-header">
@@ -208,7 +207,7 @@
                                                         </button>
                                                     </div>
                                                     <div class="toast-body">
-                                                        ${mess} 
+                                                        ${successMessage} 
                                                     </div>
                                                 </div>
                                             </div>
@@ -244,10 +243,11 @@
         <script src="assets/js/functions.js"></script>
         <script src="assets/js/contact.js"></script>
         <script src='assets/vendors/switcher/switcher.js'></script>
-        <script src='../../www.google.com/recaptcha/api.js'></script>
+        <!--<script src='../../www.google.com/recaptcha/api.js'></script>-->
+
         <script>
             $(document).ready(function () {
-                var successMessage = "${mess}";
+                var successMessage = "${successMessage}";
                 if (successMessage) {
                     $('#successToast').toast({
                         delay: 5000

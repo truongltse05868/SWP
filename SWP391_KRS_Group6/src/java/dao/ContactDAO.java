@@ -45,4 +45,53 @@ public class ContactDAO extends DBConnect{
         }
         return contactList;
     }
+    public Contact getContactById(int contactId){
+        Contact contact = null;
+        String query = "SELECT * FROM contact WHERE contact_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setInt(1, contactId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    contact = new Contact(
+                        rs.getInt("contact_id"),
+                        rs.getString("full_name"),
+                        rs.getString("email"),
+                        rs.getString("phone"),
+                        rs.getString("subject"),
+                        rs.getString("message"),
+                        rs.getInt("type_id"),
+                        rs.getBoolean("status")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error fetching user by ID", e);
+        }
+        
+        return contact;
+    }
+    public boolean addContact(Contact contact){
+        String query = "INSERT INTO contact (full_name, email,phone ,subject, message,  type_id, status) "
+                + "VALUES (?, ?, ? , ?, ?, ?,?)";
+        try (PreparedStatement ps = connection.prepareStatement(query)) {
+            ps.setString(1, contact.getFull_name());
+            ps.setString(2, contact.getEmail());
+            ps.setString(3, contact.getPhone());
+            ps.setString(4, contact.getSubject());
+            ps.setString(5, contact.getMessage());
+            ps.setInt(6, contact.getType_id()); //mặc định là student
+            ps.setBoolean(7, contact.isStatus());
+            int rowsAffected = ps.executeUpdate();
+            if (rowsAffected > 0) {
+                logger.log(Level.INFO, "contact added successfully");
+                return true;
+            } else {
+                logger.log(Level.WARNING, "No rows affected");
+                return false;
+            }
+        } catch (SQLException e) {
+            logger.log(Level.SEVERE, "Error adding user", e);
+            return false;
+        }
+    }
 }
