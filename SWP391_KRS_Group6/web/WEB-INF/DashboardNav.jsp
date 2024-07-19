@@ -163,7 +163,7 @@
                         </div>
                     </li>-->
                     <li>
-                        <a href="#" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="admin/assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
+                        <a href="Home" class="ttr-material-button ttr-submenu-toggle"><span class="ttr-user-avatar"><img alt="" src="admin/assets/images/testimonials/pic3.jpg" width="32" height="32"></span></a>
                         <div class="ttr-header-submenu">
                             <ul>
                                 <!--<li><a href="user-profile.html">My profile</a></li>-->
@@ -171,13 +171,12 @@
                                     <li><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
                                             return false;">My profile</a></li>
                                 </c:if>
-                                <li><a href="list-view-calendar.html">Activity</a></li>
-                                <li><a href="mailbox.html">Messages</a></li>
+                                
                                 <li><a href="Logout">Logout</a></li>
                             </ul>
                         </div>
                     </li>
-                    <li class="ttr-hide-on-mobile">
+<!--                    <li class="ttr-hide-on-mobile">
                         <a href="#" class="ttr-material-button"><i class="ti-layout-grid3-alt"></i></a>
                         <div class="ttr-header-submenu ttr-extra-menu">
                             <a href="#">
@@ -205,7 +204,7 @@
                                 <span>Pictures</span>
                             </a>
                         </div>
-                    </li>
+                    </li>-->
                 </ul>
                 <!-- header right menu end -->
             </div>
@@ -259,18 +258,18 @@
                         <span class="ttr-label">Courses</span>
                     </a>
                 </li>-->
-                <li>
+<!--                <li>
                     <a href="event.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-calendar"></i></span>
                         <span class="ttr-label">Event</span>
                     </a>
-                </li>
-                <li>
+                </li>-->
+<!--                <li>
                     <a href="app-profile.html" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-user"></i></span>
                         <span class="ttr-label">Profile</span>
                     </a>
-                </li>
+                </li>-->
                 <li>
                     <a href="PostController" class="ttr-material-button">
                         <span class="ttr-icon"><i class="ti-email"></i></span>

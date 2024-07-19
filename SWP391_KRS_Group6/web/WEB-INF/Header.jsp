@@ -109,24 +109,6 @@
                         </li>
                         <li><a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
                             <ul class="sub-menu">
-                                <li><a href="javascript:;">About<i class="fa fa-angle-right"></i></a>
-                                    <ul class="sub-menu">
-                                        <li><a href="about-1.html">About 1</a></li>
-                                        <li><a href="about-2.html">About 2</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="javascript:;">Event<i class="fa fa-angle-right"></i></a>
-                                    <ul class="sub-menu">
-                                        <li><a href="event.html">Event</a></li>
-                                        <li><a href="events-details.html">Events Details</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="javascript:;">FAQ's<i class="fa fa-angle-right"></i></a>
-                                    <ul class="sub-menu">
-                                        <li><a href="faq-1.html">FAQ's 1</a></li>
-                                        <li><a href="faq-2.html">FAQ's 2</a></li>
-                                    </ul>
-                                </li>
                                 <li><a href="ContactController">Contact Us</a>
                                 </li>
                                 <li><a href="portfolio.html">Portfolio</a></li>
@@ -134,72 +116,22 @@
                                     <li><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
                                             return false;">Profile</a></li>
                                     </c:if>
+                            </ul>
+                        </li>
+                        <li class="add-mega-menu"><a href="ClassController">Our Classes </a>
 
-                                <li><a href="membership.html">Membership</a></li>
-                                <li><a href="error-404.html">404 Page</a></li>
-                            </ul>
                         </li>
-                        <li class="add-mega-menu"><a href="javascript:;">Our Classes <i class="fa fa-chevron-down"></i></a>
-                            <ul class="sub-menu add-menu">
-                                <li class="add-menu-left">
-                                    <h5 class="menu-adv-title">Our Classes</h5>
-                                    <ul>
-                                        <li><a href="ClassController">Classes </a></li>
-                                        <li><a href="courses-details.html">Classes Details</a></li>
-                                        <li><a href="profile.html">Instructor Profile</a></li>
-                                        <li><a href="event.html">Upcoming Event</a></li>
-                                        <li><a href="membership.html">Membership</a></li>
-                                    </ul>
-                                </li>
-                                <li class="add-menu-right">
-                                    <img src="assets/images/adv/adv.jpg" alt=""/>
-                                </li>
-                            </ul>
+                        <li class="add-mega-menu"><a href="SubjectController">Our Courses </a>
                         </li>
-                        <li class="add-mega-menu"><a href="javascript:;">Our Courses <i class="fa fa-chevron-down"></i></a>
-                            <ul class="sub-menu add-menu">
-                                <li class="add-menu-left">
-                                    <h5 class="menu-adv-title">Our Courses</h5>
-                                    <ul>
-                                        <li><a href="SubjectController">Courses </a></li>
-                                        <li><a href="courses-details.html">Courses Details</a></li>
-                                        <li><a href="profile.html">Instructor Profile</a></li>
-                                        <li><a href="event.html">Upcoming Event</a></li>
-                                        <li><a href="membership.html">Membership</a></li>
-                                    </ul>
-                                </li>
-                                <li class="add-menu-right">
-                                    <img src="assets/images/adv/adv.jpg" alt=""/>
-                                </li>
-                            </ul>
-                        </li>
-                        <li><a href="javascript:;">Blog <i class="fa fa-chevron-down"></i></a>
-                            <ul class="sub-menu">
-                                <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog</a></li>
-                                
-                            </ul>
+                        <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog </a>
                         </li>
                         <c:if test="${sessionScope['account'].getRole_id() == 1}">
-                            <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
+                            <li class="nav-dashboard"><a href="Dashboard">Dashboard <i class="fa fa-chevron-down"></i></a>
                                 <ul class="sub-menu">
                                     <li><a href="Dashboard">Dashboard</a></li>
-
                                     <li><a href="SettingController">Setting List</a></li>
                                     <li><a href="PostController">Post List</a></li>
                                     <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
-                                    <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="admin/basic-calendar.html">Basic Calendar</a></li>
-                                            <li><a href="admin/list-view-calendar.html">List View Calendar</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="javascript:;">Mailbox<i class="fa fa-angle-right"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="admin/mailbox.html">Mailbox</a></li>
-                                            <li><a href="admin/mailbox-compose.html">Compose</a></li>
-                                            <li><a href="admin/mailbox-read.html">Mail Read</a></li>
-                                        </ul>
-                                    </li>
                                 </ul>
                             </li>
                         </c:if>
@@ -214,10 +146,10 @@
                         <c:if test="${sessionScope['account'].getRole_id() == null}">
                             <li><a id="loginLink" href="Login" >Login</a></li>
                             <li><a id="registerLink" href="RegisterController">Register</a></li>
-<!--                            <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage'); 
-                                    return false;">ForgotPassword</a></li>-->
-                            </c:if>
-                            <c:if test="${sessionScope['account'].getRole_id() != null}">
+                            <!--                            <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage'); 
+                                                                return false;">ForgotPassword</a></li>-->
+                        </c:if>
+                        <c:if test="${sessionScope['account'].getRole_id() != null}">
                             <li> 
                                 <label><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
                                         return false;">Hello, ${sessionScope.account.full_name} </a></label>
@@ -237,7 +169,7 @@
                     <div class="mx-5 menu-logo">
                         <a href="Home"><img src="assets/images/logo-white.png" alt=""></a>
                     </div>
-                                        <!-- Mobile Nav Button ==== -->
+                    <!-- Mobile Nav Button ==== -->
                     <button class="navbar-toggler collapsed menuicon justify-content-end" type="button" data-toggle="collapse" data-target="#menuDropdown" aria-controls="menuDropdown" aria-expanded="false" aria-label="Toggle navigation">
                         <span></span>
                         <span></span>
@@ -263,99 +195,34 @@
                             </li>
                             <li><a href="javascript:;">Pages <i class="fa fa-chevron-down"></i></a>
                                 <ul class="sub-menu">
-                                    <li><a href="javascript:;">About<i class="fa fa-angle-right"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="about-1.html">About 1</a></li>
-                                            <li><a href="about-2.html">About 2</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="javascript:;">Event<i class="fa fa-angle-right"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="event.html">Event</a></li>
-                                            <li><a href="events-details.html">Events Details</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="javascript:;">FAQ's<i class="fa fa-angle-right"></i></a>
-                                        <ul class="sub-menu">
-                                            <li><a href="faq-1.html">FAQ's 1</a></li>
-                                            <li><a href="faq-2.html">FAQ's 2</a></li>
-                                        </ul>
-                                    </li>
-                                    <li><a href="ContactController">Contact Us<i class="fa fa-angle-right"></i></a>
+                                    
+                                    <li><a href="ContactController">Contact Us</a>
                                     <li><a href="portfolio.html">Portfolio</a></li>
                                         <c:if test="${sessionScope['account'] != null}">
                                         <li><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
                                                 return false;">Profile</a></li>
                                         </c:if>
 
-                                    <li><a href="membership.html">Membership</a></li>
-                                    <li><a href="error-404.html">404 Page</a></li>
+                                 
                                 </ul>
                             </li>
-                            <li class="add-mega-menu"><a href="javascript:;">Our Classes <i class="fa fa-chevron-down"></i></a>
-                                <ul class="sub-menu add-menu">
-                                    <li class="add-menu-left">
-                                        <h5 class="menu-adv-title">Our Classes</h5>
-                                        <ul>
-                                            <li><a href="ClassController">Classes </a></li>
-                                            <li><a href="courses-details.html">Classes Details</a></li>
-                                            <li><a href="profile.html">Instructor Profile</a></li>
-                                            <li><a href="event.html">Upcoming Event</a></li>
-                                            <li><a href="membership.html">Membership</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="add-menu-right">
-                                        <img src="assets/images/adv/adv.jpg" alt=""/>
-                                    </li>
-                                </ul>
+                            <li class="add-mega-menu"><a href="ClassController">Our Classes </a>
+                                
                             </li>
-                            <li class="add-mega-menu"><a href="javascript:;">Our Courses <i class="fa fa-chevron-down"></i></a>
-                                <ul class="sub-menu add-menu">
-                                    <li class="add-menu-left">
-                                        <h5 class="menu-adv-title">Our Courses</h5>
-                                        <ul>
-                                            <li><a href="SubjectController">Courses </a></li>
-                                            <li><a href="courses-details.html">Courses Details</a></li>
-                                            <li><a href="profile.html">Instructor Profile</a></li>
-                                            <li><a href="event.html">Upcoming Event</a></li>
-                                            <li><a href="membership.html">Membership</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="add-menu-right">
-                                        <img src="assets/images/adv/adv.jpg" alt=""/>
-                                    </li>
-                                </ul>
+                            <li class="add-mega-menu"><a href="SubjectController">Our Courses </a>
+                               
                             </li>
-                            <li><a href="javascript:;">Blog <i class="fa fa-chevron-down"></i></a>
-                                <ul class="sub-menu">
-                                    <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog</a></li>
-                                    <li><a href="Pos">Blog Classic Sidebar</a></li>
-                                    <li><a href="blog-list-sidebar.html">Blog List Sidebar</a></li>
-                                    <li><a href="blog-standard-sidebar.html">Blog Standard Sidebar</a></li>
-                                    <li><a href="blog-details.html">Blog Details</a></li>
-                                </ul>
+                           <li><a href="PostController" onclick="sendPostRequestForBlog('BlogList'); return false;">Blog </a>
+                                
                             </li>
                             <c:if test="${sessionScope['account'].getRole_id() == 1}">
-                                <li class="nav-dashboard"><a href="javascript:;">Dashboard <i class="fa fa-chevron-down"></i></a>
+                                <li class="nav-dashboard"><a href="Dashboard">Dashboard <i class="fa fa-chevron-down"></i></a>
                                     <ul class="sub-menu">
                                         <li><a href="Dashboard">Dashboard</a></li>
                                         <li><a href="SettingController">Setting List</a></li>
                                         <li><a href="PostController">Post List</a></li>
                                         <li><a href="userList" onclick="sendPostRequest('userList'); return false;">User List</a></li>
-                                        <li><a href="javascript:;">Calendar<i class="fa fa-angle-right"></i></a>
-                                            <ul class="sub-menu">
-                                                <li><a href="admin/basic-calendar.html">Basic Calendar</a></li>
-                                                <li><a href="admin/list-view-calendar.html">List View Calendar</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="javascript:;">Mailbox<i class="fa fa-angle-right"></i></a>
-                                            <ul class="sub-menu">
-                                                <li><a href="admin/mailbox.html">Mailbox</a></li>
-                                                <li><a href="admin/mailbox-compose.html">Compose</a></li>
-                                                <li><a href="admin/mailbox-read.html">Mail Read</a></li>
-                                            </ul>
-                                        </li>
-                                    </ul>
+                                                                            </ul>
                                 </li>
                             </c:if>
                         </ul>
@@ -368,10 +235,10 @@
                                             <c:if test="${sessionScope['account'].getRole_id() == null}">
                                                 <li><a id="loginLink" href="Login" >Login</a></li>
                                                 <li><a id="registerLink" href="RegisterController">Register</a></li>
-<!--                                                <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
-                                                        return false;">ForgotPassword</a></li>-->
-                                                </c:if>
-                                                <c:if test="${sessionScope['account'].getRole_id() != null}">
+                                                <!--                                                <li><a id="forgotpass" href="forgotpass" onclick="sendPostRequestForPass('forgotPassPage');
+                                                                                                        return false;">ForgotPassword</a></li>-->
+                                            </c:if>
+                                            <c:if test="${sessionScope['account'].getRole_id() != null}">
                                                 <li> 
                                                     <label><a href="profile" onclick="sendPostRequestProfile('profileUserPage', ${sessionScope['account'].getUser_id()});
                                                             return false;">Hello, ${sessionScope.account.full_name} </a></label>
