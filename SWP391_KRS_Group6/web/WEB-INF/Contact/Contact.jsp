@@ -156,6 +156,14 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <div class="input-group"> 
+                                                    <label>Your Phone *</label>
+                                                    <input name="phone" type="number" class="form-control" required >
+                                                </div>
+                                            </div>
+                                        </div>
 
                                         <div class="col-lg-6">
                                             <div class="form-group">

@@ -114,13 +114,13 @@ public class ContactController extends HttpServlet {
             ContactService contactService = new ContactService();
             String userName = request.getParameter("name");
             String subject = request.getParameter("subject");
-//            String setting = request.getParameter("settingId");
+            String phone = request.getParameter("phone");
             String emailUser = request.getParameter("email");
             String message = request.getParameter("message");
             String emailAdmin = "ladykillah041098@gmail.com";
             int type = Integer.parseInt(request.getParameter("contactTypeId")) ;
             List<Setting> contactType = settingService.getAllContactType();
-            String phone =  "";
+            
             Setting setting = settingService.getSettingById(type);
             String typeName = setting.getSettingName();
             Contact contact = new Contact( userName, emailUser, phone, subject, message, type, true);
@@ -128,7 +128,7 @@ public class ContactController extends HttpServlet {
             //validate
             //sent email
             
-            boolean isSentEmail = contactService.sendEmailContact(userName, emailAdmin, emailUser, typeName, subject, message);
+            boolean isSentEmail = contactService.sendEmailContact(userName, phone, emailAdmin, emailUser, typeName, subject, message);
             if (isSentEmail) {
                 request.setAttribute("successMessage", "Gửi thành công");
                 request.setAttribute("setting", contactType);
