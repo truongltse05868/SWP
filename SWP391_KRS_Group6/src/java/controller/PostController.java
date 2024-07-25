@@ -185,7 +185,7 @@ public class PostController extends HttpServlet {
             String sortOrder = request.getParameter("sortOrder") != null ? request.getParameter("sortOrder") : "DESC";
             String keyword = request.getParameter("keyword");
             List<Post> subjec;
-List<Post> Recentposts;
+            List<Post> Recentposts;
             List<Post> posts;
             if (keyword != null && !keyword.trim().isEmpty()) {
                 posts = postDAO.searchBlog(keyword, sortBy, sortOrder, page, pageSize);
@@ -193,7 +193,7 @@ List<Post> Recentposts;
                 subjec = postDAO.getAllBlog(1);
             } else {
                 posts = postDAO.getAllBlogsSortedBy(sortBy, sortOrder, page, pageSize);
-                Recentposts = postDAO.getAllBlogsSortedBy("post_id", "DESC", 1,5);
+                Recentposts = postDAO.getAllBlogsSortedBy("post_id", "DESC", 1, 5);
                 subjec = postDAO.getAllBlog(1);
             }
             List<User> users = userDAO.getAllUsers();
@@ -202,7 +202,7 @@ List<Post> Recentposts;
             request.setAttribute("maxPage", maxPage);
 
             request.setAttribute("posts", posts);
-             request.setAttribute("Recentposts", Recentposts);
+            request.setAttribute("Recentposts", Recentposts);
             request.setAttribute("user", users);
             request.setAttribute("currentPage", page);
             request.setAttribute("pageSize", pageSize);
@@ -287,9 +287,7 @@ List<Post> Recentposts;
     private void InsertPost(HttpServletRequest request, HttpServletResponse response, String submit, int user_id)
             throws ServletException, IOException {
         try {
-            PostDAO dao = new PostDAO();
             if (submit != null && submit.equals("insertPost")) {
-                int author = user_id;
                 String title = request.getParameter("title");
                 String summary = request.getParameter("summary");
                 String thumbnail = request.getParameter("thumbnail_url");
@@ -303,61 +301,30 @@ List<Post> Recentposts;
                     return;
                 }
 
+                PostDAO dao = new PostDAO();
                 boolean status = false; // Default status for non-admin users
-                if (author == 1) {
+                if (user_id == 1) {
                     String statusParam = request.getParameter("status");
                     status = (statusParam != null && statusParam.equals("on"));
                 }
 
-                Post post = new Post(0, title, summary, thumbnail, content, status, author);
+                Post post = new Post(0, title, summary, thumbnail, content, status, user_id);
                 dao.addPost(post);
 
-                String successMessage = (author == 1) ? "Post added successfully." : "Post added successfully! The admin will publish it soon.";
+                String successMessage = (user_id == 1) ? "Post added successfully." : "Post added successfully! The admin will publish it soon.";
                 request.setAttribute("successMessage", successMessage);
 
-                // Fetch and set the list of posts
-                List<Post> posts = dao.getAllBlog(1);
-                request.setAttribute("posts", posts);
-
-                if (author == 1) {
+                if (user_id == 1) {
+                    // Fetch and set the list of posts
+                    List<Post> posts = dao.getAllBlog(1);
+                    request.setAttribute("posts", posts);
                     request.getRequestDispatcher("WEB-INF/Post/PostList.jsp").forward(request, response);
                 } else {
-                    UserDAO udao = new UserDAO();
-                    List<User> adminUsers = udao.getUserByColumn("role_id", "1"); // Assuming this method returns a list of users with role_id 1
-
-                    if (adminUsers != null && !adminUsers.isEmpty()) {
-                        for (User admin : adminUsers) {
-                            String email = admin.getEmail();
-                            boolean emailExists = udao.checkEmailExists(email);
-
-                            if (emailExists) {
-                                User au = udao.getUserById(author);
-                                String subject = "REQUEST Publish New Post";
-                                String emailContent = String.format(
-                                        "Dear publisher %s,\n\n"
-                                        + "A new post has been submitted for publication on EduChamp.\n"
-                                        + "Post title: %s by %s\n\n"
-                                        + "We kindly request that you review the post and consider it for publication. "
-                                        + "If any revisions are required, please let us know, and we will inform the author accordingly.\n"
-                                        + "\n"
-                                        + "Thank you for your attention to this request. We look forward to your feedback and the potential publication of this user-submitted content.\n"
-                                        + "\n"
-                                        + "Best regards,\n"
-                                        + "EduChamp",
-                                        admin.getFull_name(), post.getTitle(), au.getFull_name());
-
-                                BaseService.sendEmail(email, subject, emailContent);
-                            } else {
-                                request.setAttribute("errorMessage", "Admin email address does not exist.");
-                            }
-                        }
-                    } else {
-                        request.setAttribute("errorMessage", "Admin user not found.");
-                    }
-
+                    sendEmailToAdmins(request, user_id, post);
                     request.getRequestDispatcher("WEB-INF/Post/BlogDisplay.jsp").forward(request, response);
                 }
             } else {
+                PostDAO dao = new PostDAO();
                 List<Post> posts = dao.getAllBlog(1);
                 request.setAttribute("postList", posts);
                 request.getRequestDispatcher("WEB-INF/Post/insertPost.jsp").forward(request, response);
@@ -368,6 +335,46 @@ List<Post> Recentposts;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error inserting post", e);
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred while inserting the post.");
+        }
+    }
+
+    private void sendEmailToAdmins(HttpServletRequest request, int author, Post post) {
+        try {
+            UserDAO udao = new UserDAO();
+            List<User> adminUsers = udao.getUserByColumn("role_id", "1"); // Assuming this method returns a list of users with role_id 1
+
+            if (adminUsers != null && !adminUsers.isEmpty()) {
+                for (User admin : adminUsers) {
+                    String email = admin.getEmail();
+                    boolean emailExists = udao.checkEmailExists(email);
+
+                    if (emailExists) {
+                        User au = udao.getUserById(author);
+                        String subject = "REQUEST Publish New Post";
+                        String emailContent = String.format(
+                                "Dear publisher %s,\n\n"
+                                + "A new post has been submitted for publication on EduChamp.\n"
+                                + "Post title: %s by %s\n\n"
+                                + "We kindly request that you review the post and consider it for publication. "
+                                + "If any revisions are required, please let us know, and we will inform the author accordingly.\n"
+                                + "\n"
+                                + "Thank you for your attention to this request. We look forward to your feedback and the potential publication of this user-submitted content.\n"
+                                + "\n"
+                                + "Best regards,\n"
+                                + "EduChamp",
+                                admin.getFull_name(), post.getTitle(), au.getFull_name());
+
+                        new Thread(() -> BaseService.sendEmail(email, subject, emailContent)).start(); // Send email asynchronously
+                    } else {
+                        request.setAttribute("errorMessage", "Admin email address does not exist.");
+                    }
+                }
+            } else {
+                request.setAttribute("errorMessage", "Admin user not found.");
+            }
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, "Error sending email to admins", e);
+            request.setAttribute("errorMessage", "An error occurred while notifying the admins.");
         }
     }
 
