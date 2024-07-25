@@ -385,7 +385,7 @@
                                             </div>
                                         </div>
                                         <div class="col-12">
-                                            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-plus-circle"></i>Update Class</button>
+                                            <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-fw fa-plus-circle"></i>Update Lesson</button>
                                             <button type="button" onclick="sendPostRequestLessonList('lessonList'); return false;" class="btn-secondry">Back</button>
                                         </div>
                                         <!--hiển thị thông báo-->
