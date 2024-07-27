@@ -270,8 +270,8 @@ public class UserController extends HttpServlet {
             if (fullName == null || fullName.trim().isEmpty() || !userService.isValidFullName(fullName)) {
                 errors.put("fullnameValidate", "Tên phải có độ dài từ 3 đến 20 ký tự");
             }
-            if (userService.isValidPhone(phone)) {
-                errors.put("phoneValidate", "Tên phải có độ dài từ 3 đến 20 ký tự");
+            if (!userService.isValidPhone(phone)) {
+                errors.put("phoneValidate", "Số điện thoại không đúng");
             }
             if (!errors.isEmpty()) {
                 user.setUser_name(userName);
@@ -286,7 +286,7 @@ public class UserController extends HttpServlet {
                 request.setAttribute("roles", roles);
                 RequestDispatcher dispatcher = request.getRequestDispatcher("WEB-INF/UserProfile.jsp");
                 dispatcher.forward(request, response);
-
+                return;
             }
 
             if (user != null) {

@@ -71,11 +71,13 @@ public abstract class BaseService {
         // Check if the phone number is empty or null
         if (phone == null || phone.isEmpty()) {
             return true;
-        }
-        // Validate the phone number format
-        // Example: "^0\\d{9}$" for a 10-digit number starting with 0
+        } else {
+            // Validate the phone number format
+            // Example: "^0\\d{9}$" for a 10-digit number starting with 0
 
-        return phone.matches("^0\\d{9}$");
+            return phone.matches("^0\\d{9}$");
+        }
+
     }
 
     public String generateOTP() {
@@ -141,12 +143,13 @@ public abstract class BaseService {
         String content = "Dear " + userName + "\n\n Please click the following link to confirm your email address: " + confirmationLink;
         sendEmail(recipientEmail, "Email Confirmation", content);
     }
-    public boolean sendEmailContact(String fullName,String phone, String emailAdmin, String emailUser, String type, String subject, String mess){
-        String content = "Dear admin, My name is " + fullName + "\n\n" 
-                + "My email is : " + emailUser +"\n\n"
-                + "My phone is : " + phone +"\n\n"
-                + "I need support " + type +"\n\n" 
-                + "This is problem: " + mess + "\n\n." 
+
+    public boolean sendEmailContact(String fullName, String phone, String emailAdmin, String emailUser, String type, String subject, String mess) {
+        String content = "Dear admin, My name is " + fullName + "\n\n"
+                + "My email is : " + emailUser + "\n\n"
+                + "My phone is : " + phone + "\n\n"
+                + "I need support " + type + "\n\n"
+                + "This is problem: " + mess + "\n\n."
                 + "Thanks and best regard.";
         return sendEmail(emailAdmin, subject, content);
     }
